@@ -11,45 +11,51 @@
 
 namespace Silex;
 
+use Pimple;
+use Psr\Container\ContainerInterface;
+use Silex\EventListener\ConverterListener;
+use Silex\EventListener\LocaleListener;
+use Silex\EventListener\MiddlewareListener;
+use Silex\EventListener\StringToResponseListener;
+use Spryker\Shared\ApplicationExtension\Event\EventSubscriberInterface;
+use Spryker\Shared\ApplicationExtension\Provider\BootableServiceInterface;
+use Spryker\Shared\ApplicationExtension\Provider\ServiceInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpKernel\HttpKernel;
-use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\TerminableInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\ResponseListener;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\HttpKernel;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Routing\RequestContext;
-use Silex\EventListener\LocaleListener;
-use Silex\EventListener\MiddlewareListener;
-use Silex\EventListener\ConverterListener;
-use Silex\EventListener\StringToResponseListener;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * The Silex framework class.
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Application extends \Pimple implements HttpKernelInterface, TerminableInterface
+class Application extends Pimple implements HttpKernelInterface, TerminableInterface, ContainerInterface
 {
-    const VERSION = '1.3.6';
+    public const VERSION = '1.3.6';
 
-    const EARLY_EVENT = 512;
-    const LATE_EVENT = -512;
+    public const EARLY_EVENT = 512;
+    public const LATE_EVENT = -512;
 
-    protected $providers = array();
+    protected $providers = [];
+
     protected $booted = false;
 
     /**
@@ -58,8 +64,10 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      * Objects and parameters can be passed as argument to the constructor.
      *
      * @param array $values The parameters or objects.
+     *
+     * @throws \RuntimeException
      */
-    public function __construct(array $values = array())
+    public function __construct(array $values = [])
     {
         parent::__construct();
 
@@ -147,7 +155,7 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
         });
 
         $this['request_error'] = $this->protect(function () {
-            throw new \RuntimeException('Accessed request service outside of request scope. Try moving that call to a before handler or controller.');
+            throw new RuntimeException('Accessed request service outside of request scope. Try moving that call to a before handler or controller.');
         });
 
         $this['request'] = $this['request_error'];
@@ -164,15 +172,21 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
     }
 
     /**
-     * Registers a service provider.
+     * @param \Silex\ServiceProviderInterface|\Spryker\Shared\ApplicationExtension\Provider\ServiceInterface|\Spryker\Shared\ApplicationExtension\Provider\BootableServiceInterface|\Spryker\Shared\ApplicationExtension\Event\EventSubscriberInterface $provider
+     * @param array $values An array of values that customizes the provider
      *
-     * @param ServiceProviderInterface $provider A ServiceProviderInterface instance
-     * @param array                    $values   An array of values that customizes the provider
-     *
-     * @return Application
+     * @return $this
      */
-    public function register(ServiceProviderInterface $provider, array $values = array())
+    public function register($provider, array $values = [])
     {
+        if ($provider instanceof EventSubscriberInterface) {
+            $this->addEventSubscriber($provider);
+        }
+
+        if (!($provider instanceof ServiceProviderInterface) && !($provider instanceof ServiceInterface) && !($provider instanceof BootableServiceInterface)) {
+            return $this;
+        }
+
         $this->providers[] = $provider;
 
         $provider->register($this);
@@ -185,16 +199,44 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
     }
 
     /**
-     * Boots all service providers.
+     * @param \Spryker\Shared\ApplicationExtension\Event\EventSubscriberInterface $eventSubscriber
+     *
+     * @return void
+     */
+    protected function addEventSubscriber(EventSubscriberInterface $eventSubscriber)
+    {
+        $dispatcher = $this->getEventDispatcher();
+        $dispatcher->addSubscriber($eventSubscriber);
+    }
+
+    /**
+     * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     */
+    protected function getEventDispatcher(): EventDispatcherInterface
+    {
+        return $this['dispatcher'];
+    }
+
+    /**
+     * Boots all (bootable) service providers.
      *
      * This method is automatically called by handle(), but you can use it
      * to boot all service providers when not handling a request.
+     *
+     * @return void
      */
     public function boot()
     {
         if (!$this->booted) {
             foreach ($this->providers as $provider) {
-                $provider->boot($this);
+                if ($provider instanceof BootableServiceInterface) {
+                    $provider->boot($this);
+                    continue;
+                }
+
+                if ($provider instanceof ServiceProviderInterface && method_exists($provider, 'boot')) {
+                    $provider->boot($this);
+                }
             }
 
             $this->booted = true;
@@ -207,9 +249,9 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      * You can optionally specify HTTP methods that should be matched.
      *
      * @param string $pattern Matched route pattern
-     * @param mixed  $to      Callback that returns the response when matched
+     * @param mixed $to Callback that returns the response when matched
      *
-     * @return Controller
+     * @return \Silex\Controller
      */
     public function match($pattern, $to = null)
     {
@@ -217,12 +259,16 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
     }
 
     /**
+     * @internal To get entries form the ContainerInterface, this is not used ATM and the method will be removed from the Application at all.
+     *
      * Maps a GET request to a callable.
      *
-     * @param string $pattern Matched route pattern
-     * @param mixed  $to      Callback that returns the response when matched
+     * @deprecated This method should not be used anymore from the outside.
      *
-     * @return Controller
+     * @param string $pattern Matched route pattern
+     * @param mixed $to Callback that returns the response when matched
+     *
+     * @return \Silex\Controller
      */
     public function get($pattern, $to = null)
     {
@@ -230,12 +276,24 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
     }
 
     /**
+     * @internal This is just added for the intermediate state of the refactoring away from Silex.
+     *
+     * @param string $id
+     *
+     * @return bool
+     */
+    public function has($id): bool
+    {
+        return $this->offsetExists($id);
+    }
+
+    /**
      * Maps a POST request to a callable.
      *
      * @param string $pattern Matched route pattern
-     * @param mixed  $to      Callback that returns the response when matched
+     * @param mixed $to Callback that returns the response when matched
      *
-     * @return Controller
+     * @return \Silex\Controller
      */
     public function post($pattern, $to = null)
     {
@@ -246,9 +304,9 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      * Maps a PUT request to a callable.
      *
      * @param string $pattern Matched route pattern
-     * @param mixed  $to      Callback that returns the response when matched
+     * @param mixed $to Callback that returns the response when matched
      *
-     * @return Controller
+     * @return \Silex\Controller
      */
     public function put($pattern, $to = null)
     {
@@ -259,9 +317,9 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      * Maps a DELETE request to a callable.
      *
      * @param string $pattern Matched route pattern
-     * @param mixed  $to      Callback that returns the response when matched
+     * @param mixed $to Callback that returns the response when matched
      *
-     * @return Controller
+     * @return \Silex\Controller
      */
     public function delete($pattern, $to = null)
     {
@@ -272,9 +330,9 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      * Maps an OPTIONS request to a callable.
      *
      * @param string $pattern Matched route pattern
-     * @param mixed  $to      Callback that returns the response when matched
+     * @param mixed $to Callback that returns the response when matched
      *
-     * @return Controller
+     * @return \Silex\Controller
      */
     public function options($pattern, $to = null)
     {
@@ -285,9 +343,9 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      * Maps a PATCH request to a callable.
      *
      * @param string $pattern Matched route pattern
-     * @param mixed  $to      Callback that returns the response when matched
+     * @param mixed $to Callback that returns the response when matched
      *
-     * @return Controller
+     * @return \Silex\Controller
      */
     public function patch($pattern, $to = null)
     {
@@ -297,9 +355,9 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
     /**
      * Adds an event listener that listens on the specified events.
      *
-     * @param string   $eventName The event to listen on
-     * @param callable $callback  The listener
-     * @param int      $priority  The higher this value, the earlier an event
+     * @param string $eventName The event to listen on
+     * @param callable $callback The listener
+     * @param int $priority The higher this value, the earlier an event
      *                            listener will be triggered in the chain (defaults to 0)
      */
     public function on($eventName, $callback, $priority = 0)
@@ -323,15 +381,17 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      * Before filters are run before any route has been matched.
      *
      * @param mixed $callback Before filter callback
-     * @param int   $priority The higher this value, the earlier an event
+     * @param int $priority The higher this value, the earlier an event
      *                        listener will be triggered in the chain (defaults to 0)
+     *
+     * @return void
      */
     public function before($callback, $priority = 0)
     {
         $app = $this;
 
         $this->on(KernelEvents::REQUEST, function (GetResponseEvent $event) use ($callback, $app) {
-            if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
+            if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
                 return;
             }
 
@@ -349,23 +409,27 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      * After filters are run after the controller has been executed.
      *
      * @param mixed $callback After filter callback
-     * @param int   $priority The higher this value, the earlier an event
+     * @param int $priority The higher this value, the earlier an event
      *                        listener will be triggered in the chain (defaults to 0)
+     *
+     * @throws \RuntimeException
+     *
+     * @return void
      */
     public function after($callback, $priority = 0)
     {
         $app = $this;
 
         $this->on(KernelEvents::RESPONSE, function (FilterResponseEvent $event) use ($callback, $app) {
-            if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
+            if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
                 return;
             }
 
             $response = call_user_func($app['callback_resolver']->resolveCallback($callback), $event->getRequest(), $event->getResponse(), $app);
             if ($response instanceof Response) {
                 $event->setResponse($response);
-            } elseif (null !== $response) {
-                throw new \RuntimeException('An after middleware returned an invalid response value. Must return null or an instance of Response.');
+            } elseif ($response !== null) {
+                throw new RuntimeException('An after middleware returned an invalid response value. Must return null or an instance of Response.');
             }
         }, $priority);
     }
@@ -376,8 +440,10 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      * Finish filters are run after the response has been sent.
      *
      * @param mixed $callback Finish filter callback
-     * @param int   $priority The higher this value, the earlier an event
+     * @param int $priority The higher this value, the earlier an event
      *                        listener will be triggered in the chain (defaults to 0)
+     *
+     * @return void
      */
     public function finish($callback, $priority = 0)
     {
@@ -391,11 +457,15 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
     /**
      * Aborts the current request by sending a proper HTTP error.
      *
-     * @param int    $statusCode The HTTP status code
-     * @param string $message    The status message
-     * @param array  $headers    An array of HTTP headers
+     * @param int $statusCode The HTTP status code
+     * @param string $message The status message
+     * @param array $headers An array of HTTP headers
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
+     *
+     * @return void
      */
-    public function abort($statusCode, $message = '', array $headers = array())
+    public function abort($statusCode, $message = '', array $headers = [])
     {
         throw new HttpException($statusCode, $message, null, $headers);
     }
@@ -414,8 +484,10 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      * For this reason you should add logging handlers before output handlers.
      *
      * @param mixed $callback Error handler callback, takes an Exception argument
-     * @param int   $priority The higher this value, the earlier an event
+     * @param int $priority The higher this value, the earlier an event
      *                        listener will be triggered in the chain (defaults to -8)
+     *
+     * @return void
      */
     public function error($callback, $priority = -8)
     {
@@ -431,8 +503,10 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      * called, until one returns a Response object.
      *
      * @param mixed $callback View handler callback
-     * @param int   $priority The higher this value, the earlier an event
+     * @param int $priority The higher this value, the earlier an event
      *                        listener will be triggered in the chain (defaults to 0)
+     *
+     * @return void
      */
     public function view($callback, $priority = 0)
     {
@@ -443,6 +517,8 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      * Flushes the controller collection.
      *
      * @param string $prefix The route prefix
+     *
+     * @return void
      */
     public function flush($prefix = '')
     {
@@ -452,10 +528,10 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
     /**
      * Redirects the user to another URL.
      *
-     * @param string $url    The URL to redirect to
-     * @param int    $status The status code (302 by default)
+     * @param string $url The URL to redirect to
+     * @param int $status The status code (302 by default)
      *
-     * @return RedirectResponse
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function redirect($url, $status = 302)
     {
@@ -466,12 +542,12 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
      * Creates a streaming response.
      *
      * @param mixed $callback A valid PHP callback
-     * @param int   $status   The response status code
-     * @param array $headers  An array of response headers
+     * @param int $status The response status code
+     * @param array $headers An array of response headers
      *
-     * @return StreamedResponse
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
-    public function stream($callback = null, $status = 200, array $headers = array())
+    public function stream($callback = null, $status = 200, array $headers = [])
     {
         return new StreamedResponse($callback, $status, $headers);
     }
@@ -479,10 +555,10 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
     /**
      * Escapes a text for HTML.
      *
-     * @param string $text         The input text to be escaped
-     * @param int    $flags        The flags (@see htmlspecialchars)
-     * @param string $charset      The charset
-     * @param bool   $doubleEncode Whether to try to avoid double escaping or not
+     * @param string $text The input text to be escaped
+     * @param int $flags The flags (@see htmlspecialchars)
+     * @param string|null $charset The charset
+     * @param bool $doubleEncode Whether to try to avoid double escaping or not
      *
      * @return string Escaped text
      */
@@ -494,13 +570,13 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
     /**
      * Convert some data into a JSON response.
      *
-     * @param mixed $data    The response data
-     * @param int   $status  The response status code
+     * @param mixed $data The response data
+     * @param int $status The response status code
      * @param array $headers An array of response headers
      *
-     * @return JsonResponse
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function json($data = array(), $status = 200, array $headers = array())
+    public function json($data = [], $status = 200, array $headers = [])
     {
         return new JsonResponse($data, $status, $headers);
     }
@@ -508,16 +584,14 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
     /**
      * Sends a file.
      *
-     * @param \SplFileInfo|string $file               The file to stream
-     * @param int                 $status             The response status code
-     * @param array               $headers            An array of response headers
-     * @param null|string         $contentDisposition The type of Content-Disposition to set automatically with the filename
+     * @param \SplFileInfo|string $file The file to stream
+     * @param int $status The response status code
+     * @param array $headers An array of response headers
+     * @param string|null $contentDisposition The type of Content-Disposition to set automatically with the filename
      *
-     * @return BinaryFileResponse
-     *
-     * @throws \RuntimeException When the feature is not supported, before http-foundation v2.2
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function sendFile($file, $status = 200, array $headers = array(), $contentDisposition = null)
+    public function sendFile($file, $status = 200, array $headers = [], $contentDisposition = null)
     {
         return new BinaryFileResponse($file, $status, $headers, true, $contentDisposition);
     }
@@ -525,10 +599,12 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
     /**
      * Mounts controllers under the given route prefix.
      *
-     * @param string                                           $prefix      The route prefix
-     * @param ControllerCollection|ControllerProviderInterface $controllers A ControllerCollection or a ControllerProviderInterface instance
+     * @param string $prefix The route prefix
+     * @param \Silex\ControllerCollection|\Silex\ControllerProviderInterface $controllers A ControllerCollection or a ControllerProviderInterface instance
      *
-     * @return Application
+     * @throws \LogicException
+     *
+     * @return $this
      */
     public function mount($prefix, $controllers)
     {
@@ -536,12 +612,12 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
             $connectedControllers = $controllers->connect($this);
 
             if (!$connectedControllers instanceof ControllerCollection) {
-                throw new \LogicException(sprintf('The method "%s::connect" must return a "ControllerCollection" instance. Got: "%s"', get_class($controllers), is_object($connectedControllers) ? get_class($connectedControllers) : gettype($connectedControllers)));
+                throw new LogicException(sprintf('The method "%s::connect" must return a "ControllerCollection" instance. Got: "%s"', get_class($controllers), is_object($connectedControllers) ? get_class($connectedControllers) : gettype($connectedControllers)));
             }
 
             $controllers = $connectedControllers;
         } elseif (!$controllers instanceof ControllerCollection) {
-            throw new \LogicException('The "mount" method takes either a "ControllerCollection" or a "ControllerProviderInterface" instance.');
+            throw new LogicException('The "mount" method takes either a "ControllerCollection" or a "ControllerProviderInterface" instance.');
         }
 
         $this['controllers']->mount($prefix, $controllers);
@@ -552,11 +628,13 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
     /**
      * Handles the request and delivers the response.
      *
-     * @param Request|null $request Request to process
+     * @param \Symfony\Component\HttpFoundation\Request|null $request Request to process
+     *
+     * @return void
      */
-    public function run(Request $request = null)
+    public function run(?Request $request = null)
     {
-        if (null === $request) {
+        if ($request === null) {
             $request = Request::createFromGlobals();
         }
 
@@ -577,7 +655,7 @@ class Application extends \Pimple implements HttpKernelInterface, TerminableInte
             $this->boot();
         }
 
-        $current = HttpKernelInterface::SUB_REQUEST === $type ? $this['request'] : $this['request_error'];
+        $current = $type === HttpKernelInterface::SUB_REQUEST ? $this['request'] : $this['request_error'];
 
         $this['request'] = $request;
 
