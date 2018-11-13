@@ -27,12 +27,12 @@ class ControllerResolver extends BaseControllerResolver
     /**
      * Constructor.
      *
-     * @param Application     $app    An Application instance
+     * @param Application     $container    An Application instance
      * @param LoggerInterface $logger A LoggerInterface instance
      */
-    public function __construct(Application $app, LoggerInterface $logger = null)
+    public function __construct(Application $container, LoggerInterface $logger = null)
     {
-        $this->app = $app;
+        $this->app = $container;
 
         parent::__construct($logger);
     }

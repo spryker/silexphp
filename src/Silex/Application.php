@@ -13,13 +13,14 @@ namespace Silex;
 
 use Pimple;
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 use Silex\EventListener\ConverterListener;
-use Silex\EventListener\LocaleListener;
 use Silex\EventListener\MiddlewareListener;
 use Silex\EventListener\StringToResponseListener;
-use Spryker\Shared\ApplicationExtension\Event\EventSubscriberInterface;
+use Silex\Provider\RoutingServiceProvider;
 use Spryker\Shared\ApplicationExtension\Provider\BootableServiceInterface;
-use Spryker\Shared\ApplicationExtension\Provider\ServiceInterface;
+use Spryker\Shared\ApplicationExtension\Provider\EventSubscriberInterface;
+use Spryker\Shared\ApplicationExtension\Provider\ServiceProviderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -36,7 +37,6 @@ use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Routing\RequestContext;
@@ -56,6 +56,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
 
     protected $providers = [];
 
+    protected $eventSubscribers = [];
+
     protected $booted = false;
 
     /**
@@ -63,11 +65,11 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
      *
      * Objects and parameters can be passed as argument to the constructor.
      *
-     * @param array $values The parameters or objects.
+     * @param array $services The parameters or objects.
      *
      * @throws \RuntimeException
      */
-    public function __construct(array $values = [])
+    public function __construct(array $services = [])
     {
         parent::__construct();
 
@@ -75,22 +77,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
 
         $this['logger'] = null;
 
-        $this['routes'] = $this->share(function () {
-            return new RouteCollection();
-        });
-
-        $this['controllers'] = $this->share(function () use ($app) {
-            return $app['controllers_factory'];
-        });
-
-        $this['controllers_factory'] = function () use ($app) {
-            return new ControllerCollection($app['route_factory']);
-        };
-
-        $this['route_class'] = 'Silex\\Route';
-        $this['route_factory'] = function () use ($app) {
-            return new $app['route_class']();
-        };
+        $this->register(new RoutingServiceProvider());
 
         $this['exception_handler'] = $this->share(function () use ($app) {
             return new ExceptionHandler($app['debug']);
@@ -106,12 +93,9 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
             $urlMatcher = new LazyUrlMatcher(function () use ($app) {
                 return $app['url_matcher'];
             });
-            if (Kernel::VERSION_ID >= 20800) {
-                $dispatcher->addSubscriber(new RouterListener($urlMatcher, $app['request_stack'], $app['request_context'], $app['logger']));
-            } else {
-                $dispatcher->addSubscriber(new RouterListener($urlMatcher, $app['request_context'], $app['logger'], $app['request_stack']));
-            }
-            $dispatcher->addSubscriber(new LocaleListener($app, $urlMatcher, $app['request_stack']));
+
+            $dispatcher->addSubscriber(new RouterListener($urlMatcher, $app['request_stack'], $app['request_context'], $app['logger']));
+
             if (isset($app['exception_handler'])) {
                 $dispatcher->addSubscriber($app['exception_handler']);
             }
@@ -166,26 +150,26 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
         $this['charset'] = 'UTF-8';
         $this['locale'] = 'en';
 
-        foreach ($values as $key => $value) {
+        foreach ($services as $key => $value) {
             $this[$key] = $value;
         }
     }
 
     /**
-     * @param \Silex\ServiceProviderInterface|\Spryker\Shared\ApplicationExtension\Provider\ServiceInterface|\Spryker\Shared\ApplicationExtension\Provider\BootableServiceInterface|\Spryker\Shared\ApplicationExtension\Event\EventSubscriberInterface $provider
+     * @param \Silex\ServiceProviderInterface|\Spryker\Shared\ApplicationExtension\Provider\ServiceProviderInterface|\Spryker\Shared\ApplicationExtension\Provider\BootableServiceInterface|\Spryker\Shared\ApplicationExtension\Provider\EventSubscriberInterface $provider
      * @param array $values An array of values that customizes the provider
      *
      * @return $this
      */
     public function register($provider, array $values = [])
     {
-        if ($provider instanceof EventSubscriberInterface) {
-            $this->addEventSubscriber($provider);
-        }
-
-        if (!($provider instanceof ServiceProviderInterface) && !($provider instanceof ServiceInterface) && !($provider instanceof BootableServiceInterface)) {
-            return $this;
-        }
+//        if ($provider instanceof EventSubscriberInterface) {
+//            $this->eventSubscribers[] = $provider;
+//        }
+//
+//        if (!($provider instanceof ServiceProviderInterface) && !($provider instanceof ServiceProviderInterface) && !($provider instanceof BootableServiceInterface)) {
+//            return $this;
+//        }
 
         $this->providers[] = $provider;
 
@@ -199,25 +183,6 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     }
 
     /**
-     * @param \Spryker\Shared\ApplicationExtension\Event\EventSubscriberInterface $eventSubscriber
-     *
-     * @return void
-     */
-    protected function addEventSubscriber(EventSubscriberInterface $eventSubscriber)
-    {
-        $dispatcher = $this->getEventDispatcher();
-        $dispatcher->addSubscriber($eventSubscriber);
-    }
-
-    /**
-     * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
-     */
-    protected function getEventDispatcher(): EventDispatcherInterface
-    {
-        return $this['dispatcher'];
-    }
-
-    /**
      * Boots all (bootable) service providers.
      *
      * This method is automatically called by handle(), but you can use it
@@ -228,18 +193,11 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     public function boot()
     {
         if (!$this->booted) {
-            foreach ($this->providers as $provider) {
-                if ($provider instanceof BootableServiceInterface) {
-                    $provider->boot($this);
-                    continue;
-                }
-
-                if ($provider instanceof ServiceProviderInterface && method_exists($provider, 'boot')) {
-                    $provider->boot($this);
-                }
-            }
-
             $this->booted = true;
+
+            foreach ($this->providers as $provider) {
+                $provider->boot($this);
+            }
         }
     }
 
@@ -270,22 +228,10 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
      *
      * @return \Silex\Controller
      */
-    public function get($pattern, $to = null)
-    {
-        return $this['controllers']->get($pattern, $to);
-    }
-
-    /**
-     * @internal This is just added for the intermediate state of the refactoring away from Silex.
-     *
-     * @param string $id
-     *
-     * @return bool
-     */
-    public function has($id): bool
-    {
-        return $this->offsetExists($id);
-    }
+//    public function get($pattern, $to = null)
+//    {
+//        return $this['controllers']->get($pattern, $to);
+//    }
 
     /**
      * Maps a POST request to a callable.

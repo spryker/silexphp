@@ -12,6 +12,7 @@
 namespace Silex\Provider;
 
 use Silex\Application;
+use Silex\ControllerCollection;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -586,8 +587,19 @@ class SecurityServiceProvider implements ServiceProviderInterface
         foreach ($this->fakeRoutes as $route) {
             list($method, $pattern, $name) = $route;
 
-            $app->$method($pattern)->run(null)->bind($name);
+            $controllerCollection = $this->getControllerCollection($app);
+            $controllerCollection->$method($pattern)->run(null)->bind($name);
         }
+    }
+
+    /**
+     * @param Application $app
+     *
+     * @return ControllerCollection
+     */
+    protected function getControllerCollection(Application $app): ControllerCollection
+    {
+        return $app->get('controllers');
     }
 
     public function addFakeRoute($method, $pattern, $name)

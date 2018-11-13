@@ -15,6 +15,9 @@ use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Silex\ServiceControllerResolver;
 
+/**
+ * @deprecated PLease add `Spryker\Shared\Kernel\ControllerProvider\ControllerProvider` to your ApplicationDependencyProvider::getServices() to replace this one.
+ */
 class ServiceControllerServiceProvider implements ServiceProviderInterface
 {
     public function register(Application $app)
