@@ -14,6 +14,8 @@ namespace Silex\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
+ * @deprecated No replacement provided, seems to be not used at all.
+ *
  * Security trait.
  *
  * @author Fabien Potencier <fabien@symfony.com>

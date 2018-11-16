@@ -39,6 +39,7 @@ use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\TerminableInterface;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -90,9 +91,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
              */
             $dispatcher = new $app['dispatcher_class']();
 
-            $urlMatcher = new LazyUrlMatcher(function () use ($app) {
-                return $app['url_matcher'];
-            });
+            $urlMatcher = $this->getLazyUrlMatcher($app);
 
             $dispatcher->addSubscriber(new RouterListener($urlMatcher, $app['request_stack'], $app['request_context'], $app['logger']));
 
@@ -156,6 +155,24 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     }
 
     /**
+     * @param ContainerInterface $container
+     *
+     * @return UrlMatcherInterface
+     */
+    protected function getLazyUrlMatcher(ContainerInterface $container)
+    {
+        if ($container->has('lazy_url_matcher')) {
+            return $container->get('lazy_url_matcher');
+        }
+
+        $urlMatcher = new LazyUrlMatcher(function () use ($container) {
+            return $container->get('url_matcher');
+        });
+
+        return $urlMatcher;
+    }
+
+    /**
      * @param \Silex\ServiceProviderInterface|\Spryker\Shared\ApplicationExtension\Provider\ServiceProviderInterface|\Spryker\Shared\ApplicationExtension\Provider\BootableServiceInterface|\Spryker\Shared\ApplicationExtension\Provider\EventSubscriberInterface $provider
      * @param array $values An array of values that customizes the provider
      *
@@ -163,14 +180,6 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
      */
     public function register($provider, array $values = [])
     {
-//        if ($provider instanceof EventSubscriberInterface) {
-//            $this->eventSubscribers[] = $provider;
-//        }
-//
-//        if (!($provider instanceof ServiceProviderInterface) && !($provider instanceof ServiceProviderInterface) && !($provider instanceof BootableServiceInterface)) {
-//            return $this;
-//        }
-
         $this->providers[] = $provider;
 
         $provider->register($this);

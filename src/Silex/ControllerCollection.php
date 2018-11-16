@@ -93,7 +93,7 @@ class ControllerCollection
     {
         $route = clone $this->defaultRoute;
         $route->setPath($pattern);
-        $this->controllers[] = $controller = new Controller($route);
+        $this->controllers[] = $controller = new Controller($route, $this->routesFactory);
         $route->setDefault('_controller', null === $to ? $this->defaultController : $to);
 
         return $controller;

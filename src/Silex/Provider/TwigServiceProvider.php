@@ -13,6 +13,7 @@ namespace Silex\Provider;
 
 use Silex\Application;
 use Silex\ServiceProviderInterface;
+use Spryker\Service\Container\ContainerInterface;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
@@ -22,6 +23,8 @@ use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 
 /**
+ * @deprecated Please add `Spryker\Shared\Twig\Service\TwigServiceProvider` to your `ApplicationDependencyProvider::getServices()` to replace this one.
+ *
  * Twig integration for Silex.
  *
  * @author Fabien Potencier <fabien@symfony.com>
@@ -30,21 +33,23 @@ class TwigServiceProvider implements ServiceProviderInterface
 {
     public function register(Application $app)
     {
-        $app['twig.options'] = array();
+        $app['twig.options'] = new \ArrayObject();
         $app['twig.form.templates'] = array('form_div_layout.html.twig');
         $app['twig.path'] = array();
         $app['twig.templates'] = array();
 
-        $app['twig'] = $app->share(function ($app) {
-            $app['twig.options'] = array_replace(
-                array(
-                    'charset' => $app['charset'],
-                    'debug' => $app['debug'],
-                    'strict_variables' => $app['debug'],
-                ), $app['twig.options']
-            );
+        $app['twig'] = $app->share(function (ContainerInterface $app) {
 
-            $twig = new \Twig_Environment($app['twig.loader'], $app['twig.options']);
+            $twigOptions = $app->get('twig.options');
+            $globalOptions = [
+                'charset' => $app['charset'],
+                'debug' => $app['debug'],
+                'strict_variables' => $app['debug'],
+            ];
+
+            $twigOptions = array_replace($globalOptions, $twigOptions);
+
+            $twig = new \Twig_Environment($app['twig.loader'], $twigOptions);
             $twig->addGlobal('app', $app);
 
             if ($app['debug']) {

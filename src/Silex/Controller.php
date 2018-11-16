@@ -12,6 +12,7 @@
 namespace Silex;
 
 use Silex\Exception\ControllerFrozenException;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * A wrapper for a controller, mapped to a route.
@@ -37,13 +38,18 @@ class Controller
     private $isFrozen = false;
 
     /**
-     * Constructor.
-     *
-     * @param Route $route
+     * @var RouteCollection
      */
-    public function __construct(Route $route)
+    private $routeCollection;
+
+    /**
+     * @param Route $route
+     * @param RouteCollection $routeCollection
+     */
+    public function __construct(Route $route, RouteCollection $routeCollection)
     {
         $this->route = $route;
+        $this->routeCollection = $routeCollection;
     }
 
     /**
@@ -80,6 +86,8 @@ class Controller
         }
 
         $this->routeName = $routeName;
+
+        $this->routeCollection->add($routeName, $this->getRoute());
 
         return $this;
     }
