@@ -18,9 +18,6 @@ use Silex\EventListener\ConverterListener;
 use Silex\EventListener\MiddlewareListener;
 use Silex\EventListener\StringToResponseListener;
 use Silex\Provider\RoutingServiceProvider;
-use Spryker\Shared\ApplicationExtension\Provider\BootableServiceInterface;
-use Spryker\Shared\ApplicationExtension\Provider\EventSubscriberInterface;
-use Spryker\Shared\ApplicationExtension\Provider\ServiceProviderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -56,8 +53,6 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     public const LATE_EVENT = -512;
 
     protected $providers = [];
-
-    protected $eventSubscribers = [];
 
     protected $booted = false;
 
@@ -161,8 +156,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
      */
     protected function getLazyUrlMatcher(ContainerInterface $container)
     {
-        if ($container->has('lazy_url_matcher')) {
-            return $container->get('lazy_url_matcher');
+        if ($container->has('request_matcher_lazy')) {
+            return $container->get('request_matcher_lazy');
         }
 
         $urlMatcher = new LazyUrlMatcher(function () use ($container) {
@@ -173,7 +168,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     }
 
     /**
-     * @param \Silex\ServiceProviderInterface|\Spryker\Shared\ApplicationExtension\Provider\ServiceProviderInterface|\Spryker\Shared\ApplicationExtension\Provider\BootableServiceInterface|\Spryker\Shared\ApplicationExtension\Provider\EventSubscriberInterface $provider
+     * @param \Silex\ServiceProviderInterface|\Spryker\Shared\ApplicationExtension\Provider\ServiceProviderInterface|\Spryker\Shared\ApplicationExtension\Provider\BootableServiceInterface|\Spryker\Shared\ApplicationExtension\Provider\EventSubscriberProviderInterface $provider
      * @param array $values An array of values that customizes the provider
      *
      * @return $this
