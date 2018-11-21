@@ -223,9 +223,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     /**
      * @internal To get entries form the ContainerInterface, this is not used ATM and the method will be removed from the Application at all.
      *
-     * Maps a GET request to a callable.
-     *
      * @deprecated This method should not be used anymore from the outside.
+     * If you use this method somewhere e.g. in tests, use $app->get('controllers')->get() instead.
      *
      * @param string $pattern Matched route pattern
      * @param mixed $to Callback that returns the response when matched
