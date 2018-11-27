@@ -36,9 +36,7 @@ use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\TerminableInterface;
-use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\RouteCollection;
 
 /**
  * The Silex framework class.
@@ -75,10 +73,6 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
 
         $this->register(new RoutingServiceProvider());
 
-        $this['exception_handler'] = $this->share(function () use ($app) {
-            return new ExceptionHandler($app['debug']);
-        });
-
         $this['dispatcher_class'] = 'Symfony\\Component\\EventDispatcher\\EventDispatcher';
         $this['dispatcher'] = $this->share(function () use ($app) {
             /*
@@ -86,13 +80,10 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
              */
             $dispatcher = new $app['dispatcher_class']();
 
+            // TODO: the next two lines can be removed, the router listener now comes from the RoutingServiceProvider
             $urlMatcher = $this->getLazyUrlMatcher($app);
-
             $dispatcher->addSubscriber(new RouterListener($urlMatcher, $app['request_stack'], $app['request_context'], $app['logger']));
 
-            if (isset($app['exception_handler'])) {
-                $dispatcher->addSubscriber($app['exception_handler']);
-            }
             $dispatcher->addSubscriber(new ResponseListener($app['charset']));
             $dispatcher->addSubscriber(new MiddlewareListener($app));
             $dispatcher->addSubscriber(new ConverterListener($app['routes'], $app['callback_resolver']));
@@ -150,9 +141,9 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     }
 
     /**
-     * @param ContainerInterface $container
+     * @param \Psr\Container\ContainerInterface $container
      *
-     * @return UrlMatcherInterface
+     * @return \Symfony\Component\Routing\Matcher\UrlMatcherInterface
      */
     protected function getLazyUrlMatcher(ContainerInterface $container)
     {
@@ -610,7 +601,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
 
         $this->flush();
 
-        $response = $this['kernel']->handle($request, $type, $catch);
+        $kernel = $this['kernel'];
+        $response = $kernel->handle($request, $type, $catch);
 
         $this['request'] = $current;
 
