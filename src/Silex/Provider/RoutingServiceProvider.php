@@ -17,7 +17,6 @@ use Silex\Provider\Routing\LazyRequestMatcher;
 use Silex\RedirectableUrlMatcher;
 use Silex\ServiceProviderInterface;
 use Spryker\Service\Container\ContainerInterface;
-use Spryker\Shared\Routing\Plugin\Provider\RoutingServiceProvider as SprykerRoutingServiceProvider;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\RequestContext;
@@ -44,8 +43,8 @@ class RoutingServiceProvider implements ServiceProviderInterface
         });
 
         $app['routes_factory'] = $app->factory(function (ContainerInterface $container) {
-            if ($container->has(SprykerRoutingServiceProvider::ROUTE_COLLECTION)) {
-                return $container->get(SprykerRoutingServiceProvider::ROUTE_COLLECTION);
+            if ($container->has('route_collection')) {
+                return $container->get('route_collection');
             }
 
             return new RouteCollection();

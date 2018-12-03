@@ -159,12 +159,12 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     }
 
     /**
-     * @param \Silex\ServiceProviderInterface|\Spryker\Shared\ApplicationExtension\Provider\ServiceProviderInterface|\Spryker\Shared\ApplicationExtension\Provider\BootableServiceInterface|\Spryker\Shared\ApplicationExtension\Provider\EventSubscriberProviderInterface $provider
+     * @param \Silex\ServiceProviderInterface
      * @param array $values An array of values that customizes the provider
      *
      * @return $this
      */
-    public function register($provider, array $values = [])
+    public function register(ServiceProviderInterface $provider, array $values = [])
     {
         $this->providers[] = $provider;
 
@@ -601,8 +601,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
 
         $this->flush();
 
-        $kernel = $this['kernel'];
-        $response = $kernel->handle($request, $type, $catch);
+        $response = $this['kernel']->handle($request, $type, $catch);
 
         $this['request'] = $current;
 
