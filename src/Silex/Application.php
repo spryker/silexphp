@@ -12,7 +12,6 @@
 namespace Silex;
 
 use Pimple;
-use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Silex\EventListener\ConverterListener;
 use Silex\EventListener\MiddlewareListener;
@@ -30,7 +29,6 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\EventListener\ResponseListener;
-use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -43,7 +41,7 @@ use Symfony\Component\Routing\RequestContext;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Application extends Pimple implements HttpKernelInterface, TerminableInterface, ContainerInterface
+class Application extends Pimple implements HttpKernelInterface, TerminableInterface
 {
     public const VERSION = '1.3.6';
 
@@ -79,10 +77,6 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
              * @var EventDispatcherInterface
              */
             $dispatcher = new $app['dispatcher_class']();
-
-            // TODO: the next two lines can be removed, the router listener now comes from the RoutingServiceProvider
-            $urlMatcher = $this->getLazyUrlMatcher($app);
-            $dispatcher->addSubscriber(new RouterListener($urlMatcher, $app['request_stack'], $app['request_context'], $app['logger']));
 
             $dispatcher->addSubscriber(new ResponseListener($app['charset']));
             $dispatcher->addSubscriber(new MiddlewareListener($app));
@@ -141,24 +135,6 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     }
 
     /**
-     * @param \Psr\Container\ContainerInterface $container
-     *
-     * @return \Symfony\Component\Routing\Matcher\UrlMatcherInterface
-     */
-    protected function getLazyUrlMatcher(ContainerInterface $container)
-    {
-        if ($container->has('request_matcher_lazy')) {
-            return $container->get('request_matcher_lazy');
-        }
-
-        $urlMatcher = new LazyUrlMatcher(function () use ($container) {
-            return $container->get('url_matcher');
-        });
-
-        return $urlMatcher;
-    }
-
-    /**
      * @param \Silex\ServiceProviderInterface
      * @param array $values An array of values that customizes the provider
      *
@@ -201,6 +177,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
      *
      * You can optionally specify HTTP methods that should be matched.
      *
+     * @deprecated Adding routes and controllers will be moved to spryker/routing module.
+     *
      * @param string $pattern Matched route pattern
      * @param mixed $to Callback that returns the response when matched
      *
@@ -222,13 +200,15 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
      *
      * @return \Silex\Controller
      */
-//    public function get($pattern, $to = null)
-//    {
-//        return $this['controllers']->get($pattern, $to);
-//    }
+    public function get($pattern, $to = null)
+    {
+        return $this['controllers']->get($pattern, $to);
+    }
 
     /**
      * Maps a POST request to a callable.
+     *
+     * @deprecated Adding routes and controllers will be moved to spryker/routing module.
      *
      * @param string $pattern Matched route pattern
      * @param mixed $to Callback that returns the response when matched
@@ -243,6 +223,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     /**
      * Maps a PUT request to a callable.
      *
+     * @deprecated Adding routes and controllers will be moved to spryker/routing module.
+     *
      * @param string $pattern Matched route pattern
      * @param mixed $to Callback that returns the response when matched
      *
@@ -255,6 +237,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
 
     /**
      * Maps a DELETE request to a callable.
+     *
+     * @deprecated Adding routes and controllers will be moved to spryker/routing module.
      *
      * @param string $pattern Matched route pattern
      * @param mixed $to Callback that returns the response when matched
@@ -269,6 +253,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     /**
      * Maps an OPTIONS request to a callable.
      *
+     * @deprecated Adding routes and controllers will be moved to spryker/routing module.
+     *
      * @param string $pattern Matched route pattern
      * @param mixed $to Callback that returns the response when matched
      *
@@ -282,6 +268,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     /**
      * Maps a PATCH request to a callable.
      *
+     * @deprecated Adding routes and controllers will be moved to spryker/routing module.
+     *
      * @param string $pattern Matched route pattern
      * @param mixed $to Callback that returns the response when matched
      *
@@ -294,6 +282,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
 
     /**
      * Adds an event listener that listens on the specified events.
+     *
+     * @deprecated Adding events will be moved to spryker/event-dispatcher module.
      *
      * @param string $eventName The event to listen on
      * @param callable $callback The listener
@@ -319,6 +309,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
      * Registers a before filter.
      *
      * Before filters are run before any route has been matched.
+     *
+     * @deprecated Adding events will be moved to spryker/event-dispatcher module.
      *
      * @param mixed $callback Before filter callback
      * @param int $priority The higher this value, the earlier an event
@@ -347,6 +339,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
      * Registers an after filter.
      *
      * After filters are run after the controller has been executed.
+     *
+     * @deprecated Adding events will be moved to spryker/event-dispatcher module.
      *
      * @param mixed $callback After filter callback
      * @param int $priority The higher this value, the earlier an event
@@ -379,6 +373,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
      *
      * Finish filters are run after the response has been sent.
      *
+     * @deprecated Adding events will be moved to spryker/event-dispatcher module.
+     *
      * @param mixed $callback Finish filter callback
      * @param int $priority The higher this value, the earlier an event
      *                        listener will be triggered in the chain (defaults to 0)
@@ -396,6 +392,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
 
     /**
      * Aborts the current request by sending a proper HTTP error.
+     *
+     * @deprecated Adding events will be moved to spryker/event-dispatcher module.
      *
      * @param int $statusCode The HTTP status code
      * @param string $message The status message
@@ -423,6 +421,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
      *
      * For this reason you should add logging handlers before output handlers.
      *
+     * @deprecated Adding events will be moved to spryker/event-dispatcher module.
+     *
      * @param mixed $callback Error handler callback, takes an Exception argument
      * @param int $priority The higher this value, the earlier an event
      *                        listener will be triggered in the chain (defaults to -8)
@@ -442,6 +442,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
      * an instance of Response. When this occurs, all suitable handlers will be
      * called, until one returns a Response object.
      *
+     * @deprecated Adding events will be moved to spryker/event-dispatcher module.
+     *
      * @param mixed $callback View handler callback
      * @param int $priority The higher this value, the earlier an event
      *                        listener will be triggered in the chain (defaults to 0)
@@ -456,6 +458,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     /**
      * Flushes the controller collection.
      *
+     * @deprecated Adding routes and controllers will be moved to spryker/routing module.
+     *
      * @param string $prefix The route prefix
      *
      * @return void
@@ -467,6 +471,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
 
     /**
      * Redirects the user to another URL.
+     *
+     * @deprecated Adding routes and controllers will be moved to spryker/routing module.
      *
      * @param string $url The URL to redirect to
      * @param int $status The status code (302 by default)
@@ -481,6 +487,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     /**
      * Creates a streaming response.
      *
+     * @deprecated Adding routes and controllers will be moved to spryker/routing module.
+     *
      * @param mixed $callback A valid PHP callback
      * @param int $status The response status code
      * @param array $headers An array of response headers
@@ -494,6 +502,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
 
     /**
      * Escapes a text for HTML.
+     *
+     * @deprecated Adding routes and controllers will be moved to spryker/routing module.
      *
      * @param string $text The input text to be escaped
      * @param int $flags The flags (@see htmlspecialchars)
@@ -510,6 +520,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     /**
      * Convert some data into a JSON response.
      *
+     * @deprecated Adding routes and controllers will be moved to spryker/routing module.
+     *
      * @param mixed $data The response data
      * @param int $status The response status code
      * @param array $headers An array of response headers
@@ -523,6 +535,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
 
     /**
      * Sends a file.
+     *
+     * @deprecated Adding routes and controllers will be moved to spryker/routing module.
      *
      * @param \SplFileInfo|string $file The file to stream
      * @param int $status The response status code
@@ -538,6 +552,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
 
     /**
      * Mounts controllers under the given route prefix.
+     *
+     * @deprecated Adding routes and controllers will be moved to spryker/routing module.
      *
      * @param string $prefix The route prefix
      * @param \Silex\ControllerCollection|\Silex\ControllerProviderInterface $controllers A ControllerCollection or a ControllerProviderInterface instance
