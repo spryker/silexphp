@@ -38,17 +38,13 @@ class RoutingServiceProvider implements ServiceProviderInterface
     {
         $app['route_class'] = 'Silex\\Route';
 
-        $app['route_factory'] = $app->factory(function ($app) {
+        $app['route_factory'] = function ($app) {
             return new $app['route_class']();
-        });
+        };
 
-        $app['routes_factory'] = $app->factory(function (ContainerInterface $container) {
-            if ($container->has('route_collection')) {
-                return $container->get('route_collection');
-            }
-
+        $app['routes_factory'] = function () {
             return new RouteCollection();
-        });
+        };
 
         $app['routes'] = $app->share(function ($app) {
             return $app['routes_factory'];
@@ -78,7 +74,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
         $controllersFactory = function () use ($app, &$controllersFactory) {
             return new ControllerCollection($app['route_factory'], $app['routes_factory'], $controllersFactory);
         };
-        $app['controllers_factory'] = $app->factory($controllersFactory);
+        $app['controllers_factory'] = $controllersFactory;
 
         $app['routing.listener'] = $app->share(function ($app) {
             $urlMatcher = new LazyRequestMatcher(function () use ($app) {
@@ -97,6 +93,6 @@ class RoutingServiceProvider implements ServiceProviderInterface
     public function boot(Application $app)
     {
         $dispatcher = $app['dispatcher'];
-        $dispatcher->addSubscriber($app->get('routing.listener'));
+        $dispatcher->addSubscriber($app['routing.listener']);
     }
 }
