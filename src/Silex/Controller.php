@@ -44,12 +44,12 @@ class Controller
 
     /**
      * @param Route $route
-     * @param RouteCollection $routeCollection
+     * @param RouteCollection|null $routeCollection
      */
-    public function __construct(Route $route, RouteCollection $routeCollection)
+    public function __construct(Route $route, ?RouteCollection $routeCollection = null)
     {
         $this->route = $route;
-        $this->routeCollection = $routeCollection;
+        $this->routeCollection = $routeCollection ?: new RouteCollection();
     }
 
     /**

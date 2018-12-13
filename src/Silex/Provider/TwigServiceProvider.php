@@ -13,7 +13,6 @@ namespace Silex\Provider;
 
 use Silex\Application;
 use Silex\ServiceProviderInterface;
-use Spryker\Service\Container\ContainerInterface;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
@@ -38,7 +37,7 @@ class TwigServiceProvider implements ServiceProviderInterface
         $app['twig.path'] = array();
         $app['twig.templates'] = array();
 
-        $app['twig'] = $app->share(function (ContainerInterface $app) {
+        $app['twig'] = $app->share(function (Application $app) {
 
             $twigOptions = (array)$app->get('twig.options');
             $globalOptions = [

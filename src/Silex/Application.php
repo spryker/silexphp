@@ -11,6 +11,7 @@
 
 namespace Silex;
 
+use LogicException;
 use Pimple;
 use RuntimeException;
 use Silex\EventListener\ConverterListener;

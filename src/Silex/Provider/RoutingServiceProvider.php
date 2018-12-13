@@ -16,7 +16,6 @@ use Silex\ControllerCollection;
 use Silex\Provider\Routing\LazyRequestMatcher;
 use Silex\RedirectableUrlMatcher;
 use Silex\ServiceProviderInterface;
-use Spryker\Service\Container\ContainerInterface;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\RequestContext;
