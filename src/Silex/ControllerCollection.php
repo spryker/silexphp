@@ -218,10 +218,9 @@ class ControllerCollection
             if ($controller instanceof Controller) {
                 $controller->getRoute()->setPath($prefix.$controller->getRoute()->getPath());
                 if (!$name = $controller->getRouteName()) {
-                    $name = $base = $controller->generateRouteName('');
-                    $i = 0;
+                    $name = $controller->generateRouteName('');
                     while ($routes->get($name)) {
-                        $name = $base.'_'.++$i;
+                        $name .= '_';
                     }
                     $controller->bind($name);
                 }

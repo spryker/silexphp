@@ -599,7 +599,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
      */
     protected function getControllerCollection(Application $app): ControllerCollection
     {
-        return $app->get('controllers');
+        return $app['controllers'];
     }
 
     public function addFakeRoute($method, $pattern, $name)

@@ -56,7 +56,7 @@ class SwiftmailerServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         $app->get('/', function () use ($app) {
             $app['mailer']->send(\Swift_Message::newInstance());
-            return 'ok';
+            return true;
         });
 
         $this->assertCount(0, $app['swiftmailer.spool']->getMessages());
@@ -81,7 +81,7 @@ class SwiftmailerServiceProviderTest extends \PHPUnit_Framework_TestCase
             return new SpoolStub();
         });
 
-        $app->get('/', function () use ($app) { return 'ok'; });
+        $app->get('/', function () use ($app) { return true; });
 
         $request = Request::create('/');
         $response = $app->handle($request);

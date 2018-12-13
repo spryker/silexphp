@@ -20,6 +20,8 @@ use Symfony\Component\HttpKernel\Client;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * @deprecated Please use spryker/log instead
+ *
  * SecurityServiceProvider.
  *
  * @author Fabien Potencier <fabien@symfony.com>
