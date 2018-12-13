@@ -317,6 +317,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
         $app->get('/foo', function () use (&$middlewareTarget) {
             $middlewareTarget[] = 'route_triggered';
+            return true;
         })
         ->before($middleware);
 
@@ -340,6 +341,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
         $app->get('/foo', function () use (&$middlewareTarget) {
             $middlewareTarget[] = 'route_triggered';
+            return true;
         })
         ->after($middleware);
 

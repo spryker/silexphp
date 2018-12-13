@@ -37,6 +37,7 @@ class MiddlewareTest extends \PHPUnit_Framework_TestCase
         $app->match('/foo', function () use (&$i, $test) {
             $test->assertEquals(1, $i);
             ++$i;
+            return true;
         });
 
         $app->after(function () use (&$i, $test) {
@@ -92,6 +93,7 @@ class MiddlewareTest extends \PHPUnit_Framework_TestCase
         $app->match('/foo', function () use (&$i, $test) {
             $test->assertEquals(2, $i);
             ++$i;
+            return true;
         });
 
         $app->after(function () use (&$i, $test) {

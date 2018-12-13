@@ -48,6 +48,7 @@ class LazyDispatcherTest extends \PHPUnit_Framework_TestCase
             $app->finish(function () use (&$fired) {
                 $fired = true;
             });
+            return true;
         });
 
         $request = Request::create('/');

@@ -21,4 +21,7 @@
             <directory>./src</directory>
         </whitelist>
     </filter>
+    <php>
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak" />
+    </php>
 </phpunit>

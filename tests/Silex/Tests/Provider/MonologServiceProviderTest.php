@@ -64,6 +64,7 @@ class MonologServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         $app->get('/log', function () use ($app) {
             $app['monolog']->addDebug('logging a message');
+            return true;
         });
 
         $this->assertFalse($app['monolog.handler']->hasDebugRecords());

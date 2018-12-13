@@ -29,10 +29,10 @@ class UrlGeneratorServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         $app->register(new UrlGeneratorServiceProvider());
 
-        $app->get('/hello/{name}', function ($name) {})
+        $app->get('/hello/{name}', function ($name) { return true; })
             ->bind('hello');
 
-        $app->get('/', function () {});
+        $app->get('/', function () { return true; });
 
         $request = Request::create('/');
         $app->handle($request);
@@ -46,7 +46,7 @@ class UrlGeneratorServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         $app->register(new UrlGeneratorServiceProvider());
 
-        $app->get('/hello/{name}', function ($name) {})
+        $app->get('/hello/{name}', function ($name) { return true; })
             ->bind('hello');
 
         $app->get('/', function () use ($app) {
