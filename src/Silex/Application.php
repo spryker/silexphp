@@ -70,6 +70,10 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
 
         $this['logger'] = null;
 
+        $this['exception_handler'] = $this->share(function () use ($app) {
+            return new ExceptionHandler($app['debug']);
+        });
+
         $this->register(new RoutingServiceProvider());
 
         $this['dispatcher_class'] = 'Symfony\\Component\\EventDispatcher\\EventDispatcher';
@@ -78,6 +82,10 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
              * @var EventDispatcherInterface
              */
             $dispatcher = new $app['dispatcher_class']();
+
+            if (isset($app['exception_handler'])) {
+                $dispatcher->addSubscriber($app['exception_handler']);
+            }
 
             $dispatcher->addSubscriber(new ResponseListener($app['charset']));
             $dispatcher->addSubscriber(new MiddlewareListener($app));
