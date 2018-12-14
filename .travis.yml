@@ -12,7 +12,7 @@ before_install:
 before_script:
     - composer install
 
-script: phpunit
+script: vendor/bin/phpunit
 
 matrix:
     include:
