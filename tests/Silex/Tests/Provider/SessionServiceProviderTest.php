@@ -26,6 +26,7 @@ class SessionServiceProviderTest extends WebTestCase
 {
     public function testRegister()
     {
+        $this->markTestSkipped();
         /*
          * Smoke test
          */
