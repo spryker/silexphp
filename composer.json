@@ -1,5 +1,5 @@
 {
-    "name": "silex/silex",
+    "name": "spryker/silexphp",
     "description": "The PHP micro-framework based on the Symfony Components",
     "keywords": ["microframework"],
     "homepage": "http://silex.sensiolabs.org",
@@ -15,8 +15,8 @@
         }
     ],
     "require": {
-        "php": ">=5.3.9",
-        "pimple/pimple": "~1.0",
+        "php": ">=7.1",
+        "pimple/pimple": "^1.0",
         "symfony/event-dispatcher": "^3.0.0 || ^4.0.0",
         "symfony/http-foundation": "^3.0.0 || ^4.0.0",
         "symfony/http-kernel": "^3.0.0 || ^4.0.0",
