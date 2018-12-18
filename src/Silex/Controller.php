@@ -33,33 +33,68 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class Controller
 {
+    /**
+     * @var \Silex\Route
+     */
     private $route;
+
+    /**
+     * @var string
+     */
     private $routeName;
+
+    /**
+     * @var bool
+     */
     private $isFrozen = false;
 
     /**
-     * @var RouteCollection
+     * @var \Symfony\Component\Routing\RouteCollection
      */
     private $routeCollection;
 
     /**
-     * @param Route $route
-     * @param RouteCollection|null $routeCollection
+     * @param \Silex\Route $route
+     * @param \Symfony\Component\Routing\RouteCollection|null $routeCollection
      */
     public function __construct(Route $route, ?RouteCollection $routeCollection = null)
     {
+        $this->setRoute($route);
+        $this->setRouteCollection($routeCollection);
+    }
+
+    /**
+     * @param \Silex\Route $route
+     */
+    public function setRoute(Route $route)
+    {
         $this->route = $route;
-        $this->routeCollection = $routeCollection ?: new RouteCollection();
     }
 
     /**
      * Gets the controller's route.
      *
-     * @return Route
+     * @return \Silex\Route
      */
     public function getRoute()
     {
         return $this->route;
+    }
+
+    /**
+     * @param \Symfony\Component\Routing\RouteCollection $routeCollection
+     */
+    public function setRouteCollection(?RouteCollection $routeCollection)
+    {
+        $this->routeCollection = $routeCollection ?: new RouteCollection();
+    }
+
+    /**
+     * @return \Symfony\Component\Routing\RouteCollection
+     */
+    public function getRouteCollection(): RouteCollection
+    {
+        return $this->routeCollection;
     }
 
     /**
@@ -87,7 +122,7 @@ class Controller
 
         $this->routeName = $routeName;
 
-        $this->routeCollection->add($routeName, $this->getRoute());
+        $this->getRouteCollection()->add($routeName, $this->getRoute());
 
         return $this;
     }
