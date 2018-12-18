@@ -6,9 +6,6 @@ cache:
     directories:
       - $HOME/.composer/cache/files
 
-before_install:
-    - phpenv config-rm xdebug.ini
-
 before_script:
     - composer install
 
