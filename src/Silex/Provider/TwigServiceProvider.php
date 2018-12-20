@@ -19,7 +19,7 @@ use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\SecurityExtension;
 use Symfony\Bridge\Twig\Extension\HttpKernelExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-use Symfony\Bridge\Twig\Form\TwigRenderer;
+use Symfony\Component\Form\FormRenderer;
 
 /**
  * @deprecated Please add `Spryker\Shared\Twig\Service\TwigServiceProvider` to your `ApplicationDependencyProvider::getServices()` to replace this one.
@@ -80,7 +80,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                     });
 
                     $app['twig.form.renderer'] = $app->share(function ($app) {
-                        return new TwigRenderer($app['twig.form.engine'], $app['form.csrf_provider']);
+                        return new FormRenderer($app['twig.form.engine'], $app['form.csrf_provider']);
                     });
 
                     $twig->addExtension(new FormExtension($app['twig.form.renderer']));
