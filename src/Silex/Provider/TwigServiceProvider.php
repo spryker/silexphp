@@ -44,7 +44,7 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         $app['twig'] = $app->share(function (Application $app) {
 
-            $twigOptions = (array)$app->get('twig.options');
+            $twigOptions = (array)$app['twig.options'];
             $globalOptions = [
                 'charset' => $app['charset'],
                 'debug' => $app['debug'],
