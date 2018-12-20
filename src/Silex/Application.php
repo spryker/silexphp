@@ -87,12 +87,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
             if (isset($app['exception_handler'])) {
                 $dispatcher->addSubscriber($app['exception_handler']);
             }
-
-            $urlMatcher = new LazyUrlMatcher(function () use ($app) {
-                return $app['url_matcher'];
-            });
-
-            $dispatcher->addSubscriber(new LocaleListener($app, $urlMatcher, $app['request_stack']));
+            
             $dispatcher->addSubscriber(new ResponseListener($app['charset']));
             $dispatcher->addSubscriber(new MiddlewareListener($app));
             $dispatcher->addSubscriber(new ConverterListener($app['routes'], $app['callback_resolver']));
