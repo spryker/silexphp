@@ -1,56 +1,24 @@
-Silex, a simple Web Framework
-=============================
+# Silex Module
 
-**WARNING** Silex 1.x is not maintained anymore. Please, upgrade to Silex 2.x.
+The micro framework Silex will no longer be maintained. With this release we introduce a copy of Silex to be able to refactor out Silex and replace it with a Spryker solution. This release will not change any behavior.
 
-Silex is a PHP micro-framework to develop websites based on `Symfony
-components`_::
 
-    <?php
+## Installation
 
-    require_once __DIR__.'/../vendor/autoload.php';
+```
+composer update spryker/silexphp
+```
 
-    $app = new Silex\Application();
+As `spryker/silexphp` instead of `silex/silexphp` is now a requirement in `spryker/silex` you do not need to install this manually, please consider to update `spryker/silex`. 
 
-    $app->get('/hello/{name}', function ($name) use ($app) {
-      return 'Hello '.$app->escape($name);
-    });
 
-    $app->run();
+## Documentation
 
-Silex works with PHP 5.3.9 or later.
+[Module Documentation](https://academy.spryker.com/developing_with_spryker/module_guide/modules.html)
 
-Installation
-------------
 
-The recommended way to install Silex is through `Composer`_:
+**WARNING** Silex 1.x is not maintained anymore. This is a copy of `silex/silexphp` we use to refactor out Silex from Spryker.
 
-.. code-block:: bash
-
-    composer require silex/silex "~1.3"
-
-Alternatively, you can download the `silex.zip`_ file and extract it.
-
-More Information
-----------------
-
-Read the `documentation`_ for more information and `changelog
-<doc/changelog.rst>`_ for upgrading information.
-
-Tests
------
-
-To run the test suite, you need `Composer`_ and `PHPUnit`_:
-
-.. code-block:: bash
-
-    $ composer install
-    $ phpunit
-
-Community
----------
-
-Check out #silex-php on irc.freenode.net.
 
 License
 -------
