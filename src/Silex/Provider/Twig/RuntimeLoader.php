@@ -20,14 +20,26 @@ use Pimple;
  */
 class RuntimeLoader implements \Twig_RuntimeLoaderInterface
 {
+    /**
+     * @var \Pimple
+     */
     private $container;
+
+    /**
+     * @var array
+     */
     private $mapping;
 
+    /**
+     * @param \Pimple $container
+     * @param array $mapping
+     */
     public function __construct(Pimple $container, array $mapping)
     {
         $this->container = $container;
         $this->mapping = $mapping;
     }
+
     /**
      * {@inheritdoc}
      */
