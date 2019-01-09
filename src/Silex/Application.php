@@ -15,6 +15,7 @@ use LogicException;
 use Pimple;
 use RuntimeException;
 use Silex\EventListener\ConverterListener;
+use Silex\EventListener\LocaleListener;
 use Silex\EventListener\MiddlewareListener;
 use Silex\EventListener\StringToResponseListener;
 use Silex\Provider\RoutingServiceProvider;

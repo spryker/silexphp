@@ -14,6 +14,7 @@ namespace Silex\Provider;
 use Silex\Application;
 use Silex\ControllerCollection;
 use Silex\EventListener\LocaleListener;
+use Silex\LazyUrlMatcher;
 use Silex\Provider\Routing\LazyRequestMatcher;
 use Silex\RedirectableUrlMatcher;
 use Silex\ServiceProviderInterface;
@@ -76,9 +77,13 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
         $app['controllers_factory'] = $controllersFactory;
 
+        $app['url_matcher'] = function () use ($app) {
+            return new RedirectableUrlMatcher($app['routes'], $app['request_context']);
+        };
+
         $app['routing.listener'] = $app->share(function ($app) {
             $urlMatcher = new LazyRequestMatcher(function () use ($app) {
-                return $app['request_matcher'];
+                return $app['url_matcher'];
             });
 
             return new RouterListener($urlMatcher, $app['request_stack'], $app['request_context'], $app['logger']);
@@ -94,6 +99,6 @@ class RoutingServiceProvider implements ServiceProviderInterface
     {
         $dispatcher = $app['dispatcher'];
         $dispatcher->addSubscriber($app['routing.listener']);
-        $dispatcher->addSubscriber(new LocaleListener($app, $app['request_matcher'], $app['request_stack']));
+        $dispatcher->addSubscriber(new LocaleListener($app, $app['url_matcher'], $app['request_stack']));
     }
 }
