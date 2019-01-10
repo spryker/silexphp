@@ -17,7 +17,6 @@ use Silex\EventListener\ConverterListener;
 use Silex\EventListener\MiddlewareListener;
 use Silex\EventListener\StringToResponseListener;
 use Silex\Provider\RoutingServiceProvider;
-use Spryker\Service\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +31,7 @@ use Symfony\Component\Routing\RequestContext;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Application extends Pimple implements HttpKernelInterface, TerminableInterface, ContainerInterface
+class Application extends Pimple implements HttpKernelInterface, TerminableInterface
 {
     public const VERSION = '1.3.6';
 
@@ -134,7 +133,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     }
 
     /**
-     * @param \Silex\ServiceProviderInterface
+     * @param \Silex\ServiceProviderInterface $provider
      * @param array $values An array of values that customizes the provider
      *
      * @return $this
