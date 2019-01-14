@@ -26,6 +26,7 @@ class TwigServiceProviderTest extends \PHPUnit_Framework_TestCase
     public function testRegisterAndRender()
     {
         $app = new Application();
+        $this->setMockFormFactoryForApplication($app);
 
         $app->register(new TwigServiceProvider(), array(
             'twig.templates' => array('hello' => 'Hello {{ name }}!'),
@@ -47,6 +48,7 @@ class TwigServiceProviderTest extends \PHPUnit_Framework_TestCase
         }
 
         $app = new Application();
+        $this->setMockFormFactoryForApplication($app);
 
         $app->register(new HttpFragmentServiceProvider());
         $app->register(new TwigServiceProvider(), array(
@@ -81,5 +83,23 @@ class TwigServiceProviderTest extends \PHPUnit_Framework_TestCase
             return $loader;
         });
         $this->assertEquals('foo', $app['twig.loader']->getSourceContext('foo')->getCode());
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getMockFormFactory()
+    {
+        return $this->getMockBuilder('Symfony\Component\Form\FormFactoryInterface')->getMock();
+    }
+
+    /**
+     * @param \Silex\Application $app
+     */
+    protected function setMockFormFactoryForApplication(Application $app): void
+    {
+        $app['form.factory'] = function () {
+            return $this->getMockFormFactory();
+        };
     }
 }
