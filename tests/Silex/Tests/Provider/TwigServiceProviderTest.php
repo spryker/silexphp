@@ -86,7 +86,7 @@ class TwigServiceProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getMockFormFactory()
     {
@@ -95,6 +95,8 @@ class TwigServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param \Silex\Application $app
+     *
+     * @return void
      */
     protected function setMockFormFactoryForApplication(Application $app): void
     {
