@@ -11,9 +11,11 @@
 
 namespace Silex\Tests\Provider;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\HttpFragmentServiceProvider;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -26,7 +28,7 @@ class TwigServiceProviderTest extends \PHPUnit_Framework_TestCase
     public function testRegisterAndRender()
     {
         $app = new Application();
-        $this->setMockFormFactoryForApplication($app);
+        $app = $this->setMockFormFactoryForApplication($app);
 
         $app->register(new TwigServiceProvider(), array(
             'twig.templates' => array('hello' => 'Hello {{ name }}!'),
@@ -48,7 +50,7 @@ class TwigServiceProviderTest extends \PHPUnit_Framework_TestCase
         }
 
         $app = new Application();
-        $this->setMockFormFactoryForApplication($app);
+        $app = $this->setMockFormFactoryForApplication($app);
 
         $app->register(new HttpFragmentServiceProvider());
         $app->register(new TwigServiceProvider(), array(
@@ -86,22 +88,14 @@ class TwigServiceProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject
-     */
-    protected function getMockFormFactory()
-    {
-        return $this->getMockBuilder('Symfony\Component\Form\FormFactoryInterface')->getMock();
-    }
-
-    /**
      * @param \Silex\Application $app
      *
-     * @return void
+     * @return \Silex\Application
      */
-    protected function setMockFormFactoryForApplication(Application $app): void
+    protected function setMockFormFactoryForApplication(Application $app): Application
     {
-        $app['form.factory'] = function () {
-            return $this->getMockFormFactory();
-        };
+        $app['form.factory'] = true;
+
+        return $app;
     }
 }
