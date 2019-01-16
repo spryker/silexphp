@@ -47,7 +47,7 @@ class HttpCacheServiceProviderTest extends \PHPUnit_Framework_TestCase
             $finished = true;
         });
 
-        $app->get('/', function () use ($app) {
+        $app['controllers']->get('/', function () use ($app) {
             return new UnsendableResponse('will do something after finish');
         });
 

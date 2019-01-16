@@ -43,7 +43,7 @@ class MonologServiceProviderTest extends \PHPUnit_Framework_TestCase
         $this->markTestSkipped();
         $app = $this->getApplication();
 
-        $app->get('/foo', function () use ($app) {
+        $app['controllers']->get('/foo', function () use ($app) {
             return 'foo';
         });
 
@@ -63,7 +63,7 @@ class MonologServiceProviderTest extends \PHPUnit_Framework_TestCase
     {
         $app = $this->getApplication();
 
-        $app->get('/log', function () use ($app) {
+        $app['controllers']->get('/log', function () use ($app) {
             $app['monolog']->addDebug('logging a message');
             return true;
         });
@@ -99,7 +99,7 @@ class MonologServiceProviderTest extends \PHPUnit_Framework_TestCase
         /*
          * Simulate unhandled exception, logged to critical
          */
-        $app->get('/error', function () {
+        $app['controllers']->get('/error', function () {
             throw new \RuntimeException('very bad error');
         });
 
@@ -116,7 +116,7 @@ class MonologServiceProviderTest extends \PHPUnit_Framework_TestCase
     {
         $app = $this->getApplication();
 
-        $app->get('/foo', function () use ($app) {
+        $app['controllers']->get('/foo', function () use ($app) {
             return new RedirectResponse('/bar', 302);
         });
 
@@ -143,7 +143,7 @@ class MonologServiceProviderTest extends \PHPUnit_Framework_TestCase
             ),
         ));
 
-        $app->get('/admin', function () {
+        $app['controllers']->get('/admin', function () {
             return 'SECURE!';
         });
 

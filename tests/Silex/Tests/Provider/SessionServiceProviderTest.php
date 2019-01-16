@@ -55,13 +55,13 @@ class SessionServiceProviderTest extends WebTestCase
             'session.test' => true,
         ));
 
-        $app->get('/login', function () use ($app) {
+        $app['controllers']->get('/login', function () use ($app) {
             $app['session']->set('logged_in', true);
 
             return 'Logged in successfully.';
         });
 
-        $app->get('/account', function () use ($app) {
+        $app['controllers']->get('/account', function () use ($app) {
             if (!$app['session']->get('logged_in')) {
                 return 'You are not logged in.';
             }
@@ -69,7 +69,7 @@ class SessionServiceProviderTest extends WebTestCase
             return 'This is your account.';
         });
 
-        $app->get('/logout', function () use ($app) {
+        $app['controllers']->get('/logout', function () use ($app) {
             $app['session']->invalidate();
 
             return 'Logged out successfully.';
@@ -86,11 +86,11 @@ class SessionServiceProviderTest extends WebTestCase
             'session.test' => true,
         ));
 
-        $app->get('/', function () {
+        $app['controllers']->get('/', function () {
             return 'A welcome page.';
         });
 
-        $app->get('/robots.txt', function () {
+        $app['controllers']->get('/robots.txt', function () {
             return 'Informations for robots.';
         });
 

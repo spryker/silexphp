@@ -36,11 +36,11 @@ class HttpFragmentServiceProviderTest extends \PHPUnit_Framework_TestCase
             ),
         ));
 
-        $app->get('/hello', function () use ($app) {
+        $app['controllers']->get('/hello', function () use ($app) {
             return $app['twig']->render('hello');
         });
 
-        $app->get('/foo', function () use ($app) {
+        $app['controllers']->get('/foo', function () use ($app) {
             return $app['twig']->render('foo');
         });
 

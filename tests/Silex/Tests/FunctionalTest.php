@@ -28,12 +28,12 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
 
-        $app->get('/', function () {
+        $app['controllers']->get('/', function () {
             return 'hello';
         })
         ->bind('homepage');
 
-        $app->get('/foo', function () {
+        $app['controllers']->get('/foo', function () {
             return 'foo';
         })
         ->bind('foo_abc');
