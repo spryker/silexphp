@@ -170,7 +170,7 @@ class MiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $app->before(function () { return new Response('app before'); });
 
-        $app->get('/', function () {
+        $app['controllers']->get('/', function () {
             return new Response('test');
         })->before(function () {
             return new Response('middleware before');

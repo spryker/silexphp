@@ -28,7 +28,7 @@ class SecurityTraitTest extends \PHPUnit_Framework_TestCase
     {
         $app = $this->createApplication();
 
-        $app->get('/', function () { return 'foo'; })
+        $app['controllers']->get('/', function () { return 'foo'; })
             ->secure('ROLE_ADMIN')
         ;
 
@@ -41,7 +41,7 @@ class SecurityTraitTest extends \PHPUnit_Framework_TestCase
     {
         $app = $this->createApplication();
 
-        $app->get('/', function () { return 'foo'; })
+        $app['controllers']->get('/', function () { return 'foo'; })
             ->secure('ROLE_ADMIN')
         ;
 
@@ -56,7 +56,7 @@ class SecurityTraitTest extends \PHPUnit_Framework_TestCase
     {
         $app = $this->createApplication();
 
-        $app->get('/', function () { return 'foo'; })
+        $app['controllers']->get('/', function () { return 'foo'; })
             ->secure('ROLE_SUPER_ADMIN')
         ;
 

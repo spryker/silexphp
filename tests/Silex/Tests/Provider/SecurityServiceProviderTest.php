@@ -42,7 +42,7 @@ class SecurityServiceProviderTest extends WebTestCase
                 ),
             ),
         ));
-        $app->get('/', function () {});
+        $app['controllers']->get('/', function () {});
         $app->handle(Request::create('/'));
     }
 
@@ -219,13 +219,13 @@ class SecurityServiceProviderTest extends WebTestCase
             ),
         ));
 
-        $app->get('/login', function (Request $request) use ($app) {
+        $app['controllers']->get('/login', function (Request $request) use ($app) {
             $app['session']->start();
 
             return $app['security.last_error']($request);
         });
 
-        $app->get('/', function () use ($app) {
+        $app['controllers']->get('/', function () use ($app) {
             $user = $app['security.token_storage']->getToken()->getUser();
 
             $content = is_object($user) ? $user->getUsername() : 'ANONYMOUS';
@@ -241,7 +241,7 @@ class SecurityServiceProviderTest extends WebTestCase
             return $content;
         });
 
-        $app->get('/admin', function () use ($app) {
+        $app['controllers']->get('/admin', function () use ($app) {
             return 'admin';
         });
 
@@ -270,7 +270,7 @@ class SecurityServiceProviderTest extends WebTestCase
             ),
         ));
 
-        $app->get('/', function () use ($app) {
+        $app['controllers']->get('/', function () use ($app) {
             $user = $app['security.token_storage']->getToken()->getUser();
             $content = is_object($user) ? $user->getUsername() : 'ANONYMOUS';
 
@@ -285,7 +285,7 @@ class SecurityServiceProviderTest extends WebTestCase
             return $content;
         });
 
-        $app->get('/admin', function () use ($app) {
+        $app['controllers']->get('/admin', function () use ($app) {
             return 'admin';
         });
 

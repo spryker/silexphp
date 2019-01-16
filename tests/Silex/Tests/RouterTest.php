@@ -118,7 +118,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             return 'bar';
         })->method('GET|POST');
 
-        $app->get('/resource', function () {
+        $app['controllers']->get('/resource', function () {
             return 'get resource';
         });
 
@@ -152,7 +152,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
 
-        $app->get('/foo', function () use ($app) {
+        $app['controllers']->get('/foo', function () use ($app) {
             return new Response($app['request']->getRequestUri());
         });
 
@@ -171,7 +171,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
 
-        $app->get('/foo/', function () use ($app) {
+        $app['controllers']->get('/foo/', function () use ($app) {
             return new Response('ok');
         });
 
@@ -236,7 +236,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
 
-        $app->get('/foo', 'Silex\Tests\MyController::getFoo');
+        $app['controllers']->get('/foo', 'Silex\Tests\MyController::getFoo');
 
         $this->checkRouteResponse($app, '/foo', 'foo');
     }
@@ -245,7 +245,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
 
-        $app->get('/bar', 'Silex\Tests\MyController::getBar');
+        $app['controllers']->get('/bar', 'Silex\Tests\MyController::getBar');
 
         $this->checkRouteResponse($app, '/bar', 'bar');
     }

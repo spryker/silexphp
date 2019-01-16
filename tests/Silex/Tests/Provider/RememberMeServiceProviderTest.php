@@ -82,7 +82,7 @@ class RememberMeServiceProviderTest extends WebTestCase
             ),
         );
 
-        $app->get('/', function () use ($app) {
+        $app['controllers']->get('/', function () use ($app) {
             if ($app['security.authorization_checker']->isGranted('IS_AUTHENTICATED_FULLY')) {
                 return 'AUTHENTICATED_FULLY';
             } elseif ($app['security.authorization_checker']->isGranted('IS_AUTHENTICATED_REMEMBERED')) {

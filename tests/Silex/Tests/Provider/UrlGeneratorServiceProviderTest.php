@@ -29,10 +29,10 @@ class UrlGeneratorServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         $app->register(new UrlGeneratorServiceProvider());
 
-        $app->get('/hello/{name}', function ($name) { return true; })
+        $app['controllers']->get('/hello/{name}', function ($name) { return true; })
             ->bind('hello');
 
-        $app->get('/', function () { return true; });
+        $app['controllers']->get('/', function () { return true; });
 
         $request = Request::create('/');
         $app->handle($request);
@@ -46,10 +46,10 @@ class UrlGeneratorServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         $app->register(new UrlGeneratorServiceProvider());
 
-        $app->get('/hello/{name}', function ($name) { return true; })
+        $app['controllers']->get('/hello/{name}', function ($name) { return true; })
             ->bind('hello');
 
-        $app->get('/', function () use ($app) {
+        $app['controllers']->get('/', function () use ($app) {
             return $app['url_generator']->generate('hello', array('name' => 'john'));
         });
 
@@ -65,10 +65,10 @@ class UrlGeneratorServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         $app->register(new UrlGeneratorServiceProvider());
 
-        $app->get('/hello/{name}', function ($name) {})
+        $app['controllers']->get('/hello/{name}', function ($name) {})
             ->bind('hello');
 
-        $app->get('/', function () use ($app) {
+        $app['controllers']->get('/', function () use ($app) {
             return $app['url_generator']->generate('hello', array('name' => 'john'), UrlGeneratorInterface::ABSOLUTE_URL);
         });
 
@@ -84,11 +84,11 @@ class UrlGeneratorServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         $app->register(new UrlGeneratorServiceProvider());
 
-        $app->get('/insecure', function () {})
+        $app['controllers']->get('/insecure', function () {})
             ->bind('insecure_page')
             ->requireHttp();
 
-        $app->get('/', function () use ($app) {
+        $app['controllers']->get('/', function () use ($app) {
             return $app['url_generator']->generate('insecure_page');
         });
 
@@ -104,11 +104,11 @@ class UrlGeneratorServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         $app->register(new UrlGeneratorServiceProvider());
 
-        $app->get('/secure', function () {})
+        $app['controllers']->get('/secure', function () {})
             ->bind('secure_page')
             ->requireHttps();
 
-        $app->get('/', function () use ($app) {
+        $app['controllers']->get('/', function () use ($app) {
             return $app['url_generator']->generate('secure_page');
         });
 

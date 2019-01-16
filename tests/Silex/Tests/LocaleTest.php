@@ -25,18 +25,18 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
     public function testLocale()
     {
         $app = new Application();
-        $app->get('/', function (Request $request) { return $request->getLocale(); });
+        $app['controllers']->get('/', function (Request $request) { return $request->getLocale(); });
         $response = $app->handle(Request::create('/'));
         $this->assertEquals('en', $response->getContent());
 
         $app = new Application();
         $app['locale'] = 'fr';
-        $app->get('/', function (Request $request) { return $request->getLocale(); });
+        $app['controllers']->get('/', function (Request $request) { return $request->getLocale(); });
         $response = $app->handle(Request::create('/'));
         $this->assertEquals('fr', $response->getContent());
 
         $app = new Application();
-        $app->get('/{_locale}', function (Request $request) { return $request->getLocale(); });
+        $app['controllers']->get('/{_locale}', function (Request $request) { return $request->getLocale(); });
         $response = $app->handle(Request::create('/es'));
         $this->assertEquals('es', $response->getContent());
     }
@@ -44,16 +44,16 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
     public function testLocaleInSubRequests()
     {
         $app = new Application();
-        $app->get('/embed/{_locale}', function (Request $request) { return $request->getLocale(); });
-        $app->get('/{_locale}', function (Request $request) use ($app) {
+        $app['controllers']->get('/embed/{_locale}', function (Request $request) { return $request->getLocale(); });
+        $app['controllers']->get('/{_locale}', function (Request $request) use ($app) {
             return $request->getLocale().$app->handle(Request::create('/embed/es'), HttpKernelInterface::SUB_REQUEST)->getContent().$request->getLocale();
         });
         $response = $app->handle(Request::create('/fr'));
         $this->assertEquals('fresfr', $response->getContent());
 
         $app = new Application();
-        $app->get('/embed', function (Request $request) { return $request->getLocale(); });
-        $app->get('/{_locale}', function (Request $request) use ($app) {
+        $app['controllers']->get('/embed', function (Request $request) { return $request->getLocale(); });
+        $app['controllers']->get('/{_locale}', function (Request $request) use ($app) {
             return $request->getLocale().$app->handle(Request::create('/embed'), HttpKernelInterface::SUB_REQUEST)->getContent().$request->getLocale();
         });
         $response = $app->handle(Request::create('/fr'));
@@ -65,8 +65,8 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
         $app->before(function (Request $request) use ($app) { $request->setLocale('fr'); });
-        $app->get('/embed', function (Request $request) { return $request->getLocale(); });
-        $app->get('/', function (Request $request) use ($app) {
+        $app['controllers']->get('/embed', function (Request $request) { return $request->getLocale(); });
+        $app['controllers']->get('/', function (Request $request) use ($app) {
             return $request->getLocale().$app->handle(Request::create('/embed'), HttpKernelInterface::SUB_REQUEST)->getContent().$request->getLocale();
         });
         $response = $app->handle(Request::create('/'));

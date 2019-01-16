@@ -81,7 +81,7 @@ class ExceptionHandlerTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
         $app['debug'] = false;
 
-        $app->get('/foo', function () { return 'foo'; });
+        $app['controllers']->get('/foo', function () { return 'foo'; });
 
         $request = Request::create('/foo', 'POST');
         $response = $app->handle($request);
@@ -95,7 +95,7 @@ class ExceptionHandlerTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
         $app['debug'] = true;
 
-        $app->get('/foo', function () { return 'foo'; });
+        $app['controllers']->get('/foo', function () { return 'foo'; });
 
         $request = Request::create('/foo', 'POST');
         $response = $app->handle($request);
@@ -134,7 +134,7 @@ class ExceptionHandlerTest extends \PHPUnit_Framework_TestCase
             throw new NotFoundHttpException('foo exception');
         });
 
-        $app->get('/405', function () { return 'foo'; });
+        $app['controllers']->get('/405', function () { return 'foo'; });
 
         $app->error(function ($e, $code) {
             return new Response('foo exception handler');
