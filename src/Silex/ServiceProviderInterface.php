@@ -22,7 +22,7 @@ namespace Silex;
 interface ServiceProviderInterface
 {
     /**
-     * @deprecated Please use `Spryker\Shared\ApplicationExtension\Provider\ServiceInterface::register()` instead.
+     * @deprecated Please use `Spryker\Shared\ApplicationExtension\Dependency\Plugin\ApplicationPluginInterface::provide()` instead.
      *
      * Registers services on the given app.
      *
@@ -32,7 +32,7 @@ interface ServiceProviderInterface
     public function register(Application $app);
 
     /**
-     * @deprecated Please use `Spryker\Shared\ApplicationExtension\Provider\BootableServiceInterface::boot()` instead if
+     * @deprecated Please use `Spryker\Shared\ApplicationExtension\Dependency\Plugin\BootableApplicationPluginInterface::boot()` instead if
      * your service needs to be configured dynamically.
      *
      * Bootstraps the application.
