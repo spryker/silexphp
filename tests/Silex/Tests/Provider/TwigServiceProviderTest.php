@@ -11,9 +11,10 @@
 
 namespace Silex\Tests\Provider;
 
+use PHPUnit_Framework_TestCase;
 use Silex\Application;
-use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\HttpFragmentServiceProvider;
+use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -21,18 +22,18 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  */
-class TwigServiceProviderTest extends \PHPUnit_Framework_TestCase
+class TwigServiceProviderTest extends PHPUnit_Framework_TestCase
 {
     public function testRegisterAndRender()
     {
-        $app = new Application();
+        $app = new Application(['form.factory' => true]);
 
-        $app->register(new TwigServiceProvider(), array(
-            'twig.templates' => array('hello' => 'Hello {{ name }}!'),
-        ));
+        $app->register(new TwigServiceProvider(), [
+            'twig.templates' => ['hello' => 'Hello {{ name }}!'],
+        ]);
 
         $app->get('/hello/{name}', function ($name) use ($app) {
-            return $app['twig']->render('hello', array('name' => $name));
+            return $app['twig']->render('hello', ['name' => $name]);
         });
 
         $request = Request::create('/hello/john');
@@ -46,15 +47,15 @@ class TwigServiceProviderTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped();
         }
 
-        $app = new Application();
+        $app = new Application(['form.factory' => true]);
 
         $app->register(new HttpFragmentServiceProvider());
-        $app->register(new TwigServiceProvider(), array(
-            'twig.templates' => array(
+        $app->register(new TwigServiceProvider(), [
+            'twig.templates' => [
                 'hello' => '{{ render("/foo") }}',
                 'foo' => 'foo',
-            ),
-        ));
+            ],
+        ]);
 
         $app->get('/hello', function () use ($app) {
             return $app['twig']->render('hello');
@@ -72,9 +73,9 @@ class TwigServiceProviderTest extends \PHPUnit_Framework_TestCase
     public function testLoaderPriority()
     {
         $app = new Application();
-        $app->register(new TwigServiceProvider(), array(
-            'twig.templates' => array('foo' => 'foo'),
-        ));
+        $app->register(new TwigServiceProvider(), [
+            'twig.templates' => ['foo' => 'foo'],
+        ]);
         $loader = $this->getMockBuilder('\Twig_LoaderInterface')->getMock();
         $loader->expects($this->never())->method('getSourceContext');
         $app['twig.loader.filesystem'] = $app->share(function ($app) use ($loader) {
