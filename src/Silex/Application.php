@@ -130,7 +130,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
             throw new RuntimeException('Accessed request service outside of request scope. Try moving that call to a before handler or controller.');
         });
 
-        $this['request'] = Request::createFromGlobals();
+        $this['request'] = $this['request_error'];
 
         $this['request.http_port'] = 80;
         $this['request.https_port'] = 443;
