@@ -12,9 +12,6 @@
 namespace Silex;
 
 /**
- * @deprecated This interface will be removed soon, please check deprecation messages at method level for further
- * information.
- *
  * Interface that all Silex service providers must implement.
  *
  * @author Fabien Potencier <fabien@symfony.com>
@@ -22,8 +19,6 @@ namespace Silex;
 interface ServiceProviderInterface
 {
     /**
-     * @deprecated Please use `Spryker\Shared\ApplicationExtension\Provider\ServiceInterface::register()` instead.
-     *
      * Registers services on the given app.
      *
      * This method should only be used to configure services and parameters.
@@ -32,9 +27,6 @@ interface ServiceProviderInterface
     public function register(Application $app);
 
     /**
-     * @deprecated Please use `Spryker\Shared\ApplicationExtension\Provider\BootableServiceInterface::boot()` instead if
-     * your service needs to be configured dynamically.
-     *
      * Bootstraps the application.
      *
      * This method is called after all services are registered

@@ -29,8 +29,6 @@ use Twig_Extension_Debug;
 use Twig_Loader_Filesystem;
 
 /**
- * @deprecated Please add `Spryker\Shared\Twig\Service\TwigServiceProvider` to your `ApplicationDependencyProvider::getServices()` to replace this one.
- *
  * Twig integration for Silex.
  *
  * @author Fabien Potencier <fabien@symfony.com>
