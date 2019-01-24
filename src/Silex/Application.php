@@ -104,6 +104,10 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
         });
 
         $this['kernel'] = $this->share(function () use ($app) {
+            if (isset($app['argument-resolver']) && isset($app['controller-resolver'])) {
+                return new HttpKernel($app['dispatcher'], $app['controller-resolver'], $app['request_stack'], $app['argument-resolver']);
+            }
+
             return new HttpKernel($app['dispatcher'], $app['resolver'], $app['request_stack']);
         });
 
