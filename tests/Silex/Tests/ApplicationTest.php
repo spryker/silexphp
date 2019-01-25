@@ -38,7 +38,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $returnValue = $app->match('/foo', function () {});
         $this->assertInstanceOf('Silex\Controller', $returnValue);
 
-        $returnValue = $app->get('/foo', function () {});
+        $returnValue = $app['controllers']->get('/foo', function () {});
         $this->assertInstanceOf('Silex\Controller', $returnValue);
 
         $returnValue = $app->post('/foo', function () {});
@@ -72,7 +72,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $request = Request::create('/');
 
         $app = new Application();
-        $app->get('/', function (Request $req) use ($request) {
+        $app['controllers']->get('/', function (Request $req) use ($request) {
             return $request === $req ? 'ok' : 'ko';
         });
 
@@ -92,11 +92,11 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
 
-        $app->get('/foo', function () {
+        $app['controllers']->get('/foo', function () {
             return 'foo';
         });
 
-        $app->get('/bar')->run(function () {
+        $app['controllers']->get('/bar')->run(function () {
             return 'bar';
         });
 
@@ -111,14 +111,14 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
 
-        $app->get('/foo/{foo}', function (\ArrayObject $foo) {
+        $app['controllers']->get('/foo/{foo}', function (\ArrayObject $foo) {
             return $foo['foo'];
         })->convert('foo', function ($foo) { return new \ArrayObject(array('foo' => $foo)); });
 
         $response = $app->handle(Request::create('/foo/bar'));
         $this->assertEquals('bar', $response->getContent());
 
-        $app->get('/foo/{foo}/{bar}', function (\ArrayObject $foo) {
+        $app['controllers']->get('/foo/{foo}/{bar}', function (\ArrayObject $foo) {
             return $foo['foo'];
         })->convert('foo', function ($foo, Request $request) { return new \ArrayObject(array('foo' => $foo.$request->attributes->get('bar'))); });
 
@@ -177,7 +177,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
 
-        $app->get('/{name}', 'Silex\Tests\FooController::barAction');
+        $app['controllers']->get('/{name}', 'Silex\Tests\FooController::barAction');
 
         $this->assertEquals('Hello Fabien', $app->handle(Request::create('/Fabien'))->getContent());
     }
@@ -187,7 +187,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
         $app['charset'] = 'ISO-8859-1';
 
-        $app->get('/', function () {
+        $app['controllers']->get('/', function () {
             return 'hello';
         });
 
@@ -232,7 +232,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
             throw new \Exception('This middleware shouldn\'t run!');
         };
 
-        $app->get('/reached', function () use (&$middlewareTarget) {
+        $app['controllers']->get('/reached', function () use (&$middlewareTarget) {
             $middlewareTarget[] = 'route_triggered';
 
             return 'hello';
@@ -242,7 +242,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         ->after($afterMiddleware1)
         ->after($afterMiddleware2);
 
-        $app->get('/never-reached', function () use (&$middlewareTarget) {
+        $app['controllers']->get('/never-reached', function () use (&$middlewareTarget) {
             throw new \Exception('This route shouldn\'t run!');
         })
         ->before($beforeMiddleware3)
@@ -258,7 +258,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
 
-        $app->get('/foo', function () {
+        $app['controllers']->get('/foo', function () {
             throw new \Exception('This route shouldn\'t run!');
         })
         ->before(function () {
@@ -275,7 +275,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
 
-        $app->get('/foo', function () {
+        $app['controllers']->get('/foo', function () {
             return new Response('foo');
         })
         ->after(function () {
@@ -292,7 +292,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
 
-        $app->get('/foo', function () {
+        $app['controllers']->get('/foo', function () {
             throw new \Exception('This route shouldn\'t run!');
         })
         ->before(function () use ($app) {
@@ -315,7 +315,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
             $middlewareTarget[] = 'middleware_triggered';
         };
 
-        $app->get('/foo', function () use (&$middlewareTarget) {
+        $app['controllers']->get('/foo', function () use (&$middlewareTarget) {
             $middlewareTarget[] = 'route_triggered';
             return true;
         })
@@ -339,7 +339,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
             $middlewareTarget[] = 'middleware_triggered';
         };
 
-        $app->get('/foo', function () use (&$middlewareTarget) {
+        $app['controllers']->get('/foo', function () use (&$middlewareTarget) {
             $middlewareTarget[] = 'route_triggered';
             return true;
         })
@@ -364,7 +364,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
             $containerTarget[] = '4_filterFinish';
         });
 
-        $app->get('/foo', function () use (&$containerTarget) {
+        $app['controllers']->get('/foo', function () use (&$containerTarget) {
             $containerTarget[] = '1_routeTriggered';
 
             return new StreamedResponse(function () use (&$containerTarget) {
@@ -392,7 +392,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
             return 'string return';
         };
 
-        $app->get('/', function () {
+        $app['controllers']->get('/', function () {
             return 'hello';
         })
         ->before($middleware);
@@ -411,7 +411,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
             return 'string return';
         };
 
-        $app->get('/', function () {
+        $app['controllers']->get('/', function () {
             return 'hello';
         })
         ->after($middleware);
@@ -419,37 +419,13 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $app->handle(Request::create('/'), HttpKernelInterface::MASTER_REQUEST, false);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testAccessingRequestOutsideOfScopeShouldThrowRuntimeException()
-    {
-        $app = new Application();
-
-        $request = $app['request'];
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testAccessingRequestOutsideOfScopeShouldThrowRuntimeExceptionAfterHandling()
-    {
-        $app = new Application();
-        $app->get('/', function () {
-            return 'hello';
-        });
-        $app->handle(Request::create('/'), HttpKernelInterface::MASTER_REQUEST, false);
-
-        $request = $app['request'];
-    }
-
     public function testSubRequest()
     {
         $app = new Application();
-        $app->get('/sub', function (Request $request) {
+        $app['controllers']->get('/sub', function (Request $request) {
             return new Response('foo');
         });
-        $app->get('/', function (Request $request) use ($app) {
+        $app['controllers']->get('/', function (Request $request) use ($app) {
             return $app->handle(Request::create('/sub'), HttpKernelInterface::SUB_REQUEST);
         });
 
@@ -462,10 +438,10 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $subRequest = Request::create('/sub');
 
         $app = new Application();
-        $app->get('/sub', function (Request $request) {
+        $app['controllers']->get('/sub', function (Request $request) {
             return new Response('foo');
         });
-        $app->get('/', function (Request $request) use ($subRequest, $app) {
+        $app['controllers']->get('/', function (Request $request) use ($subRequest, $app) {
             $response = $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
             // request in app must be the main request here
@@ -500,9 +476,9 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $mounted = new ControllerCollection(new Route());
         $mounted->get('/mounted')->bind('second');
 
-        $app->get('/before')->bind('first');
+        $app['controllers']->get('/before')->bind('first');
         $app->mount('/', $mounted);
-        $app->get('/after')->bind('third');
+        $app['controllers']->get('/after')->bind('third');
         $app->flush();
 
         $this->assertEquals(array('first', 'second', 'third'), array_keys(iterator_to_array($app['routes'])));
@@ -556,7 +532,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         ErrorHandler::register(null, false);
         $app['monolog.logfile'] = 'php://memory';
         $app->register(new MonologServiceProvider());
-        $app->get('/foo/', function () { return 'ok'; });
+        $app['controllers']->get('/foo/', function () { return 'ok'; });
 
         $response = $app->handle(Request::create('/foo'));
         $this->assertEquals(301, $response->getStatusCode());
@@ -577,7 +553,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testViewListenerWithPrimitive()
     {
         $app = new Application();
-        $app->get('/foo', function () { return 123; });
+        $app['controllers']->get('/foo', function () { return 123; });
         $app->view(function ($view, Request $request) {
             return new Response($view);
         });
@@ -590,7 +566,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testViewListenerWithArrayTypeHint()
     {
         $app = new Application();
-        $app->get('/foo', function () { return array('ok'); });
+        $app['controllers']->get('/foo', function () { return array('ok'); });
         $app->view(function (array $view) {
             return new Response($view[0]);
         });
@@ -603,7 +579,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testViewListenerWithObjectTypeHint()
     {
         $app = new Application();
-        $app->get('/foo', function () { return (object) array('name' => 'world'); });
+        $app['controllers']->get('/foo', function () { return (object) array('name' => 'world'); });
         $app->view(function (\stdClass $view) {
             return new Response('Hello '.$view->name);
         });
@@ -619,7 +595,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testViewListenerWithCallableTypeHint()
     {
         $app = new Application();
-        $app->get('/foo', function () { return function () { return 'world'; }; });
+        $app['controllers']->get('/foo', function () { return function () { return 'world'; }; });
         $app->view(function (callable $view) {
             return new Response('Hello '.$view());
         });
@@ -632,7 +608,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testViewListenersCanBeChained()
     {
         $app = new Application();
-        $app->get('/foo', function () { return (object) array('name' => 'world'); });
+        $app['controllers']->get('/foo', function () { return (object) array('name' => 'world'); });
 
         $app->view(function (\stdClass $view) {
             return array('msg' => 'Hello '.$view->name);
@@ -650,7 +626,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testViewListenersAreIgnoredIfNotSuitable()
     {
         $app = new Application();
-        $app->get('/foo', function () { return 'Hello world'; });
+        $app['controllers']->get('/foo', function () { return 'Hello world'; });
 
         $app->view(function (\stdClass $view) {
             throw new \Exception('View listener was called');
@@ -668,7 +644,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testViewListenersResponsesAreNotUsedIfNull()
     {
         $app = new Application();
-        $app->get('/foo', function () { return 'Hello world'; });
+        $app['controllers']->get('/foo', function () { return 'Hello world'; });
 
         $app->view(function ($view) {
             return 'Hello view listener';

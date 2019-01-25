@@ -15,7 +15,6 @@ use LogicException;
 use Pimple;
 use RuntimeException;
 use Silex\EventListener\ConverterListener;
-use Silex\EventListener\LocaleListener;
 use Silex\EventListener\MiddlewareListener;
 use Silex\EventListener\StringToResponseListener;
 use Silex\Provider\RoutingServiceProvider;
@@ -145,7 +144,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     }
 
     /**
-     * @param \Silex\ServiceProviderInterface
+     * @param \Silex\ServiceProviderInterface $provider
      * @param array $values An array of values that customizes the provider
      *
      * @return $this
@@ -197,22 +196,6 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     public function match($pattern, $to = null)
     {
         return $this['controllers']->match($pattern, $to);
-    }
-
-    /**
-     * @internal To get entries form the ContainerInterface, this is not used ATM and the method will be removed from the Application at all.
-     *
-     * @deprecated This method should not be used anymore from the outside.
-     * If you use this method somewhere e.g. in tests, use $app->get('controllers')->get() instead.
-     *
-     * @param string $pattern Matched route pattern
-     * @param mixed $to Callback that returns the response when matched
-     *
-     * @return \Silex\Controller
-     */
-    public function get($pattern, $to = null)
-    {
-        return $this['controllers']->get($pattern, $to);
     }
 
     /**

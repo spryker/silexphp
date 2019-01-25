@@ -32,7 +32,7 @@ class TwigServiceProviderTest extends PHPUnit_Framework_TestCase
             'twig.templates' => ['hello' => 'Hello {{ name }}!'],
         ]);
 
-        $app->get('/hello/{name}', function ($name) use ($app) {
+        $app['controllers']->get('/hello/{name}', function ($name) use ($app) {
             return $app['twig']->render('hello', ['name' => $name]);
         });
 
@@ -57,11 +57,11 @@ class TwigServiceProviderTest extends PHPUnit_Framework_TestCase
             ],
         ]);
 
-        $app->get('/hello', function () use ($app) {
+        $app['controllers']->get('/hello', function () use ($app) {
             return $app['twig']->render('hello');
         });
 
-        $app->get('/foo', function () use ($app) {
+        $app['controllers']->get('/foo', function () use ($app) {
             return $app['twig']->render('foo');
         });
 
