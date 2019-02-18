@@ -13,8 +13,6 @@ namespace Silex\Provider;
 
 use Silex\Application;
 use Silex\ControllerCollection;
-use Silex\EventListener\LocaleListener;
-use Silex\LazyUrlMatcher;
 use Silex\Provider\Routing\LazyRequestMatcher;
 use Silex\RedirectableUrlMatcher;
 use Silex\ServiceProviderInterface;
@@ -99,6 +97,5 @@ class RoutingServiceProvider implements ServiceProviderInterface
     {
         $dispatcher = $app['dispatcher'];
         $dispatcher->addSubscriber($app['routing.listener']);
-        $dispatcher->addSubscriber(new LocaleListener($app, $app['url_matcher'], $app['request_stack']));
     }
 }
