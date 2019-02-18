@@ -99,6 +99,10 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
             return new CallbackResolver($app);
         });
 
+        $this['resolver'] = $this->share(function () use ($app) {
+            return new ControllerResolver($app, $app['logger']);
+        });
+
         $this['kernel'] = $this->share(function () use ($app) {
             return new HttpKernel($app['dispatcher'], $app['resolver'], $app['request_stack']);
         });
