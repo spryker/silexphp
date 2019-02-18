@@ -19,7 +19,7 @@ use Symfony\Component\Routing\RequestContextAwareInterface;
 
 /**
  * @deprecated Will be removed without replacement.
- * 
+ *
  * Initializes the locale based on the current request.
  *
  * @author Fabien Potencier <fabien@symfony.com>
