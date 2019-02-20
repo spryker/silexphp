@@ -136,9 +136,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
         $this['request.https_port'] = 443;
         $this['debug'] = false;
         $this['charset'] = 'UTF-8';
-        $this['locale'] = function() {
-            return 'en';
-        };
+        $this['locale'] = 'en';
 
         foreach ($services as $key => $value) {
             $this[$key] = $value;
