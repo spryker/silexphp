@@ -29,7 +29,10 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class RoutingServiceProvider implements ServiceProviderInterface
 {
-    protected const FLAG_USE_LOCALE_LISTENER = 'FLAG_USE_LOCALE_LISTENER';
+    /**
+     * Added for BC reason only.
+     */
+    protected const BC_FEATURE_FLAG_LOCALE_LISTENER = 'BC_FEATURE_FLAG_LOCALE_LISTENER';
 
     /**
      * @param \Silex\Application $app
@@ -38,7 +41,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
      */
     public function register(Application $app)
     {
-        $app[static::FLAG_USE_LOCALE_LISTENER] = true;
+        $app[static::BC_FEATURE_FLAG_LOCALE_LISTENER] = true;
 
         $app['route_class'] = 'Silex\\Route';
 
@@ -102,7 +105,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
     {
         $dispatcher = $app['dispatcher'];
         $dispatcher->addSubscriber($app['routing.listener']);
-        if ($app[static::FLAG_USE_LOCALE_LISTENER]) {
+        if ($app[static::BC_FEATURE_FLAG_LOCALE_LISTENER]) {
             $dispatcher->addSubscriber(new LocaleListener($app, $app['url_matcher'], $app['request_stack']));
         }
     }
