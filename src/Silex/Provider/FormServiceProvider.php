@@ -25,6 +25,9 @@ use Symfony\Component\Security\Csrf\TokenStorage\NativeSessionTokenStorage;
 use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
 
 /**
+ * @deprecated Use `Spryker\Yves\Form\Plugin\Application\FormApplicationPlugin` instead.
+ * @deprecated Use `Spryker\Zed\Form\Plugin\Application\FormApplicationPlugin` instead.
+ *
  * Symfony Form component Provider.
  *
  * @author Fabien Potencier <fabien@symfony.com>
