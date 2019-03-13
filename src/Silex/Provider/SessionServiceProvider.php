@@ -50,6 +50,8 @@ class SessionServiceProvider implements ServiceProviderInterface
             return new Session($app['session.storage']);
         });
 
+        $app->configure('session', ['isGlobal' => true]);
+
         $app['session.storage.handler'] = $app->share(function ($app) {
             return new NativeFileSessionHandler($app['session.storage.save_path']);
         });
