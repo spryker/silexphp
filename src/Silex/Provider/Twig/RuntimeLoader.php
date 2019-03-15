@@ -18,7 +18,7 @@ use Pimple;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class RuntimeLoader implements \Twig_RuntimeLoaderInterface
+class RuntimeLoader implements \Twig\RuntimeLoader\RuntimeLoaderInterface
 {
     /**
      * @var \Pimple

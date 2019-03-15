@@ -24,9 +24,9 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Extension\HttpKernelExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\FormRenderer;
-use Twig_Environment;
-use Twig_Extension_Debug;
-use Twig_Loader_Filesystem;
+use Twig\Environment;
+use AbstractExtension_Debug;
+use Twig\Loader\FilesystemLoader;
 
 /**
  * Twig integration for Silex.
@@ -53,11 +53,11 @@ class TwigServiceProvider implements ServiceProviderInterface
 
             $twigOptions = array_replace($globalOptions, $twigOptions);
 
-            $twig = new Twig_Environment($app['twig.loader'], $twigOptions);
+            $twig = new Environment($app['twig.loader'], $twigOptions);
             $twig->addGlobal('app', $app);
 
             if ($app['debug']) {
-                $twig->addExtension(new Twig_Extension_Debug());
+                $twig->addExtension(new AbstractExtension_Debug());
             }
 
             if (class_exists('Symfony\Bridge\Twig\Extension\RoutingExtension')) {
@@ -93,7 +93,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                     // add loader for Symfony built-in form templates
                     $reflected = new ReflectionClass('Symfony\Bridge\Twig\Extension\FormExtension');
                     $path = dirname($reflected->getFileName()) . '/../Resources/views/Form';
-                    $app['twig.loader']->addLoader(new Twig_Loader_Filesystem($path));
+                    $app['twig.loader']->addLoader(new FilesystemLoader($path));
                 }
             }
 
@@ -105,15 +105,15 @@ class TwigServiceProvider implements ServiceProviderInterface
         });
 
         $app['twig.loader.filesystem'] = $app->share(function ($app) {
-            return new Twig_Loader_Filesystem($app['twig.path']);
+            return new FilesystemLoader($app['twig.path']);
         });
 
         $app['twig.loader.array'] = $app->share(function ($app) {
-            return new \Twig_Loader_Array($app['twig.templates']);
+            return new \Twig\Loader\ArrayLoader($app['twig.templates']);
         });
 
         $app['twig.loader'] = $app->share(function ($app) {
-            return new \Twig_Loader_Chain(array(
+            return new \Twig\Loader\ChainLoader(array(
                 $app['twig.loader.array'],
                 $app['twig.loader.filesystem'],
             ));

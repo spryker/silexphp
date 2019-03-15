@@ -50,7 +50,7 @@ If the asset location depends on the asset type or path, you will need more
 abstraction; here is one way to do that with a Twig function::
 
     $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
-        $twig->addFunction(new \Twig_SimpleFunction('asset', function ($asset) {
+        $twig->addFunction(new \Twig\TwigFunction('asset', function ($asset) {
             // implement whatever logic you need to determine the asset path
 
             return sprintf('http://assets.examples.com/%s', ltrim($asset, '/'));
