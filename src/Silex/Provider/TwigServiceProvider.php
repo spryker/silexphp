@@ -25,7 +25,7 @@ use Symfony\Bridge\Twig\Extension\HttpKernelExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\FormRenderer;
 use Twig\Environment;
-use AbstractExtension_Debug;
+use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 
 /**
@@ -57,7 +57,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             $twig->addGlobal('app', $app);
 
             if ($app['debug']) {
-                $twig->addExtension(new AbstractExtension_Debug());
+                $twig->addExtension(new DebugExtension());
             }
 
             if (class_exists('Symfony\Bridge\Twig\Extension\RoutingExtension')) {
@@ -76,7 +76,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                 if (isset($app['fragment.handler'])) {
                     $app['fragment.renderer.hinclude']->setTemplating($twig);
 
-                    $twig->addExtension(new HttpKernelExtension($app['fragment.handler']));
+                    $twig->addExtension(new HttpKernelExtension());
                 }
 
                 if (isset($app['form.factory'])) {
