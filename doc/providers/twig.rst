@@ -166,7 +166,7 @@ You can configure the Twig environment before using it by extending the
 
     $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
         $twig->addGlobal('pi', 3.14);
-        $twig->addFilter('levenshtein', new \Twig\TwigFilter_Function('levenshtein'));
+        $twig->addFilter('levenshtein', new \Twig\TwigFunction('levenshtein'));
 
         return $twig;
     }));

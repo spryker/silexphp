@@ -26,6 +26,8 @@ use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\FormRenderer;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
+use Twig\Loader\ArrayLoader;
+use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
 
 /**
@@ -109,11 +111,11 @@ class TwigServiceProvider implements ServiceProviderInterface
         });
 
         $app['twig.loader.array'] = $app->share(function ($app) {
-            return new \Twig\Loader\ArrayLoader($app['twig.templates']);
+            return new ArrayLoader($app['twig.templates']);
         });
 
         $app['twig.loader'] = $app->share(function ($app) {
-            return new \Twig\Loader\ChainLoader(array(
+            return new ChainLoader(array(
                 $app['twig.loader.array'],
                 $app['twig.loader.filesystem'],
             ));
