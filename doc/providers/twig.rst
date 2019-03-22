@@ -23,7 +23,7 @@ Parameters
 Services
 --------
 
-* **twig**: The ``Twig_Environment`` instance. The main way of
+* **twig**: The ``Environment`` instance. The main way of
   interacting with Twig.
 
 * **twig.loader**: The loader for Twig templates which uses the ``twig.path``
@@ -166,7 +166,7 @@ You can configure the Twig environment before using it by extending the
 
     $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
         $twig->addGlobal('pi', 3.14);
-        $twig->addFilter('levenshtein', new \Twig_Filter_Function('levenshtein'));
+        $twig->addFilter('levenshtein', new \Twig\TwigFunction('levenshtein'));
 
         return $twig;
     }));

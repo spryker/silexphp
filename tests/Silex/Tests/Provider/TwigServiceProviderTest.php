@@ -16,6 +16,7 @@ use Silex\Application;
 use Silex\Provider\HttpFragmentServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
+use Twig\Loader\LoaderInterface;
 
 /**
  * TwigProvider test cases.
@@ -76,7 +77,7 @@ class TwigServiceProviderTest extends PHPUnit_Framework_TestCase
         $app->register(new TwigServiceProvider(), [
             'twig.templates' => ['foo' => 'foo'],
         ]);
-        $loader = $this->getMockBuilder('\Twig_LoaderInterface')->getMock();
+        $loader = $this->getMockBuilder(LoaderInterface::class)->getMock();
         $loader->expects($this->never())->method('getSourceContext');
         $app['twig.loader.filesystem'] = $app->share(function ($app) use ($loader) {
             return $loader;
