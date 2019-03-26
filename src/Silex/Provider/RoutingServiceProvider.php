@@ -14,7 +14,6 @@ namespace Silex\Provider;
 use Silex\Application;
 use Silex\ControllerCollection;
 use Silex\EventListener\LocaleListener;
-use Silex\LazyUrlMatcher;
 use Silex\Provider\Routing\LazyRequestMatcher;
 use Silex\RedirectableUrlMatcher;
 use Silex\ServiceProviderInterface;
@@ -31,12 +30,19 @@ use Symfony\Component\Routing\RouteCollection;
 class RoutingServiceProvider implements ServiceProviderInterface
 {
     /**
+     * Added for BC reason only.
+     */
+    protected const BC_FEATURE_FLAG_LOCALE_LISTENER = 'BC_FEATURE_FLAG_LOCALE_LISTENER';
+
+    /**
      * @param \Silex\Application $app
      *
      * @return void
      */
     public function register(Application $app)
     {
+        $app[static::BC_FEATURE_FLAG_LOCALE_LISTENER] = true;
+
         $app['route_class'] = 'Silex\\Route';
 
         $app['route_factory'] = function ($app) {
@@ -99,6 +105,8 @@ class RoutingServiceProvider implements ServiceProviderInterface
     {
         $dispatcher = $app['dispatcher'];
         $dispatcher->addSubscriber($app['routing.listener']);
-        $dispatcher->addSubscriber(new LocaleListener($app, $app['url_matcher'], $app['request_stack']));
+        if ($app[static::BC_FEATURE_FLAG_LOCALE_LISTENER]) {
+            $dispatcher->addSubscriber(new LocaleListener($app, $app['url_matcher'], $app['request_stack']));
+        }
     }
 }
