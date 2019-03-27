@@ -20,6 +20,9 @@ use Symfony\Component\Validator\Mapping\Loader\StaticMethodLoader;
 use Symfony\Component\Validator\Validation;
 
 /**
+ * @deprecated Use `Spryker\Zed\Validator\Communication\Plugin\Application\ValidatorPlugin` instead.
+ * @deprecated Use `Spryker\Yves\Validator\Plugin\Application\ValidatorPlugin` instead.
+ *
  * Symfony Validator component Provider.
  *
  * @author Fabien Potencier <fabien@symfony.com>
