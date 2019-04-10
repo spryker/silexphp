@@ -14,7 +14,7 @@ You do not need to install this manually. Please consider to update `spryker/sil
 
 ## Documentation
 
-[Module Documentation](https://academy.spryker.com/developing_with_spryker/module_guide/modules.html)
+[Spryker Documentation](https://documentation.spryker.com/)
 
 
 **WARNING** Silex 1.x is not maintained anymore. This is a copy of `silex/silexphp` we use to refactor out Silex from Spryker.
