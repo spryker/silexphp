@@ -1,4 +1,4 @@
-# Silex Module
+# Silexphp
 
 The micro framework Silex will no longer be maintained. With this release we introduce a copy of Silex to be able to refactor out Silex and replace it with a Spryker solution. This release will not change any behavior.
 
