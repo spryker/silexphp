@@ -19,6 +19,9 @@ use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 
 /**
+ * @deprecated Use `\Spryker\Zed\Translator\Communication\Plugin\Application\TranslatorApplicationPlugin` instead.
+ * @deprecated Use `\Spryker\Yves\Translator\Plugin\Application\TranslatorApplicationPlugin` instead.
+ *
  * Symfony Translation component Provider.
  *
  * @author Fabien Potencier <fabien@symfony.com>
