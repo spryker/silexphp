@@ -11,14 +11,19 @@
 
 namespace Silex\Provider;
 
+use ReflectionClass;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Silex\Translator;
-use Symfony\Component\Translation\MessageSelector;
+use Symfony\Component\Translation\Formatter\MessageFormatter;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
+use Symfony\Component\Translation\MessageSelector;
 
 /**
+ * @deprecated Use `\Spryker\Zed\Translator\Communication\Plugin\Application\TranslatorApplicationPlugin` instead.
+ * @deprecated Use `\Spryker\Yves\Translator\Plugin\Application\TranslatorApplicationPlugin` instead.
+ *
  * Symfony Translation component Provider.
  *
  * @author Fabien Potencier <fabien@symfony.com>
@@ -32,7 +37,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
 
             // Handle deprecated 'locale_fallback'
             if (isset($app['locale_fallback'])) {
-                $app['locale_fallbacks'] = (array) $app['locale_fallback'];
+                $app['locale_fallbacks'] = (array)$app['locale_fallback'];
             }
 
             $translator->setFallbackLocales($app['locale_fallbacks']);
@@ -41,16 +46,16 @@ class TranslationServiceProvider implements ServiceProviderInterface
             $translator->addLoader('xliff', new XliffFileLoader());
 
             if (isset($app['validator'])) {
-                $r = new \ReflectionClass('Symfony\Component\Validator\Validation');
-                $file = dirname($r->getFilename()).'/Resources/translations/validators.'.$app['locale'].'.xlf';
+                $r = new ReflectionClass('Symfony\Component\Validator\Validation');
+                $file = dirname($r->getFilename()) . '/Resources/translations/validators.' . $app['locale'] . '.xlf';
                 if (file_exists($file)) {
                     $translator->addResource('xliff', $file, $app['locale'], 'validators');
                 }
             }
 
             if (isset($app['form.factory'])) {
-                $r = new \ReflectionClass('Symfony\Component\Form\Form');
-                $file = dirname($r->getFilename()).'/Resources/translations/validators.'.$app['locale'].'.xlf';
+                $r = new ReflectionClass('Symfony\Component\Form\Form');
+                $file = dirname($r->getFilename()) . '/Resources/translations/validators.' . $app['locale'] . '.xlf';
                 if (file_exists($file)) {
                     $translator->addResource('xliff', $file, $app['locale'], 'validators');
                 }
@@ -71,18 +76,25 @@ class TranslationServiceProvider implements ServiceProviderInterface
         });
 
         $app['translator.resources'] = function ($app) {
-            return array();
+            return [];
         };
 
         $app['translator.message_selector'] = $app->share(function () {
+            if (class_exists(MessageFormatter::class)) {
+                return new MessageFormatter();
+            }
+
             return new MessageSelector();
         });
 
-        $app['translator.domains'] = array();
-        $app['locale_fallbacks'] = array('en');
+        $app['translator.domains'] = [];
+        $app['locale_fallbacks'] = ['en'];
         $app['translator.cache_dir'] = null;
     }
 
+    /**
+     * @return void
+     */
     public function boot(Application $app)
     {
     }
