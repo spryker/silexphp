@@ -19,6 +19,9 @@ use Symfony\Component\Security\Http\RememberMe\TokenBasedRememberMeServices;
 use Symfony\Component\Security\Http\RememberMe\ResponseListener;
 
 /**
+ * @deprecated Use `\Spryker\Yves\Security\Plugin\Security\RememberMeSecurityPlugin` instead.
+ * @see \Spryker\Yves\Security\Plugin\Security\RememberMeSecurityPlugin
+ *
  * Remember-me authentication for the SecurityServiceProvider.
  *
  * @author Jérôme Tamarelle <jerome@tamarelle.net>
