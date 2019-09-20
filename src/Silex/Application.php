@@ -18,6 +18,7 @@ use Silex\EventListener\ConverterListener;
 use Silex\EventListener\MiddlewareListener;
 use Silex\EventListener\StringToResponseListener;
 use Silex\Provider\RoutingServiceProvider;
+use Spryker\Service\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -36,6 +37,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * The Silex framework class.
@@ -87,8 +89,19 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
                 $dispatcher->addSubscriber($app['exception_handler']);
             }
 
+            $app['controllers-flushed'] = false;
+
+            // `controllers` is set by the `\Silex\Provider\RoutingServiceProvider` and might not be used anymore.
+            // For projects which make use of the previous router this ensures that `routes` is filled with a
+            // proper RouteCollection which contains all routes.
+            if (isset($app['controllers'])) {
+                $app['routes'] = $app['controllers']->flush();
+                $app['controllers-flushed'] = true;
+            }
+
             $dispatcher->addSubscriber(new ResponseListener($app['charset']));
             $dispatcher->addSubscriber(new MiddlewareListener($app));
+
             $dispatcher->addSubscriber(new ConverterListener($app['routes'], $app['callback_resolver']));
             $dispatcher->addSubscriber(new StringToResponseListener());
 
