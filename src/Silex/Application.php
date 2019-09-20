@@ -89,15 +89,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
                 $dispatcher->addSubscriber($app['exception_handler']);
             }
 
-            $app['controllers-flushed'] = false;
-
-            // `controllers` is set by the `\Silex\Provider\RoutingServiceProvider` and might not be used anymore.
-            // For projects which make use of the previous router this ensures that `routes` is filled with a
-            // proper RouteCollection which contains all routes.
-            if (isset($app['controllers'])) {
-                $app['routes'] = $app['controllers']->flush();
-                $app['controllers-flushed'] = true;
-            }
+            $app['routes'] = $app['controllers']->flush();
 
             $dispatcher->addSubscriber(new ResponseListener($app['charset']));
             $dispatcher->addSubscriber(new MiddlewareListener($app));
