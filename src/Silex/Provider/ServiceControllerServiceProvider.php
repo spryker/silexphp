@@ -15,6 +15,9 @@ use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Silex\ServiceControllerResolver;
 
+/**
+ * @deprecated Use `\Spryker\Zed\Router\Communication\Plugin\Application\RouterApplicationPlugin::SERVICE_CONTROLLER_RESOLVER` instead.
+ */
 class ServiceControllerServiceProvider implements ServiceProviderInterface
 {
     public function register(Application $app)

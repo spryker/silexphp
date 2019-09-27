@@ -23,6 +23,9 @@ use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
+ * @deprecated Use `\Spryker\Zed\Router\Communication\Plugin\Application\RouterApplicationPlugin` instead.
+ * @deprecated Use `\Spryker\Yves\Router\Plugin\Application\RouterApplicationPlugin` instead.
+ *
  * Symfony Routing component Provider.
  *
  * @author Fabien Potencier <fabien@symfony.com>
@@ -32,7 +35,12 @@ class RoutingServiceProvider implements ServiceProviderInterface
     /**
      * Added for BC reason only.
      */
-    protected const BC_FEATURE_FLAG_LOCALE_LISTENER = 'BC_FEATURE_FLAG_LOCALE_LISTENER';
+    public const BC_FEATURE_FLAG_LOCALE_LISTENER = 'BC_FEATURE_FLAG_LOCALE_LISTENER';
+
+    /**
+     * Added for BC reason only.
+     */
+    public const BC_FEATURE_FLAG_ROUTER_LISTENER = 'BC_FEATURE_FLAG_ROUTER_LISTENER';
 
     /**
      * @param \Silex\Application $app
@@ -42,6 +50,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
     public function register(Application $app)
     {
         $app[static::BC_FEATURE_FLAG_LOCALE_LISTENER] = true;
+        $app[static::BC_FEATURE_FLAG_ROUTER_LISTENER] = true;
 
         $app['route_class'] = 'Silex\\Route';
 
@@ -104,7 +113,9 @@ class RoutingServiceProvider implements ServiceProviderInterface
     public function boot(Application $app)
     {
         $dispatcher = $app['dispatcher'];
-        $dispatcher->addSubscriber($app['routing.listener']);
+        if ($app[static::BC_FEATURE_FLAG_ROUTER_LISTENER]) {
+            $dispatcher->addSubscriber($app['routing.listener']);
+        }
         if ($app[static::BC_FEATURE_FLAG_LOCALE_LISTENER]) {
             $dispatcher->addSubscriber(new LocaleListener($app, $app['url_matcher'], $app['request_stack']));
         }

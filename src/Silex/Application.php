@@ -18,6 +18,7 @@ use Silex\EventListener\ConverterListener;
 use Silex\EventListener\MiddlewareListener;
 use Silex\EventListener\StringToResponseListener;
 use Silex\Provider\RoutingServiceProvider;
+use Spryker\Service\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -36,6 +37,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
 
 /**
  * The Silex framework class.
@@ -87,8 +89,11 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
                 $dispatcher->addSubscriber($app['exception_handler']);
             }
 
+            $app['routes'] = $app['controllers']->flush();
+
             $dispatcher->addSubscriber(new ResponseListener($app['charset']));
             $dispatcher->addSubscriber(new MiddlewareListener($app));
+
             $dispatcher->addSubscriber(new ConverterListener($app['routes'], $app['callback_resolver']));
             $dispatcher->addSubscriber(new StringToResponseListener());
 
@@ -104,6 +109,10 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
         });
 
         $this['kernel'] = $this->share(function () use ($app) {
+            if (isset($app['argument-resolver']) && isset($app['controller-resolver'])) {
+                return new HttpKernel($app['dispatcher'], $app['controller-resolver'], $app['request_stack'], $app['argument-resolver']);
+            }
+
             return new HttpKernel($app['dispatcher'], $app['resolver'], $app['request_stack']);
         });
 
