@@ -11,12 +11,16 @@
 
 namespace Silex\Tests;
 
+use Silex\AppArgumentValueResolver;
 use Silex\Application;
 use Silex\ControllerCollection;
 use Silex\ControllerProviderInterface;
+use Silex\ControllerResolver;
 use Silex\Route;
 use Silex\Provider\MonologServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
+use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\HttpFoundation\Response;
@@ -176,6 +180,19 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testControllersAsMethods()
     {
         $app = new Application();
+
+        $app['controller-resolver'] = function () use ($app) {
+            return new ControllerResolver($app);
+        };
+        $app['argument_metadata_factory'] = function () {
+            return new ArgumentMetadataFactory();
+        };
+        $app['argument_value_resolvers'] = function () use ($app) {
+            return array_merge([new AppArgumentValueResolver($app)], ArgumentResolver::getDefaultArgumentValueResolvers());
+        };
+        $app['argument-resolver'] = function ($app) {
+            return new ArgumentResolver($app['argument_metadata_factory'], $app['argument_value_resolvers']);
+        };
 
         $app['controllers']->get('/{name}', 'Silex\Tests\FooController::barAction');
 
