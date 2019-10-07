@@ -16,6 +16,9 @@ use Silex\ServiceProviderInterface;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
+ * @deprecated Use `\Spryker\Zed\Router\Communication\Plugin\Application\RouterApplicationPlugin` for Zed instead.
+ * @deprecated Use `\Spryker\Yves\Router\Plugin\Application\RouterApplicationPlugin` for Yves instead.
+ *
  * Symfony Routing component Provider for URL generation.
  *
  * @author Fabien Potencier <fabien@symfony.com>
