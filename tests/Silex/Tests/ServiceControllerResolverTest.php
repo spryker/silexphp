@@ -75,15 +75,4 @@ class ServiceControllerResolverTest extends \PHPUnit_Framework_Testcase
 
         $this->assertEquals(123, $this->resolver->getController($req));
     }
-
-    public function testShouldDelegateGetArguments()
-    {
-        $req = Request::create('/');
-        $this->mockResolver->expects($this->once())
-            ->method('getArguments')
-            ->with($req)
-            ->will($this->returnValue(123));
-
-        $this->assertEquals(123, $this->resolver->getArguments($req, function () {}));
-    }
 }
