@@ -22,6 +22,8 @@ use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\UriSigner;
 
 /**
+ * @deprecated Use Http module plugins instead.
+ *
  * HttpKernel Fragment integration for Silex.
  *
  * This service provider requires Symfony 2.4+.
