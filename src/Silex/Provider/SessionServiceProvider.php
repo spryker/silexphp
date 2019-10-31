@@ -24,6 +24,14 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 /**
+ * @deprecated Use `Spryker\Glue\Session\Plugin\Application\SessionApplicationPlugin` instead.
+ *
+ * @deprecated Use `Spryker\Yves\Session\Plugin\Application\SessionApplicationPlugin` instead.
+ * @deprecated Use `Spryker\Yves\Session\Plugin\EventDispatcher\SessionEventDispatcherPlugin` instead.
+ *
+ * @deprecated Use `Spryker\Zed\Session\Communication\Plugin\Application\SessionApplicationPlugin` instead.
+ * @deprecated Use `Spryker\Zed\Session\Communication\Plugin\EventDispatcher\SessionEventDispatcherPlugin` instead.
+ *
  * Symfony HttpFoundation component Provider for sessions.
  *
  * @author Fabien Potencier <fabien@symfony.com>
