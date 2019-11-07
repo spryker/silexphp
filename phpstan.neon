@@ -1,6 +1,6 @@
 parameters:
     ignoreErrors:
-        - "#Call to function method_exists\\(\\) with 'Symfony\\\Component…' and '__construct' will always evaluate to false#"
+        - "#Call to function method_exists\\(\\) with '.+Component…' and '__construct' will always evaluate to false#"
         - '#Method Symfony\\Component\\Validator\\ConstraintValidatorFactory::__construct\(\) invoked with 1 parameter, 0 required#'
         - '#Call to an undefined static method Symfony\\Component\\HttpKernel\\Controller\\ControllerResolver::doGetArguments\(\)#'
         - '#Instanceof between Exception and Symfony\\Component\\Debug\\Exception\\FlattenException will always evaluate to false#'
@@ -14,7 +14,7 @@ parameters:
         - '#Call to static method getInstance\(\) on an unknown class Spryker\\Shared\\Kernel\\Store#'
         - '#Call to an undefined method Swift_Transport_EsmtpTransport::(setUsername|setPassword|setAuthMode)\(\)#'
         - '#Instantiated class Symfony\\Component\\Validator\\Mapping\\ClassMetadataFactory not found#'
-        - '#Instantiated clas Symfony\\Component\\Form\\Extension\\Csrf\\CsrfProvider\\SessionCsrfProvider not found#'
+        - '#Instantiated class Symfony\\Component\\Form\\Extension\\Csrf\\CsrfProvider\\SessionCsrfProvider not found#'
         - '#Instantiated class Silex\\Provider\\SecurityContext not found#'
         - '#Access to constant AUTHENTICATION_ERROR on an unknown class Silex\\Provider\\SecurityContextInterface#'
         - '#Method Silex\\Application::register\(\) should return \$this\(Silex\\Application\) but returns Silex\\Application#'
