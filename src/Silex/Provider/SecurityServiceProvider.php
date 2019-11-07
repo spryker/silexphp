@@ -101,12 +101,12 @@ class SecurityServiceProvider implements ServiceProviderInterface
             $app['security.token_storage'] = $app['security.authorization_checker'] = $app->share(function ($app) {
                 return $app['security'];
             });
-        }
 
-        $app['security'] = $app->share(function ($app) {
-            // Deprecated, to be removed in 2.0
-            return new SecurityContext($app['security.authentication_manager'], $app['security.access_manager']);
-        });
+            $app['security'] = $app->share(function ($app) {
+                // Deprecated, to be removed in 2.0
+                return new SecurityContext($app['security.authentication_manager'], $app['security.access_manager']);
+            });
+        }
 
         $app['user'] = function ($app) {
             if (null === $token = $app['security.token_storage']->getToken()) {

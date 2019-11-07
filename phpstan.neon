@@ -1,6 +1,6 @@
 parameters:
     ignoreErrors:
-        - "#Call to function method_exists\(\) with 'Symfony\\Component…' and '__construct' will always evaluate to false#"
+        - "#Call to function method_exists\\(\\) with 'Symfony\\Component…' and '__construct' will always evaluate to false#"
         - '#Method Symfony\\Component\\Validator\\ConstraintValidatorFactory::__construct\(\) invoked with 1 parameter, 0 required#'
         - '#Call to an undefined static method Symfony\\Component\\HttpKernel\\Controller\ControllerResolver::doGetArguments\(\)#'
         - '#Instanceof between Exception and Symfony\\Component\\Debug\\Exception\\FlattenException will always evaluate to false#'
