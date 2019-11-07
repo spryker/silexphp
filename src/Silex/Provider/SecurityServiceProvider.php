@@ -92,19 +92,9 @@ class SecurityServiceProvider implements ServiceProviderInterface
             $app['security.token_storage'] = $app->share(function ($app) {
                 return new TokenStorage();
             });
-
-            $app['security'] = $app->share(function ($app) {
-                // Deprecated, to be removed in 2.0
-                return new SecurityContext($app['security.token_storage'], $app['security.authorization_checker']);
-            });
         } else {
             $app['security.token_storage'] = $app['security.authorization_checker'] = $app->share(function ($app) {
                 return $app['security'];
-            });
-
-            $app['security'] = $app->share(function ($app) {
-                // Deprecated, to be removed in 2.0
-                return new SecurityContext($app['security.authentication_manager'], $app['security.access_manager']);
             });
         }
 
@@ -340,11 +330,11 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return $map;
         });
 
-        $app['security.trust_resolver'] = $app->share(function ($app) {
+        $app['security.trust_resolver'] = $app->share(function () {
             return new AuthenticationTrustResolver('Symfony\Component\Security\Core\Authentication\Token\AnonymousToken', 'Symfony\Component\Security\Core\Authentication\Token\RememberMeToken');
         });
 
-        $app['security.session_strategy'] = $app->share(function ($app) {
+        $app['security.session_strategy'] = $app->share(function () {
             return new SessionAuthenticationStrategy(SessionAuthenticationStrategy::MIGRATE);
         });
 
@@ -353,11 +343,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         });
 
         $app['security.last_error'] = $app->protect(function (Request $request) {
-            if (class_exists('Symfony\Component\Security\Core\Security')) {
-                $error = Security::AUTHENTICATION_ERROR;
-            } else {
-                $error = SecurityContextInterface::AUTHENTICATION_ERROR;
-            }
+            $error = Security::AUTHENTICATION_ERROR;
             if ($request->attributes->has($error)) {
                 return $request->attributes->get($error)->getMessage();
             }

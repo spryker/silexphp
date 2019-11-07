@@ -1,2 +1,17 @@
 parameters:
     ignoreErrors:
+        - "#Call to function method_exists\(\) with 'Symfony\\Component…' and '__construct' will always evaluate to false#"
+        - '#Method Symfony\\Component\\Validator\\ConstraintValidatorFactory::__construct\(\) invoked with 1 parameter, 0 required#'
+        - '#Call to an undefined static method Symfony\\Component\\HttpKernel\\Controller\ControllerResolver::doGetArguments\(\)#'
+        - '#Instanceof between Exception and Symfony\\Component\\Debug\\Exception\\FlattenException will always evaluate to false#'
+        - '#Call to an undefined method Symfony\\Component\\Debug\\ExceptionHandler::createResponse()#'
+        - '#Instantiated class Symfony\\Bridge\\Doctrine\\Logger\\DbalLogger not found#'
+        - '#Instantiated class  Symfony\\Component\\Form\\Extension\\Csrf\\CsrfProvider\\DefaultCsrfProvider not found#'
+        - '#Instantiated class Symfony\\Component\\HttpKernel\\EventListener\\EsiListener not found#'
+        - '#Instantiated class Symfony\\Bridge\\Monolog\\Handler\\DebugHandler not found#'
+        - '#Class Symfony\\Component\\Security\\Http\\Firewall\\AccessListener constructor invoked with 5 parameters, 4 required#'
+        - '#Class Spryker\\Shared\\Kernel\\Store not found#'
+        - '#Call to static method getInstance\(\) on an unknown class Spryker\\Shared\\Kernel\\Store#'
+        - '#Call to an undefined method Swift_Transport_EsmtpTransport::(setUsername|setPassword|setAuthMode)\(\)#'
+        - '#Instantiated class Symfony\\Component\\Validator\Mapping\\ClassMetadataFactory not found#'
+
