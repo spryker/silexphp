@@ -19,7 +19,7 @@ class CallbackResolverTest extends TestCase
     private $app;
     private $resolver;
 
-    public function setup()
+    public function setUp(): void
     {
         $this->app = new \Pimple();
         $this->resolver = new CallbackResolver($this->app);

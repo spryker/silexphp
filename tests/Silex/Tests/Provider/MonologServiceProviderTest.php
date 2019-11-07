@@ -28,13 +28,13 @@ class MonologServiceProviderTest extends TestCase
 {
     private $currErrorHandler;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->currErrorHandler = set_error_handler('var_dump');
         restore_error_handler();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         set_error_handler($this->currErrorHandler);
     }
