@@ -64,6 +64,7 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
 /**
  * @deprecated Use `\Spryker\Yves\Security\Plugin\Application\SecurityApplicationPlugin` instead.
+ *
  * @see \Spryker\Yves\Security\Plugin\Application\SecurityApplicationPlugin
  *
  * Symfony Security component Provider.
