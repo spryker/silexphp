@@ -11,6 +11,7 @@
 
 namespace Silex\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Silex\Controller;
 use Silex\ControllerCollection;
 use Silex\Exception\ControllerFrozenException;
@@ -21,7 +22,7 @@ use Silex\Route;
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  */
-class ControllerCollectionTest extends \PHPUnit_Framework_TestCase
+class ControllerCollectionTest extends TestCase
 {
     public function testGetRouteCollectionWithNoRoutes()
     {
