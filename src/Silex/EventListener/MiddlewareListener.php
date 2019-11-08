@@ -11,6 +11,7 @@
 
 namespace Silex\EventListener;
 
+use RuntimeException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -57,7 +58,7 @@ class MiddlewareListener implements EventSubscriberInterface
 
                 return;
             } elseif (null !== $ret) {
-                throw new \RuntimeException(sprintf('A before middleware for route "%s" returned an invalid response value. Must return null or an instance of Response.', $routeName));
+                throw new RuntimeException(sprintf('A before middleware for route "%s" returned an invalid response value. Must return null or an instance of Response.', $routeName));
             }
         }
     }
@@ -80,7 +81,7 @@ class MiddlewareListener implements EventSubscriberInterface
             if ($response instanceof Response) {
                 $event->setResponse($response);
             } elseif (null !== $response) {
-                throw new \RuntimeException(sprintf('An after middleware for route "%s" returned an invalid response value. Must return null or an instance of Response.', $routeName));
+                throw new RuntimeException(sprintf('An after middleware for route "%s" returned an invalid response value. Must return null or an instance of Response.', $routeName));
             }
         }
     }

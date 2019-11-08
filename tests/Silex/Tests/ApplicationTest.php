@@ -11,6 +11,10 @@
 
 namespace Silex\Tests;
 
+use PHPUnit\Framework\TestCase;
+use ArrayObject;
+use Exception;
+use stdClass;
 use Silex\AppArgumentValueResolver;
 use Silex\Application;
 use Silex\ControllerCollection;
@@ -33,7 +37,7 @@ use Symfony\Component\EventDispatcher\Event;
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  */
-class ApplicationTest extends \PHPUnit_Framework_TestCase
+class ApplicationTest extends TestCase
 {
     public function testMatchReturnValue()
     {
@@ -115,16 +119,16 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
 
-        $app['controllers']->get('/foo/{foo}', function (\ArrayObject $foo) {
+        $app['controllers']->get('/foo/{foo}', function (ArrayObject $foo) {
             return $foo['foo'];
-        })->convert('foo', function ($foo) { return new \ArrayObject(array('foo' => $foo)); });
+        })->convert('foo', function ($foo) { return new ArrayObject(array('foo' => $foo)); });
 
         $response = $app->handle(Request::create('/foo/bar'));
         $this->assertEquals('bar', $response->getContent());
 
-        $app['controllers']->get('/foo/{foo}/{bar}', function (\ArrayObject $foo) {
+        $app['controllers']->get('/foo/{foo}/{bar}', function (ArrayObject $foo) {
             return $foo['foo'];
-        })->convert('foo', function ($foo, Request $request) { return new \ArrayObject(array('foo' => $foo.$request->attributes->get('bar'))); });
+        })->convert('foo', function ($foo, Request $request) { return new ArrayObject(array('foo' => $foo.$request->attributes->get('bar'))); });
 
         $response = $app->handle(Request::create('/foo/foo/bar'));
         $this->assertEquals('foobar', $response->getContent());
@@ -234,7 +238,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
             $middlewareTarget[] = 'before_middleware2_triggered';
         };
         $beforeMiddleware3 = function (Request $request) use (&$middlewareTarget, $test) {
-            throw new \Exception('This middleware shouldn\'t run!');
+            throw new Exception('This middleware shouldn\'t run!');
         };
 
         $afterMiddleware1 = function (Request $request, Response $response) use (&$middlewareTarget, $test) {
@@ -246,7 +250,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
             $middlewareTarget[] = 'after_middleware2_triggered';
         };
         $afterMiddleware3 = function (Request $request, Response $response) use (&$middlewareTarget, $test) {
-            throw new \Exception('This middleware shouldn\'t run!');
+            throw new Exception('This middleware shouldn\'t run!');
         };
 
         $app['controllers']->get('/reached', function () use (&$middlewareTarget) {
@@ -260,7 +264,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         ->after($afterMiddleware2);
 
         $app['controllers']->get('/never-reached', function () use (&$middlewareTarget) {
-            throw new \Exception('This route shouldn\'t run!');
+            throw new Exception('This route shouldn\'t run!');
         })
         ->before($beforeMiddleware3)
         ->after($afterMiddleware3);
@@ -276,7 +280,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
 
         $app['controllers']->get('/foo', function () {
-            throw new \Exception('This route shouldn\'t run!');
+            throw new Exception('This route shouldn\'t run!');
         })
         ->before(function () {
             return new Response('foo');
@@ -310,7 +314,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
 
         $app['controllers']->get('/foo', function () {
-            throw new \Exception('This route shouldn\'t run!');
+            throw new Exception('This route shouldn\'t run!');
         })
         ->before(function () use ($app) {
             return $app->redirect('/bar');
@@ -398,11 +402,9 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array('1_routeTriggered', '2_filterAfter', '3_responseSent', '4_filterFinish'), $containerTarget);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testNonResponseAndNonNullReturnFromRouteBeforeMiddlewareShouldThrowRuntimeException()
     {
+        $this->expectException('RuntimeException');
         $app = new Application();
 
         $middleware = function (Request $request) {
@@ -417,11 +419,9 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $app->handle(Request::create('/'), HttpKernelInterface::MASTER_REQUEST, false);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testNonResponseAndNonNullReturnFromRouteAfterMiddlewareShouldThrowRuntimeException()
     {
+        $this->expectException('RuntimeException');
         $app = new Application();
 
         $middleware = function (Request $request) {
@@ -501,22 +501,18 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('first', 'second', 'third'), array_keys(iterator_to_array($app['routes'])));
     }
 
-    /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage The "mount" method takes either a "ControllerCollection" or a "ControllerProviderInterface" instance.
-     */
     public function testMountNullException()
     {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('The "mount" method takes either a "ControllerCollection" or a "ControllerProviderInterface" instance.');
         $app = new Application();
         $app->mount('/exception', null);
     }
 
-    /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage The method "Silex\Tests\IncorrectControllerCollection::connect" must return a "ControllerCollection" instance. Got: "NULL"
-     */
     public function testMountWrongConnectReturnValueException()
     {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('The method "Silex\Tests\IncorrectControllerCollection::connect" must return a "ControllerCollection" instance. Got: "NULL"');
         $app = new Application();
         $app->mount('/exception', new IncorrectControllerCollection());
     }
@@ -530,12 +526,10 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(__FILE__, (string) $response->getFile());
     }
 
-    /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage The "homepage" route must have code to run when it matches.
-     */
     public function testGetRouteCollectionWithRouteWithoutController()
     {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('The "homepage" route must have code to run when it matches.');
         $app = new Application();
         unset($app['exception_handler']);
         $app->match('/')->bind('homepage');
@@ -597,7 +591,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
         $app['controllers']->get('/foo', function () { return (object) array('name' => 'world'); });
-        $app->view(function (\stdClass $view) {
+        $app->view(function (stdClass $view) {
             return new Response('Hello '.$view->name);
         });
 
@@ -627,7 +621,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
         $app['controllers']->get('/foo', function () { return (object) array('name' => 'world'); });
 
-        $app->view(function (\stdClass $view) {
+        $app->view(function (stdClass $view) {
             return array('msg' => 'Hello '.$view->name);
         });
 
@@ -645,12 +639,12 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
         $app['controllers']->get('/foo', function () { return 'Hello world'; });
 
-        $app->view(function (\stdClass $view) {
-            throw new \Exception('View listener was called');
+        $app->view(function (stdClass $view) {
+            throw new Exception('View listener was called');
         });
 
         $app->view(function (array $view) {
-            throw new \Exception('View listener was called');
+            throw new Exception('View listener was called');
         });
 
         $response = $app->handle(Request::create('/foo'));

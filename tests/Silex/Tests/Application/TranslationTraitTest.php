@@ -11,6 +11,7 @@
 
 namespace Silex\Tests\Application;
 
+use PHPUnit\Framework\TestCase;
 use Silex\Provider\TranslationServiceProvider;
 
 /**
@@ -20,8 +21,11 @@ use Silex\Provider\TranslationServiceProvider;
  *
  * @requires PHP 5.4
  */
-class TranslationTraitTest extends \PHPUnit_Framework_TestCase
+class TranslationTraitTest extends TestCase
 {
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testTrans()
     {
         $app = $this->createApplication();
@@ -30,6 +34,9 @@ class TranslationTraitTest extends \PHPUnit_Framework_TestCase
         $app->trans('foo');
     }
 
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testTransChoice()
     {
         $app = $this->createApplication();

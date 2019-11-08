@@ -11,6 +11,7 @@
 
 namespace Silex\Provider;
 
+use InvalidArgumentException;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Silex\Application;
@@ -90,7 +91,7 @@ class MonologServiceProvider implements ServiceProviderInterface
         $upper = strtoupper($name);
 
         if (!isset($levels[$upper])) {
-            throw new \InvalidArgumentException("Provided logging level '$name' does not exist. Must be a valid monolog logging level.");
+            throw new InvalidArgumentException("Provided logging level '$name' does not exist. Must be a valid monolog logging level.");
         }
 
         return $levels[$upper];

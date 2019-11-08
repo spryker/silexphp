@@ -11,9 +11,10 @@
 
 namespace Silex\Tests\Application;
 
+use Silex\Application\SecurityTrait;
 use Silex\Application;
 
 class SecurityApplication extends Application
 {
-    use Application\SecurityTrait;
+    use SecurityTrait;
 }

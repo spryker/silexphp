@@ -11,6 +11,7 @@
 
 namespace Silex\Provider;
 
+use LogicException;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -35,7 +36,7 @@ class HttpFragmentServiceProvider implements ServiceProviderInterface
     public function register(Application $app)
     {
         if (!class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
-            throw new \LogicException('The HTTP Fragment service provider only works with Symfony 2.4+.');
+            throw new LogicException('The HTTP Fragment service provider only works with Symfony 2.4+.');
         }
 
         $app['fragment.handler'] = $app->share(function ($app) {

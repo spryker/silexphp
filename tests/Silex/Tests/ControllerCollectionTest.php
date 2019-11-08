@@ -11,6 +11,7 @@
 
 namespace Silex\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Silex\Controller;
 use Silex\ControllerCollection;
 use Silex\Exception\ControllerFrozenException;
@@ -21,7 +22,7 @@ use Silex\Route;
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  */
-class ControllerCollectionTest extends \PHPUnit_Framework_TestCase
+class ControllerCollectionTest extends TestCase
 {
     public function testGetRouteCollectionWithNoRoutes()
     {
@@ -40,6 +41,9 @@ class ControllerCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, count($routes->all()));
     }
 
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testControllerFreezing()
     {
         $controllers = new ControllerCollection(new Route());
@@ -201,11 +205,9 @@ class ControllerCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $route->foo);
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     */
     public function testRouteMethodDoesNotExist()
     {
+        $this->expectException('BadMethodCallException');
         $route = new MyRoute1();
 
         $controller = new ControllerCollection($route);

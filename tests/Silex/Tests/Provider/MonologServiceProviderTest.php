@@ -11,6 +11,10 @@
 
 namespace Silex\Tests\Provider;
 
+use PHPUnit\Framework\TestCase;
+use Exception;
+use RuntimeException;
+use Silex\Provider\SecurityServiceProvider;
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 use Silex\Application;
@@ -23,17 +27,23 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  */
-class MonologServiceProviderTest extends \PHPUnit_Framework_TestCase
+class MonologServiceProviderTest extends TestCase
 {
     private $currErrorHandler;
 
-    protected function setUp()
+    /**
+     * @return void
+     */
+    protected function setUp(): void
     {
         $this->currErrorHandler = set_error_handler('var_dump');
         restore_error_handler();
     }
 
-    protected function tearDown()
+    /**
+     * @return void
+     */
+    protected function tearDown(): void
     {
         set_error_handler($this->currErrorHandler);
     }
@@ -80,7 +90,7 @@ class MonologServiceProviderTest extends \PHPUnit_Framework_TestCase
     {
         $app = $this->getApplication();
 
-        $app->error(function (\Exception $e) {
+        $app->error(function (Exception $e) {
             return 'error handled';
         });
 
@@ -100,7 +110,7 @@ class MonologServiceProviderTest extends \PHPUnit_Framework_TestCase
          * Simulate unhandled exception, logged to critical
          */
         $app['controllers']->get('/error', function () {
-            throw new \RuntimeException('very bad error');
+            throw new RuntimeException('very bad error');
         });
 
         $this->assertFalse($app['monolog.handler']->hasCriticalRecords());
@@ -133,7 +143,7 @@ class MonologServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app = $this->getApplication();
         $app['monolog.level'] = Logger::ERROR;
 
-        $app->register(new \Silex\Provider\SecurityServiceProvider(), array(
+        $app->register(new SecurityServiceProvider(), array(
             'security.firewalls' => array(
                 'admin' => array(
                     'pattern' => '^/admin',
@@ -161,12 +171,10 @@ class MonologServiceProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(Logger::INFO, $app['monolog.handler']->getLevel());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Provided logging level 'foo' does not exist. Must be a valid monolog logging level.
-     */
     public function testNonExistentStringErrorLevel()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Provided logging level \'foo\' does not exist. Must be a valid monolog logging level.');
         $app = $this->getApplication();
         $app['monolog.level'] = 'foo';
 

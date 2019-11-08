@@ -11,6 +11,7 @@
 
 namespace Silex\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Silex\Controller;
 use Silex\Route;
 
@@ -19,7 +20,7 @@ use Silex\Route;
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  */
-class ControllerTest extends \PHPUnit_Framework_TestCase
+class ControllerTest extends TestCase
 {
     public function testBind()
     {
@@ -30,11 +31,9 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $controller->getRouteName());
     }
 
-    /**
-     * @expectedException \Silex\Exception\ControllerFrozenException
-     */
     public function testBindOnFrozenControllerShouldThrowException()
     {
+        $this->expectException('Silex\Exception\ControllerFrozenException');
         $controller = new Controller(new Route('/foo'));
         $controller->bind('foo');
         $controller->freeze();
@@ -109,11 +108,9 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $route->foo);
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     */
     public function testRouteMethodDoesNotExist()
     {
+        $this->expectException('BadMethodCallException');
         $route = new MyRoute();
 
         $controller = new Controller($route);

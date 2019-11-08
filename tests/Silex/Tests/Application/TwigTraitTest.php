@@ -11,6 +11,7 @@
 
 namespace Silex\Tests\Application;
 
+use PHPUnit\Framework\TestCase;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -23,7 +24,7 @@ use Twig\Environment;
  *
  * @requires PHP 5.4
  */
-class TwigTraitTest extends \PHPUnit_Framework_TestCase
+class TwigTraitTest extends TestCase
 {
     public function testRender()
     {
@@ -63,6 +64,9 @@ class TwigTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', ob_get_clean());
     }
 
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testRenderView()
     {
         $app = $this->createApplication();

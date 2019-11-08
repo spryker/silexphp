@@ -11,7 +11,10 @@
 
 namespace Silex\Tests\Provider;
 
-class SpoolStub implements \Swift_Spool
+use Swift_Spool;
+use Swift_Mime_Message;
+use Swift_Transport;
+class SpoolStub implements Swift_Spool
 {
     private $messages = array();
     public $hasFlushed = false;
@@ -34,12 +37,12 @@ class SpoolStub implements \Swift_Spool
         return count($this->messages) > 0;
     }
 
-    public function queueMessage(\Swift_Mime_Message $message)
+    public function queueMessage(Swift_Mime_Message $message)
     {
         $this->messages[] = $message;
     }
 
-    public function flushQueue(\Swift_Transport $transport, &$failedRecipients = null)
+    public function flushQueue(Swift_Transport $transport, &$failedRecipients = null)
     {
         $this->hasFlushed = true;
         $this->messages = array();

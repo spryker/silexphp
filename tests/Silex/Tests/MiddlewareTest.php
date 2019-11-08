@@ -11,6 +11,9 @@
 
 namespace Silex\Tests;
 
+use PHPUnit\Framework\TestCase;
+use RuntimeException;
+use Exception;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  */
-class MiddlewareTest extends \PHPUnit_Framework_TestCase
+class MiddlewareTest extends TestCase
 {
     public function testBeforeAndAfterFilter()
     {
@@ -123,7 +126,7 @@ class MiddlewareTest extends \PHPUnit_Framework_TestCase
         });
 
         $app->match('/foo', function () {
-            throw new \RuntimeException();
+            throw new RuntimeException();
         });
 
         $app->after(function () use (&$i) {
@@ -183,7 +186,7 @@ class MiddlewareTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
 
-        $app->before(function () { throw new \RuntimeException(''); });
+        $app->before(function () { throw new RuntimeException(''); });
 
         // even if the before filter throws an exception, we must have the 404
         $this->assertEquals(404, $app->handle(Request::create('/'))->getStatusCode());
@@ -216,7 +219,7 @@ class MiddlewareTest extends \PHPUnit_Framework_TestCase
             return new Response($request->get('name'));
         });
 
-        $app->match('/', function () use ($app) { throw new \Exception('Should never be executed'); });
+        $app->match('/', function () use ($app) { throw new Exception('Should never be executed'); });
 
         $request = Request::create('/?name=Fabien');
         $this->assertEquals('Fabien', $app->handle($request)->getContent());

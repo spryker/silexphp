@@ -11,6 +11,9 @@
 
 namespace Silex\Util;
 
+use RuntimeException;
+use Phar;
+use SplFileInfo;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
 
@@ -38,12 +41,12 @@ class Compiler
 
         $process = new Process('git log --pretty="%h %ci" -n1 HEAD');
         if ($process->run() > 0) {
-            throw new \RuntimeException('The git binary cannot be found.');
+            throw new RuntimeException('The git binary cannot be found.');
         }
         $this->version = trim($process->getOutput());
 
-        $phar = new \Phar($pharFile, 0, 'silex.phar');
-        $phar->setSignatureAlgorithm(\Phar::SHA1);
+        $phar = new Phar($pharFile, 0, 'silex.phar');
+        $phar->setSignatureAlgorithm(Phar::SHA1);
 
         $phar->startBuffering();
 
@@ -70,11 +73,11 @@ class Compiler
             $this->addFile($phar, $file);
         }
 
-        $this->addFile($phar, new \SplFileInfo($root.'/LICENSE'), false);
-        $this->addFile($phar, new \SplFileInfo($root.'/vendor/autoload.php'));
-        $this->addFile($phar, new \SplFileInfo($root.'/vendor/composer/ClassLoader.php'));
-        $this->addFile($phar, new \SplFileInfo($root.'/vendor/composer/autoload_namespaces.php'));
-        $this->addFile($phar, new \SplFileInfo($root.'/vendor/composer/autoload_classmap.php'));
+        $this->addFile($phar, new SplFileInfo($root.'/LICENSE'), false);
+        $this->addFile($phar, new SplFileInfo($root.'/vendor/autoload.php'));
+        $this->addFile($phar, new SplFileInfo($root.'/vendor/composer/ClassLoader.php'));
+        $this->addFile($phar, new SplFileInfo($root.'/vendor/composer/autoload_namespaces.php'));
+        $this->addFile($phar, new SplFileInfo($root.'/vendor/composer/autoload_classmap.php'));
 
         // Stubs
         $phar->setStub($this->getStub());
@@ -84,7 +87,7 @@ class Compiler
         unset($phar);
     }
 
-    protected function addFile(\Phar $phar, \SplFileInfo $file, $strip = true)
+    protected function addFile(Phar $phar, SplFileInfo $file, $strip = true)
     {
         $path = str_replace(dirname(dirname(dirname(__DIR__))).DIRECTORY_SEPARATOR, '', $file->getRealPath());
 

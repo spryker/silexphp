@@ -11,9 +11,10 @@
 
 namespace Silex\Tests\Application;
 
+use Silex\Application\TranslationTrait;
 use Silex\Application;
 
 class TranslationApplication extends Application
 {
-    use Application\TranslationTrait;
+    use TranslationTrait;
 }

@@ -11,6 +11,7 @@
 
 namespace Silex\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Silex\LazyUrlMatcher;
 
 /**
@@ -18,7 +19,7 @@ use Silex\LazyUrlMatcher;
  *
  * @author Leszek Prabucki <leszek.prabucki@gmail.com>
  */
-class LazyUrlMatcherTest extends \PHPUnit_Framework_TestCase
+class LazyUrlMatcherTest extends TestCase
 {
     /**
      * @covers Silex\LazyUrlMatcher::getUrlMatcher
@@ -39,12 +40,10 @@ class LazyUrlMatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $callCounter);
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Factory supplied to LazyUrlMatcher must return implementation of UrlMatcherInterface.
-     */
     public function testThatCanInjectUrlMatcherOnly()
     {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('Factory supplied to LazyUrlMatcher must return implementation of UrlMatcherInterface.');
         $matcher = new LazyUrlMatcher(function () {
             return 'someMatcher';
         });
@@ -73,6 +72,7 @@ class LazyUrlMatcherTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Silex\LazyUrlMatcher::setContext
+     * @doesNotPerformAssertion
      */
     public function testSetContextIsProxy()
     {

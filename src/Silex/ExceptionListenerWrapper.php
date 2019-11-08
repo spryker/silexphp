@@ -11,6 +11,11 @@
 
 namespace Silex;
 
+use Exception;
+use ReflectionMethod;
+use Closure;
+use ReflectionObject;
+use ReflectionFunction;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -55,15 +60,15 @@ class ExceptionListenerWrapper
         $this->ensureResponse($response, $event);
     }
 
-    protected function shouldRun(\Exception $exception)
+    protected function shouldRun(Exception $exception)
     {
         if (is_array($this->callback)) {
-            $callbackReflection = new \ReflectionMethod($this->callback[0], $this->callback[1]);
-        } elseif (is_object($this->callback) && !$this->callback instanceof \Closure) {
-            $callbackReflection = new \ReflectionObject($this->callback);
+            $callbackReflection = new ReflectionMethod($this->callback[0], $this->callback[1]);
+        } elseif (is_object($this->callback) && !$this->callback instanceof Closure) {
+            $callbackReflection = new ReflectionObject($this->callback);
             $callbackReflection = $callbackReflection->getMethod('__invoke');
         } else {
-            $callbackReflection = new \ReflectionFunction($this->callback);
+            $callbackReflection = new ReflectionFunction($this->callback);
         }
 
         if ($callbackReflection->getNumberOfParameters() > 0) {

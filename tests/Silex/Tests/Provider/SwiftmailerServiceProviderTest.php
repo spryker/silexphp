@@ -11,11 +11,14 @@
 
 namespace Silex\Tests\Provider;
 
+use PHPUnit\Framework\TestCase;
+use Exception;
+use Swift_Message;
 use Silex\Application;
 use Silex\Provider\SwiftmailerServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 
-class SwiftmailerServiceProviderTest extends \PHPUnit_Framework_TestCase
+class SwiftmailerServiceProviderTest extends TestCase
 {
     public function testSwiftMailerServiceIsSwiftMailer()
     {
@@ -37,7 +40,7 @@ class SwiftmailerServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app['swiftmailer.use_spool'] = false;
 
         $app['swiftmailer.spooltransport'] = function () {
-            throw new \Exception('Should not be instantiated');
+            throw new Exception('Should not be instantiated');
         };
 
         $this->assertInstanceOf('Swift_Mailer', $app['mailer']);
@@ -55,7 +58,7 @@ class SwiftmailerServiceProviderTest extends \PHPUnit_Framework_TestCase
         });
 
         $app['controllers']->get('/', function () use ($app) {
-            $app['mailer']->send(\Swift_Message::newInstance());
+            $app['mailer']->send(Swift_Message::newInstance());
             return true;
         });
 

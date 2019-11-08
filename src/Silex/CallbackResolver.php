@@ -11,13 +11,15 @@
 
 namespace Silex;
 
+use Pimple;
+use InvalidArgumentException;
 class CallbackResolver
 {
     const SERVICE_PATTERN = "/[A-Za-z0-9\._\-]+:[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/";
 
     private $app;
 
-    public function __construct(\Pimple $app)
+    public function __construct(Pimple $app)
     {
         $this->app = $app;
     }
@@ -48,7 +50,7 @@ class CallbackResolver
         list($service, $method) = explode(':', $name, 2);
 
         if (!isset($this->app[$service])) {
-            throw new \InvalidArgumentException(sprintf('Service "%s" does not exist.', $service));
+            throw new InvalidArgumentException(sprintf('Service "%s" does not exist.', $service));
         }
 
         return array($this->app[$service], $method);

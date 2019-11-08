@@ -11,6 +11,7 @@
 
 namespace Silex\EventListener;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -102,7 +103,7 @@ class LogListener implements EventSubscriberInterface
      *
      * @param \Exception $e
      */
-    protected function logException(\Exception $e)
+    protected function logException(Exception $e)
     {
         $message = sprintf('%s: %s (uncaught exception) at %s line %s', get_class($e), $e->getMessage(), $e->getFile(), $e->getLine());
 
