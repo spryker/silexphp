@@ -17,11 +17,11 @@ use Silex\Application;
 use Silex\Provider\Twig\RuntimeLoader;
 use Silex\ServiceProviderInterface;
 use Symfony\Bridge\Twig\Extension\FormExtension;
+use Symfony\Bridge\Twig\Extension\HttpKernelExtension;
 use Symfony\Bridge\Twig\Extension\HttpKernelRuntime;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Bridge\Twig\Extension\SecurityExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
-use Symfony\Bridge\Twig\Extension\HttpKernelExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\FormRenderer;
 use Twig\Environment;
@@ -31,6 +31,9 @@ use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
 
 /**
+ * @deprecated Use `\Spryker\Yves\Twig\Plugin\Application\TwigApplicationPlugin` for Yves instead.
+ * @deprecated Use `\Spryker\Zed\Twig\Communication\Plugin\Application\TwigApplicationPlugin` for Zed instead.
+ *
  * Twig integration for Silex.
  *
  * @author Fabien Potencier <fabien@symfony.com>
@@ -115,10 +118,10 @@ class TwigServiceProvider implements ServiceProviderInterface
         });
 
         $app['twig.loader'] = $app->share(function ($app) {
-            return new ChainLoader(array(
+            return new ChainLoader([
                 $app['twig.loader.array'],
                 $app['twig.loader.filesystem'],
-            ));
+            ]);
         });
 
         $app['twig.runtime.httpkernel'] = function ($app) {
@@ -138,6 +141,9 @@ class TwigServiceProvider implements ServiceProviderInterface
         };
     }
 
+    /**
+     * @return void
+     */
     public function boot(Application $app)
     {
     }
