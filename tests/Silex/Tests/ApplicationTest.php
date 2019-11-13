@@ -11,6 +11,7 @@
 
 namespace Silex\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Silex\AppArgumentValueResolver;
 use Silex\Application;
 use Silex\ControllerCollection;
@@ -33,7 +34,7 @@ use Symfony\Component\EventDispatcher\Event;
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  */
-class ApplicationTest extends \PHPUnit_Framework_TestCase
+class ApplicationTest extends TestCase
 {
     public function testMatchReturnValue()
     {
