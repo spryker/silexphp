@@ -12,7 +12,7 @@ before_script:
 
 script:
     - vendor/bin/phpunit
-    - composer phpstan-setup && composer phpstan
+    - COMPOSER_MEMORY_LIMIT=-1 composer phpstan-setup && composer phpstan
 allow_failures:
     - php: 7.4snapshot
 
