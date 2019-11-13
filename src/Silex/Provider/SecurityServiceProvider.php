@@ -340,11 +340,11 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return $map;
         });
 
-        $app['security.trust_resolver'] = $app->share(function ($app) {
+        $app['security.trust_resolver'] = $app->share(function () {
             return new AuthenticationTrustResolver('Symfony\Component\Security\Core\Authentication\Token\AnonymousToken', 'Symfony\Component\Security\Core\Authentication\Token\RememberMeToken');
         });
 
-        $app['security.session_strategy'] = $app->share(function ($app) {
+        $app['security.session_strategy'] = $app->share(function () {
             return new SessionAuthenticationStrategy(SessionAuthenticationStrategy::MIGRATE);
         });
 
@@ -386,7 +386,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         });
 
         $app['security.user_provider.inmemory._proto'] = $app->protect(function ($params) use ($app) {
-            return $app->share(function () use ($app, $params) {
+            return $app->share(function () use ($params) {
                 $users = [];
                 foreach ($params as $name => $user) {
                     $users[$name] = ['roles' => (array)$user[0], 'password' => $user[1]];
@@ -424,7 +424,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         });
 
         $app['security.authentication.failure_handler._proto'] = $app->protect(function ($name, $options) use ($app) {
-            return $app->share(function () use ($name, $options, $app) {
+            return $app->share(function () use ($options, $app) {
                 return new DefaultAuthenticationFailureHandler(
                     $app,
                     $app['security.http_utils'],
@@ -469,7 +469,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         });
 
         $app['security.authentication_listener.http._proto'] = $app->protect(function ($providerKey, $options) use ($app) {
-            return $app->share(function () use ($app, $providerKey, $options) {
+            return $app->share(function () use ($app, $providerKey) {
                 return new BasicAuthenticationListener(
                     $app['security.token_storage'],
                     $app['security.authentication_manager'],
@@ -481,7 +481,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         });
 
         $app['security.authentication_listener.anonymous._proto'] = $app->protect(function ($providerKey, $options) use ($app) {
-            return $app->share(function () use ($app, $providerKey, $options) {
+            return $app->share(function () use ($app, $providerKey) {
                 return new AnonymousAuthenticationListener(
                     $app['security.token_storage'],
                     $providerKey,
@@ -491,7 +491,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         });
 
         $app['security.authentication.logout_handler._proto'] = $app->protect(function ($name, $options) use ($app) {
-            return $app->share(function () use ($name, $options, $app) {
+            return $app->share(function () use ($options, $app) {
                 return new DefaultLogoutSuccessHandler(
                     $app['security.http_utils'],
                     isset($options['target_url']) ? $options['target_url'] : '/'
@@ -528,8 +528,8 @@ class SecurityServiceProvider implements ServiceProviderInterface
             });
         });
 
-        $app['security.authentication_listener.switch_user._proto'] = $app->protect(function ($name, $options) use ($app, $that) {
-            return $app->share(function () use ($app, $name, $options, $that) {
+        $app['security.authentication_listener.switch_user._proto'] = $app->protect(function ($name, $options) use ($app) {
+            return $app->share(function () use ($app, $name, $options) {
                 return new SwitchUserListener(
                     $app['security.token_storage'],
                     $app['security.user_provider.' . $name],
@@ -554,7 +554,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         });
 
         $app['security.entry_point.http._proto'] = $app->protect(function ($name, array $options) use ($app) {
-            return $app->share(function () use ($app, $name, $options) {
+            return $app->share(function () use ($options) {
                 return new BasicAuthenticationEntryPoint(isset($options['real_name']) ? $options['real_name'] : 'Secured');
             });
         });
@@ -572,7 +572,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         });
 
         $app['security.authentication_provider.anonymous._proto'] = $app->protect(function ($name) use ($app) {
-            return $app->share(function () use ($app, $name) {
+            return $app->share(function () use ($name) {
                 return new AnonymousAuthenticationProvider($name);
             });
         });
