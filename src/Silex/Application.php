@@ -116,7 +116,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
             return new HttpKernel($app['dispatcher'], $app['resolver'], $app['request_stack']);
         });
 
-        $this['request_stack'] = $this->share(function () use ($app) {
+        $this['request_stack'] = $this->share(function () {
             if (class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
                 return new RequestStack();
             }
@@ -567,6 +567,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     public function mount($prefix, $controllers)
     {
         if ($controllers instanceof ControllerProviderInterface) {
+            /** @var mixed $connectedControllers */
             $connectedControllers = $controllers->connect($this);
 
             if (!$connectedControllers instanceof ControllerCollection) {

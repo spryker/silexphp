@@ -11,6 +11,7 @@
 
 namespace Silex\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Silex\LazyUrlMatcher;
 
 /**
@@ -18,7 +19,7 @@ use Silex\LazyUrlMatcher;
  *
  * @author Leszek Prabucki <leszek.prabucki@gmail.com>
  */
-class LazyUrlMatcherTest extends \PHPUnit_Framework_TestCase
+class LazyUrlMatcherTest extends TestCase
 {
     /**
      * @covers Silex\LazyUrlMatcher::getUrlMatcher
