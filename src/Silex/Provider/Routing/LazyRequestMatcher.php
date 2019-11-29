@@ -35,7 +35,7 @@ class LazyRequestMatcher implements RequestMatcherInterface
     /**
      * Returns the corresponding RequestMatcherInterface instance.
      *
-     * @return UrlMatcherInterface
+     * @return \Symfony\Component\Routing\Matcher\UrlMatcherInterface|\Symfony\Component\Routing\Matcher\RequestMatcherInterface
      */
     public function getRequestMatcher()
     {

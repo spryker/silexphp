@@ -34,6 +34,11 @@ class Translator extends BaseTranslator
         return $this->app['locale'];
     }
 
+    /**
+     * @param string|null $locale
+     *
+     * @return void
+     */
     public function setLocale($locale)
     {
         if (null === $locale) {

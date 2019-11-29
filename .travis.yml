@@ -1,18 +1,26 @@
 language: php
 
-sudo: false
-
 cache:
-    directories:
-      - $HOME/.composer/cache/files
+  directories:
+    - $HOME/.composer/cache/files
+
+install:
+  - COMPOSER_MEMORY_LIMIT=-1 composer install --no-interaction --prefer-dist
 
 before_script:
-    - composer install
+  - composer install
 
-script: vendor/bin/phpunit
+script:
+  - vendor/bin/phpunit
+  - COMPOSER_MEMORY_LIMIT=-1 composer phpstan-setup && composer phpstan
 
 matrix:
-    include:
-        - php: 7.2
-        - php: 7.3
-        - php: 7.4snapshot
+  include:
+    - php: 7.2
+    - php: 7.3
+    - php: 7.4snapshot
+
+  fast_finish: true
+
+  allow_failures:
+    - php: 7.4snapshot

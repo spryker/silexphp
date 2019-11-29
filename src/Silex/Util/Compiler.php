@@ -39,7 +39,7 @@ class Compiler
             unlink($pharFile);
         }
 
-        $process = new Process('git log --pretty="%h %ci" -n1 HEAD');
+        $process = new Process(['git log --pretty="%h %ci" -n1 HEAD']);
         if ($process->run() > 0) {
             throw new RuntimeException('The git binary cannot be found.');
         }
