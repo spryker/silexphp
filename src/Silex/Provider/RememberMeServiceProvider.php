@@ -9,6 +9,11 @@
  * file that was distributed with this source code.
  */
 
+/**
+ * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
+ * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
+ */
+
 namespace Silex\Provider;
 
 use LogicException;
@@ -100,6 +105,8 @@ class RememberMeServiceProvider implements ServiceProviderInterface
     }
 
     /**
+     * @param \Silex\Application $app
+     *
      * @throws \LogicException
      *
      * @return void

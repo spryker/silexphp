@@ -13,9 +13,11 @@ namespace Silex\Tests\Application;
 
 use PHPUnit\Framework\TestCase;
 use Silex\Provider\SecurityServiceProvider;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * SecurityTrait test cases.
@@ -40,7 +42,7 @@ class SecurityTraitTest extends TestCase
         $request->headers->set('PHP_AUTH_USER', 'fabien');
         $request->headers->set('PHP_AUTH_PW', 'foo');
         $app->handle($request);
-        $this->assertInstanceOf('Symfony\Component\Security\Core\User\UserInterface', $app->user());
+        $this->assertInstanceOf(UserInterface::class, $app->user());
         $this->assertEquals('fabien', $app->user()->getUsername());
     }
 
@@ -79,7 +81,7 @@ class SecurityTraitTest extends TestCase
 
     public function testIsGrantedWithoutTokenThrowsException()
     {
-        $this->expectException('Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException');
+        $this->expectException(AuthenticationCredentialsNotFoundException::class);
         $app = $this->createApplication();
         $app['controllers']->get('/', function () { return 'foo'; });
         $app->handle(Request::create('/'));

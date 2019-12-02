@@ -13,12 +13,16 @@ namespace Silex;
 
 use Pimple;
 use InvalidArgumentException;
+
 class CallbackResolver
 {
     const SERVICE_PATTERN = "/[A-Za-z0-9\._\-]+:[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/";
 
     private $app;
 
+    /**
+     * @param Pimple $app
+     */
     public function __construct(Pimple $app)
     {
         $this->app = $app;

@@ -12,6 +12,7 @@
 namespace Silex\Application;
 
 use Swift_Message;
+
 /**
  * Swiftmailer trait.
  *
