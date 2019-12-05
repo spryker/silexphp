@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit backupGlobals="false"
-         backupStaticAttributes="false"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="false"
+<phpunit colors="true"
          bootstrap="vendor/autoload.php"
 >
     <testsuites>
-        <testsuite name="Silex Test Suite">
-            <directory>./tests/Silex/</directory>
+        <testsuite name="silex">
+            <directory>tests/Silex/</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
-            <directory>./src</directory>
+            <directory>src/</directory>
         </whitelist>
     </filter>
+         
     <php>
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak" />
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
     </php>
 </phpunit>
