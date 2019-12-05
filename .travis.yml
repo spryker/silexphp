@@ -3,13 +3,12 @@ language: php
 matrix:
   include:
     - php: 7.2
-    - php: 7.3
     - php: 7.4
 
   fast_finish: true
 
-  allow_failures:
-    - php: 7.4
+before_install:
+  - if [[ ${TRAVIS_PHP_VERSION} != "7.4" ]]; then phpenv config-rm xdebug.ini ; fi
 
 before_script:
   - COMPOSER_MEMORY_LIMIT=-1 composer install --no-interaction --prefer-dist
@@ -20,4 +19,4 @@ script:
 
 cache:
   directories:
-    - $HOME/.composer/cache/files
+    - $HOME/.composer/cache
