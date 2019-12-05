@@ -41,6 +41,9 @@ class ControllerCollectionTest extends TestCase
         $this->assertEquals(2, count($routes->all()));
     }
 
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testControllerFreezing()
     {
         $controllers = new ControllerCollection(new Route());
@@ -202,11 +205,9 @@ class ControllerCollectionTest extends TestCase
         $this->assertEquals('foo', $route->foo);
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     */
     public function testRouteMethodDoesNotExist()
     {
+        $this->expectException('BadMethodCallException');
         $route = new MyRoute1();
 
         $controller = new ControllerCollection($route);

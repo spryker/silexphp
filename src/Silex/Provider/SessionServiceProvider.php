@@ -106,12 +106,12 @@ class SessionServiceProvider implements ServiceProviderInterface
 
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
+        if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType() || !$event->getRequest()->hasSession()) {
             return;
         }
 
         $session = $event->getRequest()->getSession();
-        if ($session && $session->isStarted()) {
+        if ($session->isStarted()) {
             $session->save();
 
             $params = session_get_cookie_params();

@@ -24,6 +24,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class UrlGeneratorTraitTest extends TestCase
 {
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testUrl()
     {
         $app = $this->createApplication();
@@ -32,6 +35,9 @@ class UrlGeneratorTraitTest extends TestCase
         $app->url('foo');
     }
 
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testPath()
     {
         $app = $this->createApplication();

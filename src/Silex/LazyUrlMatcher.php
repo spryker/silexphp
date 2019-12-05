@@ -11,6 +11,8 @@
 
 namespace Silex;
 
+use Closure;
+use LogicException;
 use Symfony\Component\Routing\RequestContext as SymfonyRequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
@@ -23,7 +25,7 @@ class LazyUrlMatcher implements UrlMatcherInterface
 {
     private $factory;
 
-    public function __construct(\Closure $factory)
+    public function __construct(Closure $factory)
     {
         $this->factory = $factory;
     }
@@ -37,7 +39,7 @@ class LazyUrlMatcher implements UrlMatcherInterface
     {
         $urlMatcher = call_user_func($this->factory);
         if (!$urlMatcher instanceof UrlMatcherInterface) {
-            throw new \LogicException('Factory supplied to LazyUrlMatcher must return implementation of UrlMatcherInterface.');
+            throw new LogicException('Factory supplied to LazyUrlMatcher must return implementation of UrlMatcherInterface.');
         }
 
         return $urlMatcher;

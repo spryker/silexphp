@@ -11,6 +11,17 @@
 
 namespace Silex\Provider;
 
+use Swift_Mailer;
+use Swift_Transport_SpoolTransport;
+use Swift_MemorySpool;
+use Swift_Transport_EsmtpTransport;
+use Swift_Transport_StreamBuffer;
+use Swift_StreamFilters_StringReplacementFilterFactory;
+use Swift_Transport_Esmtp_AuthHandler;
+use Swift_Transport_Esmtp_Auth_CramMd5Authenticator;
+use Swift_Transport_Esmtp_Auth_LoginAuthenticator;
+use Swift_Transport_Esmtp_Auth_PlainAuthenticator;
+use Swift_Events_SimpleEventDispatcher;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 
@@ -32,19 +43,19 @@ class SwiftmailerServiceProvider implements ServiceProviderInterface
             $app['mailer.initialized'] = true;
             $transport = $app['swiftmailer.use_spool'] ? $app['swiftmailer.spooltransport'] : $app['swiftmailer.transport'];
 
-            return new \Swift_Mailer($transport);
+            return new Swift_Mailer($transport);
         });
 
         $app['swiftmailer.spooltransport'] = $app->share(function ($app) {
-            return new \Swift_Transport_SpoolTransport($app['swiftmailer.transport.eventdispatcher'], $app['swiftmailer.spool']);
+            return new Swift_Transport_SpoolTransport($app['swiftmailer.transport.eventdispatcher'], $app['swiftmailer.spool']);
         });
 
         $app['swiftmailer.spool'] = $app->share(function ($app) {
-            return new \Swift_MemorySpool();
+            return new Swift_MemorySpool();
         });
 
         $app['swiftmailer.transport'] = $app->share(function ($app) {
-            $transport = new \Swift_Transport_EsmtpTransport(
+            $transport = new Swift_Transport_EsmtpTransport(
                 $app['swiftmailer.transport.buffer'],
                 array($app['swiftmailer.transport.authhandler']),
                 $app['swiftmailer.transport.eventdispatcher']
@@ -70,19 +81,19 @@ class SwiftmailerServiceProvider implements ServiceProviderInterface
         });
 
         $app['swiftmailer.transport.buffer'] = $app->share(function () {
-            return new \Swift_Transport_StreamBuffer(new \Swift_StreamFilters_StringReplacementFilterFactory());
+            return new Swift_Transport_StreamBuffer(new Swift_StreamFilters_StringReplacementFilterFactory());
         });
 
         $app['swiftmailer.transport.authhandler'] = $app->share(function () {
-            return new \Swift_Transport_Esmtp_AuthHandler(array(
-                new \Swift_Transport_Esmtp_Auth_CramMd5Authenticator(),
-                new \Swift_Transport_Esmtp_Auth_LoginAuthenticator(),
-                new \Swift_Transport_Esmtp_Auth_PlainAuthenticator(),
+            return new Swift_Transport_Esmtp_AuthHandler(array(
+                new Swift_Transport_Esmtp_Auth_CramMd5Authenticator(),
+                new Swift_Transport_Esmtp_Auth_LoginAuthenticator(),
+                new Swift_Transport_Esmtp_Auth_PlainAuthenticator(),
             ));
         });
 
         $app['swiftmailer.transport.eventdispatcher'] = $app->share(function () {
-            return new \Swift_Events_SimpleEventDispatcher();
+            return new Swift_Events_SimpleEventDispatcher();
         });
     }
 
@@ -91,7 +102,7 @@ class SwiftmailerServiceProvider implements ServiceProviderInterface
         $app->finish(function () use ($app) {
             // To speed things up (by avoiding Swift Mailer initialization), flush
             // messages only if our mailer has been created (potentially used)
-            if ($app['mailer.initialized'] && $app['swiftmailer.use_spool'] && $app['swiftmailer.spooltransport'] instanceof \Swift_Transport_SpoolTransport) {
+            if ($app['mailer.initialized'] && $app['swiftmailer.use_spool'] && $app['swiftmailer.spooltransport'] instanceof Swift_Transport_SpoolTransport) {
                 $app['swiftmailer.spooltransport']->getSpool()->flushQueue($app['swiftmailer.transport']);
             }
         });

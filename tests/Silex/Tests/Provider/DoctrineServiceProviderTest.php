@@ -12,6 +12,7 @@
 namespace Silex\Tests\Provider;
 
 use PHPUnit\Framework\TestCase;
+use PDO;
 use Silex\Application;
 use Silex\Provider\DoctrineServiceProvider;
 
@@ -32,7 +33,7 @@ class DoctrineServiceProviderTest extends TestCase
 
     public function testSingleConnection()
     {
-        if (!in_array('sqlite', \PDO::getAvailableDrivers())) {
+        if (!in_array('sqlite', PDO::getAvailableDrivers())) {
             $this->markTestSkipped('pdo_sqlite is not available');
         }
 
@@ -53,7 +54,7 @@ class DoctrineServiceProviderTest extends TestCase
 
     public function testMultipleConnections()
     {
-        if (!in_array('sqlite', \PDO::getAvailableDrivers())) {
+        if (!in_array('sqlite', PDO::getAvailableDrivers())) {
             $this->markTestSkipped('pdo_sqlite is not available');
         }
 

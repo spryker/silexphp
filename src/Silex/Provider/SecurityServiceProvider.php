@@ -63,6 +63,10 @@ use Symfony\Component\Security\Http\Logout\SessionLogoutHandler;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
 /**
+ * @deprecated Use `\Spryker\Yves\Security\Plugin\Application\SecurityApplicationPlugin` instead.
+ *
+ * @see \Spryker\Yves\Security\Plugin\Application\SecurityApplicationPlugin
+ *
  * Symfony Security component Provider.
  *
  * @author Fabien Potencier <fabien@symfony.com>
@@ -362,8 +366,12 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 return $request->attributes->get($error)->getMessage();
             }
 
+            if (!$request->hasSession()) {
+                return null;
+            }
+
             $session = $request->getSession();
-            if ($session && $session->has($error)) {
+            if ($session->has($error)) {
                 $message = $session->get($error)->getMessage();
                 $session->remove($error);
 

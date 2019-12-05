@@ -23,6 +23,9 @@ use Silex\Provider\SwiftmailerServiceProvider;
  */
 class SwiftmailerTraitTest extends TestCase
 {
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testMail()
     {
         $app = $this->createApplication();

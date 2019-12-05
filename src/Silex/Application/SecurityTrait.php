@@ -16,6 +16,8 @@ use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundE
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
+ * @deprecated Use `spryker/security` instead.
+ *
  * Security trait.
  *
  * @author Fabien Potencier <fabien@symfony.com>

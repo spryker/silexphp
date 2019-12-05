@@ -40,12 +40,10 @@ class LazyUrlMatcherTest extends TestCase
         $this->assertEquals(1, $callCounter);
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Factory supplied to LazyUrlMatcher must return implementation of UrlMatcherInterface.
-     */
     public function testThatCanInjectUrlMatcherOnly()
     {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('Factory supplied to LazyUrlMatcher must return implementation of UrlMatcherInterface.');
         $matcher = new LazyUrlMatcher(function () {
             return 'someMatcher';
         });
@@ -74,6 +72,7 @@ class LazyUrlMatcherTest extends TestCase
 
     /**
      * @covers Silex\LazyUrlMatcher::setContext
+     * @doesNotPerformAssertion
      */
     public function testSetContextIsProxy()
     {

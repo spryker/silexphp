@@ -11,6 +11,8 @@
 
 namespace Silex\Application;
 
+use Swift_Message;
+
 /**
  * Swiftmailer trait.
  *
@@ -26,7 +28,7 @@ trait SwiftmailerTrait
      *
      * @return int The number of sent messages
      */
-    public function mail(\Swift_Message $message, &$failedRecipients = null)
+    public function mail(Swift_Message $message, &$failedRecipients = null)
     {
         return $this['mailer']->send($message, $failedRecipients);
     }

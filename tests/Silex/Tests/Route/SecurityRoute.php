@@ -11,9 +11,10 @@
 
 namespace Silex\Tests\Route;
 
+use Silex\Route\SecurityTrait;
 use Silex\Route;
 
 class SecurityRoute extends Route
 {
-    use Route\SecurityTrait;
+    use SecurityTrait;
 }

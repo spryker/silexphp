@@ -64,6 +64,9 @@ class TwigTraitTest extends TestCase
         $this->assertEquals('foo', ob_get_clean());
     }
 
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testRenderView()
     {
         $app = $this->createApplication();

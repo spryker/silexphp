@@ -11,6 +11,7 @@
 
 namespace Silex;
 
+use BadMethodCallException;
 use Silex\Exception\ControllerFrozenException;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -130,7 +131,7 @@ class Controller
     public function __call($method, $arguments)
     {
         if (!method_exists($this->route, $method)) {
-            throw new \BadMethodCallException(sprintf('Method "%s::%s" does not exist.', get_class($this->route), $method));
+            throw new BadMethodCallException(sprintf('Method "%s::%s" does not exist.', get_class($this->route), $method));
         }
 
         call_user_func_array(array($this->route, $method), $arguments);

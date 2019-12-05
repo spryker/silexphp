@@ -23,6 +23,9 @@ use Silex\Provider\TranslationServiceProvider;
  */
 class TranslationTraitTest extends TestCase
 {
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testTrans()
     {
         $app = $this->createApplication();
@@ -31,6 +34,9 @@ class TranslationTraitTest extends TestCase
         $app->trans('foo');
     }
 
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testTransChoice()
     {
         $app = $this->createApplication();

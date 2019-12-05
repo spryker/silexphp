@@ -11,9 +11,10 @@
 
 namespace Silex\Tests\Application;
 
+use Silex\Application\FormTrait;
 use Silex\Application;
 
 class FormApplication extends Application
 {
-    use Application\FormTrait;
+    use FormTrait;
 }

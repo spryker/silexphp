@@ -12,6 +12,7 @@
 namespace Silex\Tests\EventListener;
 
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use Silex\EventListener\LogListener;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -30,6 +31,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class LogListenerTest extends TestCase
 {
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testRequestListener()
     {
         $logger = $this->getMockBuilder('Psr\\Log\\LoggerInterface')->getMock();
@@ -49,6 +53,9 @@ class LogListenerTest extends TestCase
         $dispatcher->dispatch(KernelEvents::REQUEST, new GetResponseEvent($kernel, Request::create('/foo'), HttpKernelInterface::MASTER_REQUEST), 'Log master requests');
     }
 
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testResponseListener()
     {
         $logger = $this->getMockBuilder('Psr\\Log\\LoggerInterface')->getMock();
@@ -68,6 +75,9 @@ class LogListenerTest extends TestCase
         $dispatcher->dispatch(KernelEvents::RESPONSE, new FilterResponseEvent($kernel, Request::create('/foo'), HttpKernelInterface::MASTER_REQUEST, Response::create('bar', 301)), 'Log master requests');
     }
 
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testExceptionListener()
     {
         $logger = $this->getMockBuilder('Psr\\Log\\LoggerInterface')->getMock();
@@ -88,7 +98,7 @@ class LogListenerTest extends TestCase
 
         $kernel = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\HttpKernelInterface')->getMock();
 
-        $dispatcher->dispatch(KernelEvents::EXCEPTION, new GetResponseForExceptionEvent($kernel, Request::create('/foo'), HttpKernelInterface::SUB_REQUEST, new \RuntimeException('Fatal error')));
+        $dispatcher->dispatch(KernelEvents::EXCEPTION, new GetResponseForExceptionEvent($kernel, Request::create('/foo'), HttpKernelInterface::SUB_REQUEST, new RuntimeException('Fatal error')));
 
         $dispatcher->dispatch(KernelEvents::EXCEPTION, new GetResponseForExceptionEvent($kernel, Request::create('/foo'), HttpKernelInterface::SUB_REQUEST, new HttpException(400, 'Http error')));
     }

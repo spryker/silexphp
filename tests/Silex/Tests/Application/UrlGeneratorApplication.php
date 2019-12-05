@@ -11,9 +11,10 @@
 
 namespace Silex\Tests\Application;
 
+use Silex\Application\UrlGeneratorTrait;
 use Silex\Application;
 
 class UrlGeneratorApplication extends Application
 {
-    use Application\UrlGeneratorTrait;
+    use UrlGeneratorTrait;
 }

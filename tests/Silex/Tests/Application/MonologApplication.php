@@ -11,9 +11,10 @@
 
 namespace Silex\Tests\Application;
 
+use Silex\Application\MonologTrait;
 use Silex\Application;
 
 class MonologApplication extends Application
 {
-    use Application\MonologTrait;
+    use MonologTrait;
 }

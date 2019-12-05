@@ -18,7 +18,6 @@ use Silex\EventListener\ConverterListener;
 use Silex\EventListener\MiddlewareListener;
 use Silex\EventListener\StringToResponseListener;
 use Silex\Provider\RoutingServiceProvider;
-use Spryker\Service\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,7 +36,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\RouteCollection;
 
 /**
  * The Silex framework class.
@@ -603,7 +601,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * If you call this method directly instead of run(), you must call the
      * terminate() method yourself if you want the finish filters to be run.
@@ -628,7 +626,9 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
+     *
+     * @return void
      */
     public function terminate(Request $request, Response $response)
     {

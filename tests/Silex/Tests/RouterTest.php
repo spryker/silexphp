@@ -12,6 +12,7 @@
 namespace Silex\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Silex\Route;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -95,11 +96,9 @@ class RouterTest extends TestCase
         $this->assertTrue($response->isRedirect('/target2'));
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
     public function testMissingRoute()
     {
+        $this->expectException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
         $app = new Application();
         unset($app['exception_handler']);
 
@@ -164,7 +163,7 @@ class RouterTest extends TestCase
         foreach (array('/foo', '/bar') as $path) {
             $request = Request::create($path);
             $response = $app->handle($request);
-            $this->assertContains($path, $response->getContent());
+            $this->assertStringContainsString($path, $response->getContent());
         }
     }
 
@@ -185,7 +184,7 @@ class RouterTest extends TestCase
 
     public function testHostSpecification()
     {
-        $route = new \Silex\Route();
+        $route = new Route();
 
         $this->assertSame($route, $route->host('{locale}.example.com'));
         $this->assertEquals('{locale}.example.com', $route->getHost());
@@ -251,7 +250,7 @@ class RouterTest extends TestCase
         $this->checkRouteResponse($app, '/bar', 'bar');
     }
 
-    protected function checkRouteResponse(Application $app, $path, $expectedContent, $method = 'get', $message = null)
+    protected function checkRouteResponse(Application $app, $path, $expectedContent, $method = 'get', string $message = '')
     {
         $request = Request::create($path, $method);
         $response = $app->handle($request);

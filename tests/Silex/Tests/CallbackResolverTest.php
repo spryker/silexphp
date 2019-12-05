@@ -12,6 +12,8 @@
 namespace Silex\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Pimple;
+use stdClass;
 use Silex\CallbackResolver;
 
 class CallbackResolverTest extends TestCase
@@ -19,15 +21,18 @@ class CallbackResolverTest extends TestCase
     private $app;
     private $resolver;
 
-    public function setUp(): void
+    /**
+     * @return void
+     */
+    public function setup(): void
     {
-        $this->app = new \Pimple();
+        $this->app = new Pimple();
         $this->resolver = new CallbackResolver($this->app);
     }
 
     public function testShouldResolveCallback()
     {
-        $this->app['some_service'] = function () { return new \stdClass(); };
+        $this->app['some_service'] = function () { return new stdClass(); };
 
         $this->assertTrue($this->resolver->isValid('some_service:methodName'));
         $this->assertEquals(
@@ -42,12 +47,10 @@ class CallbackResolverTest extends TestCase
         $this->assertFalse($this->resolver->isValid('some_service::methodName'));
     }
 
-    /**
-     * @expectedException          \InvalidArgumentException
-     * @expectedExceptionMessage   Service "some_service" does not exist.
-     */
     public function testShouldThrowAnExceptionIfServiceIsMissing()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Service "some_service" does not exist.');
         $this->resolver->convertCallback('some_service:methodName');
     }
 }

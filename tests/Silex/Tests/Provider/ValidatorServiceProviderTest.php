@@ -12,6 +12,10 @@
 namespace Silex\Tests\Provider;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Validator\Constraints\Expression;
+use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Email;
 use Silex\Application;
 use Silex\Provider\TranslationServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
@@ -29,6 +33,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class ValidatorServiceProviderTest extends TestCase
 {
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testRegister()
     {
         $app = new Application();
@@ -39,6 +46,9 @@ class ValidatorServiceProviderTest extends TestCase
         return $app;
     }
 
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testRegisterWithCustomValidators()
     {
         $app = new Application();
@@ -76,7 +86,7 @@ class ValidatorServiceProviderTest extends TestCase
             $this->markTestSkipped('Expression are not supported by this version of Symfony');
         }
 
-        $constraint = new Assert\Expression('true');
+        $constraint = new Expression('true');
         $validator = $app['validator.validator_factory']->getInstance($constraint);
         $this->assertInstanceOf('Symfony\Component\Validator\Constraints\ExpressionValidator', $validator);
     }
@@ -95,10 +105,10 @@ class ValidatorServiceProviderTest extends TestCase
      */
     public function testValidatorConstraint($email, $isValid, $nbGlobalError, $nbEmailError, $app)
     {
-        $constraints = new Assert\Collection(array(
+        $constraints = new Collection(array(
             'email' => array(
-                new Assert\NotBlank(),
-                new Assert\Email(),
+                new NotBlank(),
+                new Email(),
             ),
         ));
 
@@ -119,6 +129,9 @@ class ValidatorServiceProviderTest extends TestCase
         $this->assertEquals($nbEmailError, count($form->offsetGet('email')->getErrors()));
     }
 
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testValidatorWillNotAddNonexistentTranslationFiles()
     {
         $app = new Application(array(

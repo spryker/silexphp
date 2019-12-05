@@ -12,6 +12,7 @@
 namespace Silex\Tests\Provider;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionMethod;
 use Silex\Application;
 use Silex\Provider\FormServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
@@ -116,15 +117,18 @@ class FormServiceProviderTest extends TestCase
         ))));
 
         $this->assertFalse($form->isValid());
-        $r = new \ReflectionMethod($form, 'getErrors');
+        $r = new ReflectionMethod($form, 'getErrors');
         if (!$r->getNumberOfParameters()) {
             $this->assertContains('ERROR: German translation', $form->getErrorsAsString());
         } else {
             // as of 2.5
-            $this->assertContains('ERROR: German translation', (string) $form->getErrors(true, false));
+            $this->assertStringContainsString('ERROR: German translation', (string) $form->getErrors(true, false));
         }
     }
 
+    /**
+     * @doesNotPerformAssertion
+     */
     public function testFormServiceProviderWillNotAddNonexistentTranslationFiles()
     {
         $app = new Application(array(
