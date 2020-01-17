@@ -64,5 +64,6 @@
       "phpstan-setup": "cp composer.json composer.backup && COMPOSER_MEMORY_LIMIT=-1 composer require --dev phpstan/phpstan-shim:^0.11 && mv composer.backup composer.json"
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "abandoned": true
 }

@@ -6,6 +6,7 @@
 
 The micro framework Silex will no longer be maintained. With this release we introduce a copy of Silex to be able to refactor out Silex and replace it with a Spryker solution. This release will not change any behavior.
 
+**DEPRECATED - This module is not continued at this point.**
 
 ## Installation
 
@@ -13,8 +14,8 @@ The micro framework Silex will no longer be maintained. With this release we int
 composer require spryker/silexphp
 ```
 
-The module `spryker/silex` is now requiring `spryker/silexphp` instead of `silex/silexphp` - as refactored version of it. 
-You do not need to install this manually. Please consider to update `spryker/silex` instead. 
+The module `spryker/silex` is now requiring `spryker/silexphp` instead of `silex/silexphp` - as refactored version of it.
+You do not need to install this manually. Please consider to update `spryker/silex` instead.
 
 ## Documentation
 
