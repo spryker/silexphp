@@ -61,6 +61,7 @@ use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 use Symfony\Component\Security\Http\Logout\SessionLogoutHandler;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
+use Throwable;
 
 /**
  * @deprecated Use `\Spryker\Yves\Security\Plugin\Application\SecurityApplicationPlugin` instead.
@@ -321,13 +322,23 @@ class SecurityServiceProvider implements ServiceProviderInterface
         });
 
         $app['security.access_listener'] = $app->share(function ($app) {
-            return new AccessListener(
-                $app['security.token_storage'],
-                $app['security.access_manager'],
-                $app['security.access_map'],
-                $app['security.authentication_manager'],
-                $app['logger']
-            );
+            try {
+                return new AccessListener(
+                    $app['security.token_storage'],
+                    $app['security.access_manager'],
+                    $app['security.access_map'],
+                    $app['security.authentication_manager'],
+                    $app['logger']
+                );
+            } catch (Throwable $throwable) {
+                return new AccessListener(
+                    $app['security.token_storage'],
+                    $app['security.access_manager'],
+                    $app['security.access_map'],
+                    $app['security.authentication_manager'],
+                    true // Previously, the fifth argument was a logger in Symfony5 the logger was removed and replaced with an option to throw exception or not when a token is empty.
+                );
+            }
         });
 
         $app['security.access_map'] = $app->share(function ($app) {
@@ -345,7 +356,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         });
 
         $app['security.trust_resolver'] = $app->share(function () {
-            return new AuthenticationTrustResolver('Symfony\Component\Security\Core\Authentication\Token\AnonymousToken', 'Symfony\Component\Security\Core\Authentication\Token\RememberMeToken');
+            return new AuthenticationTrustResolver();
         });
 
         $app['security.session_strategy'] = $app->share(function () {

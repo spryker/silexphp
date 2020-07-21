@@ -51,6 +51,7 @@ class TranslationTraitTest extends TestCase
         }
         $translator->expects($this->once())->method('trans');
         $app->transChoice('foo', 2);
+
     }
 
     public function createApplication()

@@ -24,6 +24,7 @@ use Symfony\Bridge\Twig\Extension\SecurityExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\FormRenderer;
+use Symfony\Component\HttpKernel\Fragment\HIncludeFragmentRenderer;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\ArrayLoader;
@@ -79,7 +80,9 @@ class TwigServiceProvider implements ServiceProviderInterface
                 }
 
                 if (isset($app['fragment.handler'])) {
-                    $app['fragment.renderer.hinclude']->setTemplating($twig);
+                    if (method_exists(HIncludeFragmentRenderer::class, 'setTemplating')) {
+                        $app['fragment.renderer.hinclude']->setTemplating($twig);
+                    }
 
                     $twig->addExtension(new HttpKernelExtension());
                 }

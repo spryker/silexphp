@@ -8,7 +8,8 @@ matrix:
   fast_finish: true
 
 before_script:
-  - COMPOSER_MEMORY_LIMIT=-1 composer install --no-interaction --prefer-dist
+  - if [[ ${TRAVIS_PHP_VERSION} == "7.2" ]]; then COMPOSER_MEMORY_LIMIT=-1 composer update --prefer-lowest --no-interaction --prefer-dist ; fi
+  - if [[ ${TRAVIS_PHP_VERSION} == "7.4" ]]; then COMPOSER_MEMORY_LIMIT=-1 composer install --no-interaction --prefer-dist ; fi
 
 script:
   - vendor/bin/phpunit

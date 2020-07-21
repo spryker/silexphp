@@ -40,6 +40,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouteCollection;
@@ -174,13 +175,30 @@ class ApplicationTest extends TestCase
         $app = new Application();
         $app['pass'] = false;
 
-        $app->on('test', function (Event $e) use ($app) {
-            $app['pass'] = true;
-        });
+        $callback = $this->getCallback($app);
+        $app->on('test', $callback);
 
-        $app['dispatcher']->dispatch('test');
+        $app['dispatcher']->dispatch(new KernelEvent($app, Request::createFromGlobals(), HttpKernelInterface::MASTER_REQUEST), 'test');
 
         $this->assertTrue($app['pass']);
+    }
+
+    /**
+     * @param $app
+     *
+     * @return callable
+     */
+    protected function getCallback($app): callable
+    {
+        if (class_exists(Event::class)) {
+            return function (Event $e) use ($app) {
+                $app['pass'] = true;
+            };
+        }
+
+        return function (\Symfony\Contracts\EventDispatcher\Event $e) use ($app) {
+            $app['pass'] = true;
+        };
     }
 
     /**
