@@ -3,8 +3,8 @@ parameters:
         - "#Call to function method_exists\\(\\) with '.+Component…' and '__construct' will always evaluate to false#"
         - '#Method Symfony\\Component\\Validator\\ConstraintValidatorFactory::__construct\(\) invoked with 1 parameter, 0 required#'
         - '#Call to an undefined static method Symfony\\Component\\HttpKernel\\Controller\\ControllerResolver::doGetArguments\(\)#'
-        - '#Instanceof between Exception and Symfony\\Component\\Debug\\Exception\\FlattenException will always evaluate to false#'
         - '#Call to an undefined method Symfony\\Component\\Debug\\ExceptionHandler::createResponse\(\)#'
+        - "#Call to function method_exists\\(\\) with '.+Component…' and 'setTemplating' will always evaluate to false.#"
         - '#Instantiated class Symfony\\Bridge\\Doctrine\\Logger\\DbalLogger not found#'
         - '#Instantiated class Symfony\\Component\\Form\\Extension\\Csrf\\CsrfProvider\\DefaultCsrfProvider not found#'
         - '#Instantiated class Symfony\\Component\\HttpKernel\\EventListener\\EsiListener not found#'

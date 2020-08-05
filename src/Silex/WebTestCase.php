@@ -54,7 +54,7 @@ abstract class WebTestCase extends TestCase
      *
      * @param array $server Server parameters
      *
-     * @return HttpKernelBrowser A Client instance
+     * @return HttpKernelBrowser|Client A Client instance
      */
     public function createClient(array $server = array())
     {

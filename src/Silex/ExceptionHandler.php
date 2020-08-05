@@ -53,7 +53,7 @@ class ExceptionHandler implements EventSubscriberInterface
         if (method_exists($handler, 'getHtml')) {
             $exception = $event->getThrowable();
             if (!$exception instanceof FlattenException) {
-                $exception = FlattenException::create($exception);
+                $exception = $this->flattenException($exception);
             }
 
             $response = Response::create($handler->getHtml($exception), $exception->getStatusCode(), $exception->getHeaders())->setCharset(ini_get('default_charset'));
@@ -63,6 +63,20 @@ class ExceptionHandler implements EventSubscriberInterface
         }
 
         $event->setResponse($response);
+    }
+
+    /**
+     * @param \Exception|\Throwable $exception
+     *
+     * @return FlattenException
+     */
+    protected function flattenException($exception): FlattenException
+    {
+        if ($exception instanceof \Throwable) {
+            return FlattenException::createFromThrowable($exception);
+        }
+
+        return FlattenException::create($exception);
     }
 
     /**

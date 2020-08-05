@@ -60,7 +60,7 @@ class ExceptionListenerWrapper
         $this->ensureResponse($response, $event);
     }
 
-    protected function shouldRun(Exception $exception)
+    protected function shouldRun(\Throwable $exception)
     {
         if (is_array($this->callback)) {
             $callbackReflection = new ReflectionMethod($this->callback[0], $this->callback[1]);

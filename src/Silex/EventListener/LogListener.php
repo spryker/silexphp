@@ -101,9 +101,9 @@ class LogListener implements EventSubscriberInterface
     /**
      * Logs an exception.
      *
-     * @param \Exception $e
+     * @param \Throwable $e
      */
-    protected function logException(Exception $e)
+    protected function logException(\Throwable $e)
     {
         $message = sprintf('%s: %s (uncaught exception) at %s line %s', get_class($e), $e->getMessage(), $e->getFile(), $e->getLine());
 
