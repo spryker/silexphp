@@ -177,6 +177,14 @@ if (method_exists('Symfony\Component\Form\AbstractType', 'configureOptions')) {
             return class_exists('Symfony\Component\Form\Extension\Core\Type\RangeType') ? 'Symfony\Component\Form\Extension\Core\Type\FileType' : 'file';
         }
 
+        /**
+         * @return string[]
+         */
+        public static function getExtendedTypes(): iterable
+        {
+            return [static::getExtendedType()];
+        }
+
         public function configureOptions(OptionsResolver $resolver)
         {
             $resolver->setDefined(array('image_path'));
@@ -188,6 +196,14 @@ if (method_exists('Symfony\Component\Form\AbstractType', 'configureOptions')) {
         public function getExtendedType()
         {
             return class_exists('Symfony\Component\Form\Extension\Core\Type\RangeType') ? 'Symfony\Component\Form\Extension\Core\Type\FileType' : 'file';
+        }
+
+        /**
+         * @return string[]
+         */
+        public static function getExtendedTypes(): iterable
+        {
+            return [static::getExtendedType()];
         }
 
         public function setDefaultOptions(OptionsResolverInterface $resolver)
