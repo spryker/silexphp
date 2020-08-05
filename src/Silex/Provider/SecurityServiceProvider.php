@@ -355,7 +355,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         });
 
         $app['security.trust_resolver'] = $app->share(function () {
-            return new AuthenticationTrustResolver('Symfony\Component\Security\Core\Authentication\Token\AnonymousToken', 'Symfony\Component\Security\Core\Authentication\Token\RememberMeToken');
+            return new AuthenticationTrustResolver();
         });
 
         $app['security.session_strategy'] = $app->share(function () {

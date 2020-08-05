@@ -13,6 +13,7 @@ namespace Silex;
 
 use PHPUnit\Framework\TestCase;
 use LogicException;
+use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\HttpKernel\Client;
 use Symfony\Component\HttpKernel\HttpKernelBrowser;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -54,7 +55,7 @@ abstract class WebTestCase extends TestCase
      *
      * @param array $server Server parameters
      *
-     * @return HttpKernelBrowser|Client A Client instance
+     * @return AbstractBrowser|Client A Client instance
      */
     public function createClient(array $server = array())
     {

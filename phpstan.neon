@@ -1,4 +1,5 @@
 parameters:
+    reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         - "#Call to function method_exists\\(\\) with '.+Component…' and '__construct' will always evaluate to false#"
         - '#Method Symfony\\Component\\Validator\\ConstraintValidatorFactory::__construct\(\) invoked with 1 parameter, 0 required#'
@@ -18,4 +19,8 @@ parameters:
         - '#Instantiated class Silex\\Provider\\SecurityContext not found#'
         - '#Access to constant AUTHENTICATION_ERROR on an unknown class Silex\\Provider\\SecurityContextInterface#'
         - '#Method Silex\\Application::register\(\) should return \$this\(Silex\\Application\) but returns Silex\\Application#'
+        - '#Instantiated class .+MessageSelector not found.#'
+        - '#Comparison operation ">=" between 50103 and 20800 is always true.#'
+        - '#Unreachable statement - code above always terminates.#'
+        - '#Return typehint of method .+WebTestCase::createClient\(\) has invalid type Symfony\\Component\\HttpKernel\\Client.#'
 

@@ -72,11 +72,11 @@ class ExceptionHandler implements EventSubscriberInterface
      */
     protected function flattenException($exception): FlattenException
     {
-        if ($exception instanceof \Throwable) {
-            return FlattenException::createFromThrowable($exception);
+        if ($exception instanceof \Exception) {
+            return FlattenException::create($exception);
         }
 
-        return FlattenException::create($exception);
+        return FlattenException::createFromThrowable($exception);
     }
 
     /**
