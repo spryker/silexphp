@@ -32,7 +32,7 @@ class Translator extends BaseTranslator
     /**
      * {@inheritdoc}
      */
-    public function transChoice(?string $id, int $number, array $parameters = [], string $domain = null, string $locale = null)
+    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null)
     {
         $parameters['%count%'] = $number;
 

@@ -78,7 +78,13 @@ class TwigServiceProviderTest extends TestCase
             'twig.templates' => ['foo' => 'foo'],
         ]);
         $loader = $this->getMockBuilder(LoaderInterface::class)->getMock();
-        $loader->expects($this->never())->method('getSourceContext');
+
+        if (method_exists(LoaderInterface::class, 'getSourceContext')) {
+            $loader->expects($this->never())->method('getSourceContext');
+        } else {
+            $loader->expects($this->never())->method('getSource');
+        }
+
         $app['twig.loader.filesystem'] = $app->share(function ($app) use ($loader) {
             return $loader;
         });

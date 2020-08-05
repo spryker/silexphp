@@ -37,7 +37,7 @@ class SpoolStub implements Swift_Spool
         return count($this->messages) > 0;
     }
 
-    public function queueMessage(Swift_Mime_Message $message)
+    public function queueMessage($message)
     {
         $this->messages[] = $message;
     }

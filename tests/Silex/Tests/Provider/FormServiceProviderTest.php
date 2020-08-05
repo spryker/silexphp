@@ -182,7 +182,7 @@ if (method_exists('Symfony\Component\Form\AbstractType', 'configureOptions')) {
          */
         public static function getExtendedTypes(): iterable
         {
-            return [static::getExtendedType()];
+            return [class_exists('Symfony\Component\Form\Extension\Core\Type\RangeType') ? 'Symfony\Component\Form\Extension\Core\Type\FileType' : 'file'];
         }
 
         public function configureOptions(OptionsResolver $resolver)
@@ -203,7 +203,7 @@ if (method_exists('Symfony\Component\Form\AbstractType', 'configureOptions')) {
          */
         public static function getExtendedTypes(): iterable
         {
-            return [static::getExtendedType()];
+            return [class_exists('Symfony\Component\Form\Extension\Core\Type\RangeType') ? 'Symfony\Component\Form\Extension\Core\Type\FileType' : 'file'];
         }
 
         public function setDefaultOptions(OptionsResolverInterface $resolver)
