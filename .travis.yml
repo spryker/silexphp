@@ -16,7 +16,7 @@ before_script:
 
 script:
   - vendor/bin/phpunit
-  - COMPOSER_MEMORY_LIMIT=-1 composer phpstan-setup && composer phpstan
+  - COMPOSER_MEMORY_LIMIT=-1 composer phpstan
 
 cache:
   directories:

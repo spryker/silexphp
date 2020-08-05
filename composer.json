@@ -64,8 +64,7 @@
         }
     },
     "scripts": {
-      "phpstan": "phpstan analyse -c phpstan.neon -l 5 src/",
-      "phpstan-setup": "cp composer.json composer.backup && COMPOSER_MEMORY_LIMIT=-1 composer require --dev phpstan/phpstan:^0.12 && mv composer.backup composer.json"
+      "phpstan": "phpstan analyse -c phpstan.neon -l 5 src/"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
