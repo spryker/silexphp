@@ -47,7 +47,14 @@ class MiddlewareListener implements EventSubscriberInterface
     {
         $request = $event->getRequest();
         $routeName = $request->attributes->get('_route');
-        if ($routeName === null || !$route = $this->app['routes']->get($routeName)) {
+
+        if ($routeName === null) {
+            return;
+        }
+
+        $route = $this->app['routes']->get($routeName);
+
+        if (!$route) {
             return;
         }
 
@@ -57,7 +64,7 @@ class MiddlewareListener implements EventSubscriberInterface
                 $event->setResponse($ret);
 
                 return;
-            } elseif (null !== $ret) {
+            } elseif ($ret !== null) {
                 throw new RuntimeException(sprintf('A before middleware for route "%s" returned an invalid response value. Must return null or an instance of Response.', $routeName));
             }
         }
@@ -72,7 +79,14 @@ class MiddlewareListener implements EventSubscriberInterface
     {
         $request = $event->getRequest();
         $routeName = $request->attributes->get('_route');
-        if ($routeName === null || !$route = $this->app['routes']->get($routeName)) {
+
+        if ($routeName === null) {
+            return;
+        }
+
+        $route = $this->app['routes']->get($routeName);
+
+        if (!$route) {
             return;
         }
 

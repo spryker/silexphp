@@ -61,6 +61,7 @@ use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 use Symfony\Component\Security\Http\Logout\SessionLogoutHandler;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
+use Throwable;
 
 /**
  * @deprecated Use `\Spryker\Yves\Security\Plugin\Application\SecurityApplicationPlugin` instead.
@@ -329,7 +330,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                     $app['security.authentication_manager'],
                     $app['logger']
                 );
-            } catch (\Throwable $throwable) {
+            } catch (Throwable $throwable) {
                 return new AccessListener(
                     $app['security.token_storage'],
                     $app['security.access_manager'],
