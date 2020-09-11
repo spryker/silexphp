@@ -11,7 +11,7 @@
 
 namespace Silex\Application;
 
-use Silex\Translator;
+use Symfony\Component\Translation\Translator;
 
 /**
  * Translation trait.
