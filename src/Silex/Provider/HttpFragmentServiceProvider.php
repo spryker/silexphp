@@ -40,7 +40,7 @@ class HttpFragmentServiceProvider implements ServiceProviderInterface
         }
 
         $app['fragment.handler'] = $app->share(function ($app) {
-            return new FragmentHandler($app['fragment.renderers'], $app['debug'], $app['request_stack']);
+            return new FragmentHandler($app['request_stack'], $app['fragment.renderers'], $app['debug']);
         });
 
         $app['fragment.renderer.inline'] = $app->share(function ($app) {
