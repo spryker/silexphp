@@ -13,6 +13,7 @@ namespace Silex\Tests\Application;
 
 use PHPUnit\Framework\TestCase;
 use Silex\Provider\TranslationServiceProvider;
+use Symfony\Component\Translation\Translator;
 
 /**
  * TranslationTrait test cases.
