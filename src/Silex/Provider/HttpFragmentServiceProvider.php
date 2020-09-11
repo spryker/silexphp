@@ -40,10 +40,6 @@ class HttpFragmentServiceProvider implements ServiceProviderInterface
         }
 
         $app['fragment.handler'] = $app->share(function ($app) {
-            if (Kernel::VERSION_ID >= 20800) {
-                return new FragmentHandler($app['request_stack'], $app['fragment.renderers'], $app['debug']);
-            }
-
             return new FragmentHandler($app['fragment.renderers'], $app['debug'], $app['request_stack']);
         });
 

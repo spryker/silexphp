@@ -1,4 +1,5 @@
 parameters:
+    reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         - "#Call to function method_exists\\(\\) with '.+Component…' and '__construct' will always evaluate to false#"
         - '#Method Symfony\\Component\\Validator\\ConstraintValidatorFactory::__construct\(\) invoked with 1 parameter, 0 required#'

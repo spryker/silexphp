@@ -69,7 +69,7 @@ class ControllerCollection
     public function mount($prefix, $controllers)
     {
         if (is_callable($controllers)) {
-            $collection = $this->controllersFactory ? call_user_func($this->controllersFactory) : new static(new Route(), new RouteCollection());
+            $collection = $this->controllersFactory ? call_user_func($this->controllersFactory) : new ControllerCollection(new Route(), new RouteCollection());
             call_user_func($controllers, $collection);
             $controllers = $collection;
         } elseif (!$controllers instanceof self) {

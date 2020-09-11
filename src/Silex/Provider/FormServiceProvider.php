@@ -22,6 +22,7 @@ use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension as FormValidatorExtension;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Form\ResolvedFormTypeFactory;
+use Symfony\Component\Intl\Locale\Locale;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\TokenStorage\NativeSessionTokenStorage;
 use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
@@ -43,7 +44,7 @@ class FormServiceProvider implements ServiceProviderInterface
         }
 
         if (!class_exists('Locale')) {
-            $r = new ReflectionClass('Symfony\Component\Locale\Stub\StubLocale');
+            $r = new ReflectionClass(Locale::class);
             $path = dirname(dirname($r->getFilename())).'/Resources/stubs';
 
             require_once $path.'/functions.php';
