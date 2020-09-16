@@ -18,7 +18,7 @@
         "php": ">=7.2",
         "spryker/container": "^1.1.0",
         "symfony/event-dispatcher": "^3.0.0 || ^4.0.0",
-        "symfony/http-kernel": "^3.0.0 || ^4.0.0",
+        "symfony/http-kernel": "^3.4.0 || ^4.0.0",
         "symfony/routing": "^3.0.0 || ^4.0.0"
     },
     "require-dev": {
@@ -38,12 +38,13 @@
         "symfony/translation": "^3.0.0 || ^4.0.0",
         "symfony/twig-bridge": "^3.2.0 || ^4.0.0",
         "symfony/validator": "^3.0.0 || ^4.0.0",
-        "twig/twig": "~1.28|~2.0",
+        "twig/twig": "^1.41 || ^2.0.0 || ^3.0.0",
         "doctrine/dbal": "~2.2",
         "swiftmailer/swiftmailer": "~5",
         "monolog/monolog": "^1.4.1",
         "phpunit/phpunit": "^8",
-        "sllh/composer-versions-check": "^2.0"
+        "sllh/composer-versions-check": "^2.0",
+        "phpstan/phpstan": "^0.12.35"
     },
     "conflict": {
         "silexphp/silex": "<3.0.0"
@@ -60,8 +61,7 @@
         }
     },
     "scripts": {
-      "phpstan": "phpstan analyse -c phpstan.neon -l 5 src/",
-      "phpstan-setup": "cp composer.json composer.backup && COMPOSER_MEMORY_LIMIT=-1 composer require --dev phpstan/phpstan-shim:^0.11 && mv composer.backup composer.json"
+      "phpstan": "phpstan analyse -c phpstan.neon -l 5 src/"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

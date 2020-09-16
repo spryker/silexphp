@@ -7,15 +7,12 @@ matrix:
 
   fast_finish: true
 
-before_install:
-  - if [[ ${TRAVIS_PHP_VERSION} != "7.4" ]]; then phpenv config-rm xdebug.ini ; fi
-
 before_script:
   - COMPOSER_MEMORY_LIMIT=-1 composer install --no-interaction --prefer-dist
 
 script:
   - vendor/bin/phpunit
-  - COMPOSER_MEMORY_LIMIT=-1 composer phpstan-setup && composer phpstan
+  - COMPOSER_MEMORY_LIMIT=-1 composer phpstan
 
 cache:
   directories:

@@ -11,6 +11,8 @@
 
 namespace Silex\Application;
 
+use Symfony\Component\Translation\Translator;
+
 /**
  * Translation trait.
  *
@@ -46,6 +48,14 @@ trait TranslationTrait
      */
     public function transChoice($id, $number, array $parameters = array(), $domain = 'messages', $locale = null)
     {
-        return $this['translator']->transChoice($id, $number, $parameters, $domain, $locale);
+        $transChoiceExists = method_exists(Translator::class, 'transChoice');
+
+        if ($transChoiceExists) {
+            return $this['translator']->transChoice($id, $number, $parameters, $domain, $locale);
+        }
+
+        $parameters['%count%'] = $number;
+
+        return $this->trans($id, $parameters, $domain, $locale);
     }
 }
