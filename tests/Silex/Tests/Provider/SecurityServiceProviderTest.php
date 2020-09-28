@@ -53,11 +53,11 @@ class SecurityServiceProviderTest extends WebTestCase
      */
     protected function getClient(Application $app): AbstractBrowser
     {
-        if (class_exists(Client::class)) {
-            return new Client($app);
+        if (class_exists(HttpKernelBrowser::class)) {
+            return new HttpKernelBrowser($app);
         }
 
-        return new HttpKernelBrowser($app);
+        return new Client($app);
     }
 
     public function testFormAuthentication()

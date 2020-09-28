@@ -327,8 +327,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                     $app['security.token_storage'],
                     $app['security.access_manager'],
                     $app['security.access_map'],
-                    $app['security.authentication_manager'],
-                    $app['logger']
+                    $app['security.authentication_manager']
                 );
             } catch (Throwable $throwable) {
                 return new AccessListener(
@@ -336,7 +335,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                     $app['security.access_manager'],
                     $app['security.access_map'],
                     $app['security.authentication_manager'],
-                    true // Previously, the fifth argument was a logger in Symfony5 the logger was removed and replaced with an option to throw exception or not when a token is empty.
+                    $app['logger']
                 );
             }
         });

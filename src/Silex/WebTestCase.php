@@ -59,14 +59,14 @@ abstract class WebTestCase extends TestCase
      */
     public function createClient(array $server = array())
     {
-        if (!class_exists('Symfony\Component\BrowserKit\Client') && !class_exists('Symfony\Component\BrowserKit\AbstractBrowser')) {
+        if (!class_exists(Client::class) && !class_exists(AbstractBrowser::class)) {
             throw new LogicException('Component "symfony/browser-kit" is required by WebTestCase.'.PHP_EOL.'Run composer require symfony/browser-kit');
         }
 
-        if (class_exists(Client::class)) {
-            return new Client($this->app, $server);
+        if (class_exists(HttpKernelBrowser::class)) {
+            return new HttpKernelBrowser($this->app, $server);
         }
 
-        return new HttpKernelBrowser($this->app, $server);
+        return new Client($this->app, $server);
     }
 }
