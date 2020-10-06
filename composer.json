@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=7.2",
-        "spryker/container": "dev-beta/te-7001/te-7174/te-7175-create-beta-branch-for-spryker-container as 1.1.0",
+        "spryker/container": "^1.1.0",
         "symfony/event-dispatcher": "^3.0.0 || ^4.0.0 || ^5.0.0",
         "symfony/http-kernel": "^4.3.0 || ^5.0.0",
         "symfony/routing": "^3.0.0 || ^4.0.0 || ^5.0.0"
