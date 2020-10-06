@@ -29,6 +29,20 @@ class Translator extends BaseTranslator
         parent::__construct($this->app['locale'], $selector, $cacheDir, $debug);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null)
+    {
+        if (method_exists(BaseTranslator::class, 'transChoice')) {
+            return parent::transChoice($id, $number, $parameters, $domain, $locale);
+        }
+
+        $parameters['%count%'] = $number;
+
+        return $this->trans($id, $parameters, $domain, $locale);
+    }
+
     public function getLocale()
     {
         return $this->app['locale'];
@@ -48,15 +62,5 @@ class Translator extends BaseTranslator
         $this->app['locale'] = $locale;
 
         parent::setLocale($locale);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null)
-    {
-        $parameters['%count%'] = $number;
-
-        return $this->trans($id, $parameters, $domain, $locale);
     }
 }

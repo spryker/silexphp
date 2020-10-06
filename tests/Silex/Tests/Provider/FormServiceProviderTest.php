@@ -19,6 +19,8 @@ use Silex\Provider\TranslationServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Csrf\CsrfProvider\CsrfProviderInterface;
 use Symfony\Component\Form\FormTypeGuesserChain;
 use Symfony\Component\HttpFoundation\Request;
@@ -174,7 +176,15 @@ if (method_exists('Symfony\Component\Form\AbstractType', 'configureOptions')) {
     {
         public function getExtendedType()
         {
-            return class_exists('Symfony\Component\Form\Extension\Core\Type\RangeType') ? 'Symfony\Component\Form\Extension\Core\Type\FileType' : 'file';
+            return class_exists(RangeType::class) ? FileType::class : 'file';
+        }
+
+        /**
+         * @return string[]
+         */
+        public static function getExtendedTypes(): iterable
+        {
+            return [class_exists(RangeType::class) ? FileType::class : 'file'];
         }
 
         public function configureOptions(OptionsResolver $resolver)
@@ -187,7 +197,15 @@ if (method_exists('Symfony\Component\Form\AbstractType', 'configureOptions')) {
     {
         public function getExtendedType()
         {
-            return class_exists('Symfony\Component\Form\Extension\Core\Type\RangeType') ? 'Symfony\Component\Form\Extension\Core\Type\FileType' : 'file';
+            return class_exists(RangeType::class) ? FileType::class : 'file';
+        }
+
+        /**
+         * @return string[]
+         */
+        public static function getExtendedTypes(): iterable
+        {
+            return [class_exists(RangeType::class) ? FileType::class : 'file'];
         }
 
         public function setDefaultOptions(OptionsResolverInterface $resolver)

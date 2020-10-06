@@ -16,8 +16,10 @@ use Silex\WebTestCase;
 use Silex\Provider\SecurityServiceProvider;
 use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\ValidatorServiceProvider;
+use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\HttpKernel\Client;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelBrowser;
 
 /**
  * @deprecated Please use spryker/log instead
@@ -44,11 +46,25 @@ class SecurityServiceProviderTest extends WebTestCase
         $app->handle(Request::create('/'));
     }
 
+    /**
+     * @param Application $app
+     *
+     * @return AbstractBrowser
+     */
+    protected function getClient(Application $app): AbstractBrowser
+    {
+        if (class_exists(HttpKernelBrowser::class)) {
+            return new HttpKernelBrowser($app);
+        }
+
+        return new Client($app);
+    }
+
     public function testFormAuthentication()
     {
         $app = $this->createApplication('form');
 
-        $client = new Client($app);
+        $client = $this->getClient($app);
 
         $client->request('get', '/');
         $this->assertEquals('ANONYMOUS', $client->getResponse()->getContent());
@@ -96,7 +112,7 @@ class SecurityServiceProviderTest extends WebTestCase
     {
         $app = $this->createApplication('http');
 
-        $client = new Client($app);
+        $client = $this->getClient($app);
 
         $client->request('get', '/');
         $this->assertEquals(401, $client->getResponse()->getStatusCode());
@@ -146,7 +162,7 @@ class SecurityServiceProviderTest extends WebTestCase
         $app = $this->createApplication('form');
         $app['security.hide_user_not_found'] = false;
 
-        $client = new Client($app);
+        $client = $this->getClient($app);
 
         $client->request('get', '/');
         $this->assertEquals('ANONYMOUS', $client->getResponse()->getContent());

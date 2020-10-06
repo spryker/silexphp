@@ -16,7 +16,7 @@ use Closure;
 use ReflectionObject;
 use ReflectionFunction;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
 
 /**
  * Wraps view listeners.
@@ -40,7 +40,7 @@ class ViewListenerWrapper
         $this->callback = $callback;
     }
 
-    public function __invoke(GetResponseForControllerResultEvent $event)
+    public function __invoke(ViewEvent $event)
     {
         $controllerResult = $event->getControllerResult();
         $callback = $this->app['callback_resolver']->resolveCallback($this->callback);

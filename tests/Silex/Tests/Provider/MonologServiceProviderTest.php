@@ -74,7 +74,15 @@ class MonologServiceProviderTest extends TestCase
         $app = $this->getApplication();
 
         $app['controllers']->get('/log', function () use ($app) {
-            $app['monolog']->addDebug('logging a message');
+            /** @var \Symfony\Bridge\Monolog\Logger $monolog */
+            $monolog = $app['monolog'];
+            if (method_exists(Logger::class, 'addDebug')) {
+                $monolog->addDebug('logging a message');
+
+                return true;
+            }
+
+            $monolog->debug('logging a message');
             return true;
         });
 

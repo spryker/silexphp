@@ -26,9 +26,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\PostResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\EventListener\ResponseListener;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\HttpKernel;
@@ -322,7 +322,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     {
         $app = $this;
 
-        $this->on(KernelEvents::REQUEST, function (GetResponseEvent $event) use ($callback, $app) {
+        $this->on(KernelEvents::REQUEST, function (RequestEvent $event) use ($callback, $app) {
             if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
                 return;
             }
@@ -354,7 +354,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     {
         $app = $this;
 
-        $this->on(KernelEvents::RESPONSE, function (FilterResponseEvent $event) use ($callback, $app) {
+        $this->on(KernelEvents::RESPONSE, function (ResponseEvent $event) use ($callback, $app) {
             if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
                 return;
             }
@@ -385,7 +385,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     {
         $app = $this;
 
-        $this->on(KernelEvents::TERMINATE, function (PostResponseEvent $event) use ($callback, $app) {
+        $this->on(KernelEvents::TERMINATE, function (TerminateEvent $event) use ($callback, $app) {
             call_user_func($app['callback_resolver']->resolveCallback($callback), $event->getRequest(), $event->getResponse(), $app);
         }, $priority);
     }

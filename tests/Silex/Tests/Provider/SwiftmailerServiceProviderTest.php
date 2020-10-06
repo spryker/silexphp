@@ -58,7 +58,13 @@ class SwiftmailerServiceProviderTest extends TestCase
         });
 
         $app['controllers']->get('/', function () use ($app) {
-            $app['mailer']->send(Swift_Message::newInstance());
+            if (method_exists(Swift_Message::class, 'newInstance')) {
+                $app['mailer']->send(Swift_Message::newInstance());
+                return true;
+            }
+
+            $app['mailer']->send(new Swift_Message());
+
             return true;
         });
 

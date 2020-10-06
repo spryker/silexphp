@@ -14,7 +14,9 @@ namespace Silex\Tests\Provider;
 use Silex\Application;
 use Silex\WebTestCase;
 use Silex\Provider\SessionServiceProvider;
+use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\HttpKernel\Client;
+use Symfony\Component\HttpKernel\HttpKernelBrowser;
 
 /**
  * SessionProvider test cases.
@@ -97,12 +99,26 @@ class SessionServiceProviderTest extends WebTestCase
         $app['debug'] = true;
         unset($app['exception_handler']);
 
-        $client = new Client($app);
+        $client = $this->getClient($app);
 
         $client->request('get', '/');
         $this->assertEquals('A welcome page.', $client->getResponse()->getContent());
 
         $client->request('get', '/robots.txt');
         $this->assertEquals('Informations for robots.', $client->getResponse()->getContent());
+    }
+
+    /**
+     * @param Application $app
+     *
+     * @return AbstractBrowser
+     */
+    protected function getClient(Application $app): AbstractBrowser
+    {
+        if (class_exists(HttpKernelBrowser::class)) {
+            return new HttpKernelBrowser($app);
+        }
+
+        return new Client($app);
     }
 }

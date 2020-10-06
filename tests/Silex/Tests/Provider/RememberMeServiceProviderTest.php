@@ -16,7 +16,9 @@ use Silex\WebTestCase;
 use Silex\Provider\RememberMeServiceProvider;
 use Silex\Provider\SecurityServiceProvider;
 use Silex\Provider\SessionServiceProvider;
+use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\HttpKernel\Client;
+use Symfony\Component\HttpKernel\HttpKernelBrowser;
 use Symfony\Component\Security\Http\SecurityEvents;
 
 /**
@@ -33,7 +35,7 @@ class RememberMeServiceProviderTest extends WebTestCase
         $interactiveLogin = new InteractiveLoginTriggered();
         $app->on(SecurityEvents::INTERACTIVE_LOGIN, array($interactiveLogin, 'onInteractiveLogin'));
 
-        $client = new Client($app);
+        $client = $this->getClient($app);
 
         $client->request('get', '/');
         $this->assertFalse($interactiveLogin->triggered, 'The interactive login has not been triggered yet');
@@ -55,6 +57,20 @@ class RememberMeServiceProviderTest extends WebTestCase
         $client->followRedirect();
 
         $this->assertNull($client->getCookiejar()->get('REMEMBERME'), 'The REMEMBERME cookie has been removed');
+    }
+
+    /**
+     * @param Application $app
+     *
+     * @return AbstractBrowser
+     */
+    protected function getClient(Application $app): AbstractBrowser
+    {
+        if (class_exists(HttpKernelBrowser::class)) {
+            return new HttpKernelBrowser($app);
+        }
+
+        return new Client($app);
     }
 
     public function createApplication($authenticationMethod = 'form')

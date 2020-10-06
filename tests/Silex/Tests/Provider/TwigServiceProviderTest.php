@@ -30,7 +30,7 @@ class TwigServiceProviderTest extends TestCase
         $app = new Application(['form.factory' => true]);
 
         $app->register(new TwigServiceProvider(), [
-            'twig.templates' => ['hello' => 'Hello {{ name }}!'],
+            'twig.templates' => ['hello' => '<span>Hello </span>{{ name }}!'],
         ]);
 
         $app['controllers']->get('/hello/{name}', function ($name) use ($app) {
@@ -39,7 +39,7 @@ class TwigServiceProviderTest extends TestCase
 
         $request = Request::create('/hello/john');
         $response = $app->handle($request);
-        $this->assertEquals('Hello john!', $response->getContent());
+        $this->assertEquals('<span>Hello </span>john!', $response->getContent());
     }
 
     public function testRenderFunction()
@@ -78,11 +78,13 @@ class TwigServiceProviderTest extends TestCase
             'twig.templates' => ['foo' => 'foo'],
         ]);
         $loader = $this->getMockBuilder(LoaderInterface::class)->getMock();
+
         if (method_exists(LoaderInterface::class, 'getSourceContext')) {
             $loader->expects($this->never())->method('getSourceContext');
         } else {
             $loader->expects($this->never())->method('getSource');
         }
+
         $app['twig.loader.filesystem'] = $app->share(function ($app) use ($loader) {
             return $loader;
         });
