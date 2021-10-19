@@ -606,7 +606,7 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
      * If you call this method directly instead of run(), you must call the
      * terminate() method yourself if you want the finish filters to be run.
      */
-    public function handle(Request $request, int $type = self::MAIN_REQUEST, bool $catch = true): Response
+    public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = true): Response
     {
         if (!$this->booted) {
             $this->boot();
