@@ -73,5 +73,10 @@
         "phpstan": "phpstan analyse -c phpstan.neon -l 5 src/"
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "sllh/composer-versions-check": true
+        }
+    }
 }
