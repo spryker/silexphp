@@ -33,6 +33,13 @@ use Symfony\Component\HttpKernel\UriSigner;
  */
 class HttpFragmentServiceProvider implements ServiceProviderInterface
 {
+    protected $uriSignerSecret;
+
+    public function __construct(?string $uriSignerSecret = null)
+    {
+        $this->uriSignerSecret = $uriSignerSecret ? $uriSignerSecret : md5(__DIR__);
+    }
+
     public function register(Application $app)
     {
         if (!class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
@@ -72,7 +79,7 @@ class HttpFragmentServiceProvider implements ServiceProviderInterface
             return new UriSigner($app['uri_signer.secret']);
         });
 
-        $app['uri_signer.secret'] = md5(__DIR__);
+        $app['uri_signer.secret'] = $this->uriSignerSecret;
         $app['fragment.path'] = '/_fragment';
         $app['fragment.renderer.hinclude.global_template'] = null;
         $app['fragment.renderers'] = $app->share(function ($app) {
