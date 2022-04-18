@@ -13,13 +13,19 @@ jobs:
       matrix:
         php-version: [
             '7.4',
-            'nighly'
+            '8.0'
         ]
 
     steps:
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl, pdo_mysql
 
       - name: Validate composer.json and composer.lock
         run: composer validate
@@ -41,12 +47,6 @@ jobs:
           composer --version
           composer install -o
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-version }}
-          extensions: mbstring, intl, pdo_mysql
-
       - name: PHPStan checks
         run: composer phpstan
 
@@ -67,6 +67,12 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl, pdo_mysql
+
       - name: Get Composer Cache Directory
         id: composer-cache
         run: |
@@ -81,12 +87,6 @@ jobs:
 
       - name: Composer prefer-lowest
         run: composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable -o
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-version }}
-          extensions: mbstring, intl, pdo_mysql
 
       - name: PHPUnit tests
         run: vendor/bin/phpunit

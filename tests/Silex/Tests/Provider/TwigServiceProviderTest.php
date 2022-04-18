@@ -27,6 +27,8 @@ class TwigServiceProviderTest extends TestCase
 {
     public function testRegisterAndRender()
     {
+        putenv('SPRYKER_ZED_REQUEST_TOKEN=spryker-zed-request-token');
+
         $app = new Application(['form.factory' => true]);
 
         $app->register(new TwigServiceProvider(), [
