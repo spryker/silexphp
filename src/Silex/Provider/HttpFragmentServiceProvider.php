@@ -19,6 +19,7 @@ use Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer;
 use Symfony\Component\HttpKernel\Fragment\EsiFragmentRenderer;
 use Symfony\Component\HttpKernel\Fragment\HIncludeFragmentRenderer;
 use Symfony\Component\HttpKernel\EventListener\FragmentListener;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\HttpKernel\UriSigner;
 
 /**
@@ -36,7 +37,7 @@ class HttpFragmentServiceProvider implements ServiceProviderInterface
 
     public function __construct(?string $uriSignerSecret = null)
     {
-        $this->uriSignerSecret = $uriSignerSecret;
+        $this->uriSignerSecret = $uriSignerSecret ? $uriSignerSecret : md5(__DIR__);
     }
 
     public function register(Application $app)
@@ -78,7 +79,7 @@ class HttpFragmentServiceProvider implements ServiceProviderInterface
             return new UriSigner($app['uri_signer.secret']);
         });
 
-        $app['uri_signer.secret'] = $this->getUriSignerSecret();
+        $app['uri_signer.secret'] = $this->uriSignerSecret;
         $app['fragment.path'] = '/_fragment';
         $app['fragment.renderer.hinclude.global_template'] = null;
         $app['fragment.renderers'] = $app->share(function ($app) {
@@ -95,26 +96,5 @@ class HttpFragmentServiceProvider implements ServiceProviderInterface
     public function boot(Application $app)
     {
         $app['dispatcher']->addSubscriber($app['fragment.listener']);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getUriSignerSecret(): string
-    {
-        if ($this->uriSignerSecret) {
-            return $this->uriSignerSecret;
-        }
-
-        $this->uriSignerSecret = getenv('SPRYKER_ZED_REQUEST_TOKEN') ?: null;
-
-        if (!$this->uriSignerSecret) {
-            trigger_error(
-                'Environment variable `SPRYKER_ZED_REQUEST_TOKEN` must be defined.',
-                E_USER_ERROR,
-            );
-        }
-
-        return $this->uriSignerSecret;
     }
 }
