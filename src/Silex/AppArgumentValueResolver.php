@@ -38,7 +38,7 @@ class AppArgumentValueResolver implements ArgumentValueResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function supports(Request $request, ArgumentMetadata $argument)
+    public function supports(Request $request, ArgumentMetadata $argument): bool
     {
         return null !== $argument->getType() && (Application::class === $argument->getType() || is_subclass_of($argument->getType(), Application::class));
     }
@@ -46,7 +46,7 @@ class AppArgumentValueResolver implements ArgumentValueResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function resolve(Request $request, ArgumentMetadata $argument)
+    public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         yield $this->app;
     }
