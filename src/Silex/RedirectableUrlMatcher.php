@@ -11,6 +11,8 @@
 
 namespace Silex;
 
+use Composer\InstalledVersions;
+use Composer\Semver\VersionParser;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Matcher\RedirectableUrlMatcher as BaseRedirectableUrlMatcher;
 
@@ -19,37 +21,75 @@ use Symfony\Component\Routing\Matcher\RedirectableUrlMatcher as BaseRedirectable
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class RedirectableUrlMatcher extends BaseRedirectableUrlMatcher
-{
-    /**
-     * {@inheritdoc}
-     */
-    public function redirect(string $path, string $route, string $scheme = null): array
+if (InstalledVersions::satisfies(new VersionParser, 'symfony/routing', '^6.0.0')) {
+    class RedirectableUrlMatcher extends BaseRedirectableUrlMatcher
     {
-        $url = $this->context->getBaseUrl().$path;
-        $query = $this->context->getQueryString() ?: '';
+        /**
+         * {@inheritdoc}
+         */
+        public function redirect(string $path, string $route, string $scheme = null): array
+        {
+            $url = $this->context->getBaseUrl().$path;
+            $query = $this->context->getQueryString() ?: '';
 
-        if ($query !== '') {
-            $url .= '?'.$query;
-        }
-
-        if ($this->context->getHost()) {
-            if ($scheme) {
-                $port = '';
-                if ('http' === $scheme && 80 != $this->context->getHttpPort()) {
-                    $port = ':'.$this->context->getHttpPort();
-                } elseif ('https' === $scheme && 443 != $this->context->getHttpsPort()) {
-                    $port = ':'.$this->context->getHttpsPort();
-                }
-
-                $url = $scheme.'://'.$this->context->getHost().$port.$url;
+            if ($query !== '') {
+                $url .= '?'.$query;
             }
-        }
 
-        return array(
-            '_controller' => function ($url) { return new RedirectResponse($url, 301); },
-            '_route' => null,
-            'url' => $url,
-        );
+            if ($this->context->getHost()) {
+                if ($scheme) {
+                    $port = '';
+                    if ('http' === $scheme && 80 != $this->context->getHttpPort()) {
+                        $port = ':'.$this->context->getHttpPort();
+                    } elseif ('https' === $scheme && 443 != $this->context->getHttpsPort()) {
+                        $port = ':'.$this->context->getHttpsPort();
+                    }
+
+                    $url = $scheme.'://'.$this->context->getHost().$port.$url;
+                }
+            }
+
+            return array(
+                '_controller' => function ($url) { return new RedirectResponse($url, 301); },
+                '_route' => null,
+                'url' => $url,
+            );
+        }
+    }
+} else {
+    class RedirectableUrlMatcher extends BaseRedirectableUrlMatcher
+    {
+        /**
+         * {@inheritdoc}
+         */
+        public function redirect($path, $route, $scheme = null)
+        {
+            $url = $this->context->getBaseUrl().$path;
+            $query = $this->context->getQueryString() ?: '';
+
+            if ($query !== '') {
+                $url .= '?'.$query;
+            }
+
+            if ($this->context->getHost()) {
+                if ($scheme) {
+                    $port = '';
+                    if ('http' === $scheme && 80 != $this->context->getHttpPort()) {
+                        $port = ':'.$this->context->getHttpPort();
+                    } elseif ('https' === $scheme && 443 != $this->context->getHttpsPort()) {
+                        $port = ':'.$this->context->getHttpsPort();
+                    }
+
+                    $url = $scheme.'://'.$this->context->getHost().$port.$url;
+                }
+            }
+
+            return array(
+                '_controller' => function ($url) { return new RedirectResponse($url, 301); },
+                '_route' => null,
+                'url' => $url,
+            );
+        }
     }
 }
+
