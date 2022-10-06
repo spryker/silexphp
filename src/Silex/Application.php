@@ -602,31 +602,6 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
         $this->terminate($request, $response);
     }
 
-//    /**
-//     * {@inheritDoc}
-//     *
-//     * If you call this method directly instead of run(), you must call the
-//     * terminate() method yourself if you want the finish filters to be run.
-//     */
-//    public function handle(Request $request, int $type = HttpKernelInterface::MASTER_REQUEST, bool $catch = true): Response
-//    {
-//        if (!$this->booted) {
-//            $this->boot();
-//        }
-//
-//        $current = $type === HttpKernelInterface::SUB_REQUEST ? $this['request'] : $this['request_error'];
-//
-//        $this['request'] = $request;
-//
-//        $this->flush();
-//
-//        $response = $this['kernel']->handle($request, $type, $catch);
-//
-//        $this['request'] = $current;
-//
-//        return $response;
-//    }
-
     /**
      * {@inheritDoc}
      *
