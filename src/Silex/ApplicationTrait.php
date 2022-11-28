@@ -2,14 +2,12 @@
 
 namespace Silex;
 
-use Composer\Semver\VersionParser;
-use Composer\InstalledVersions;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
-
-if (InstalledVersions::satisfies(new VersionParser, 'symfony/http-kernel', '^6.0.0')) {
+if (Kernel::MAJOR_VERSION >= 6) {
     trait ApplicationTrait
     {
         /**

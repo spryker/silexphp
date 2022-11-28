@@ -21,10 +21,12 @@ use Symfony\Component\Routing\Matcher\RedirectableUrlMatcher as BaseRedirectable
  */
 class RedirectableUrlMatcher extends BaseRedirectableUrlMatcher
 {
+    use RedirectableUrlMatcherTrait;
+
     /**
      * {@inheritdoc}
      */
-    public function redirect(string $path, string $route, string $scheme = null): array
+    protected function executeRedirect(string $path, string $route, ?string $scheme = null): array
     {
         $url = $this->context->getBaseUrl().$path;
         $query = $this->context->getQueryString() ?: '';
