@@ -1,11 +1,19 @@
 <?php
 
+/*
+ * This file is part of the Silex framework.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Silex\Provider\Routing;
 
-use Composer\InstalledVersions;
-use Composer\Semver\VersionParser;
+use Symfony\Component\HttpKernel\Kernel;
 
-if (InstalledVersions::satisfies(new VersionParser(), 'symfony/http-kernel', '^6.0.0')) {
+if (Kernel::MAJOR_VERSION >= 6) {
     trait RedirectableUrlMatcherTrait
     {
         /**
