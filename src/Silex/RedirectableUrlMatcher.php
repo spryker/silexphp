@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Matcher\RedirectableUrlMatcher as BaseRedirectable
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-// `\Symfony\Component\Routing\RouteCollectionBuilder` exist symfony/routing v5
+// symfony/routing: >=6.0.0
 if (!class_exists('\Symfony\Component\Routing\RouteCollectionBuilder')) {
     class RedirectableUrlMatcher extends BaseRedirectableUrlMatcher
     {
