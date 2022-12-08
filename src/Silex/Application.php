@@ -611,4 +611,30 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     {
         $this['kernel']->terminate($request, $response);
     }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param int $type
+     * @param bool $catch
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function executeHandle(Request $request, int $type = HttpKernelInterface::MASTER_REQUEST, bool $catch = true): Response
+    {
+        if (!$this->booted) {
+            $this->boot();
+        }
+
+        $current = $type === HttpKernelInterface::SUB_REQUEST ? $this['request'] : $this['request_error'];
+
+        $this['request'] = $request;
+
+        $this->flush();
+
+        $response = $this['kernel']->handle($request, $type, $catch);
+
+        $this['request'] = $current;
+
+        return $response;
+    }
 }

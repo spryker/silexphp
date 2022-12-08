@@ -18,22 +18,17 @@ if (Kernel::MAJOR_VERSION >= 6) {
          */
         public function handle(Request $request, int $type = HttpKernelInterface::MASTER_REQUEST, bool $catch = true): Response
         {
-            if (!$this->booted) {
-                $this->boot();
-            }
-
-            $current = $type === HttpKernelInterface::SUB_REQUEST ? $this['request'] : $this['request_error'];
-
-            $this['request'] = $request;
-
-            $this->flush();
-
-            $response = $this['kernel']->handle($request, $type, $catch);
-
-            $this['request'] = $current;
-
-            return $response;
+            return $this->executeHandle($request, $type, $catch);
         }
+
+        /**
+         * @param \Symfony\Component\HttpFoundation\Request $request
+         * @param int $type
+         * @param bool $catch
+         *
+         * @return \Symfony\Component\HttpFoundation\Response
+         */
+        abstract protected function executeHandle(Request $request, int $type = HttpKernelInterface::MASTER_REQUEST, bool $catch = true): Response;
     }
 
 } else {
@@ -47,22 +42,17 @@ if (Kernel::MAJOR_VERSION >= 6) {
          */
         public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true): Response
         {
-            if (!$this->booted) {
-                $this->boot();
-            }
-
-            $current = $type === HttpKernelInterface::SUB_REQUEST ? $this['request'] : $this['request_error'];
-
-            $this['request'] = $request;
-
-            $this->flush();
-
-            $response = $this['kernel']->handle($request, $type, $catch);
-
-            $this['request'] = $current;
-
-            return $response;
+            return $this->executeHandle($request, $type, $catch);
         }
+
+        /**
+         * @param \Symfony\Component\HttpFoundation\Request $request
+         * @param int $type
+         * @param bool $catch
+         *
+         * @return \Symfony\Component\HttpFoundation\Response
+         */
+        abstract protected function executeHandle(Request $request, int $type = HttpKernelInterface::MASTER_REQUEST, bool $catch = true): Response;
     }
 
 }
