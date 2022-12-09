@@ -23,6 +23,12 @@ trait RedirectableUrlMatcherTrait
 {
     /**
      * {@inheritdoc}
+     *
+     * @param string $path
+     * @param string $route
+     * @param string|null $scheme
+     *
+     * @return array
      */
     public function redirect(string $path, string $route, string $scheme = null): array
     {
