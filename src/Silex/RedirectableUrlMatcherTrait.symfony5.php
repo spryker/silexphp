@@ -11,24 +11,15 @@
 
 namespace Silex;
 
-//  symfony/routing: <6.0.0
-// @phpstan-ignore-next-line
-if (class_exists('\Symfony\Component\Routing\RouteCollectionBuilder')) {
-    require 'RedirectableUrlMatcherTrait.symfony5.php';
-
-    return;
-}
-
 trait RedirectableUrlMatcherTrait
 {
     /**
      * {@inheritdoc}
      */
-    public function redirect(string $path, string $route, string $scheme = null): array
+    public function redirect($path, $route, $scheme = null)
     {
         return $this->executeRedirect($path, $route, $scheme);
     }
-
 
     /**
      * @param string $path
@@ -39,4 +30,3 @@ trait RedirectableUrlMatcherTrait
      */
     abstract protected function executeRedirect(string $path, string $route, string $scheme = null): array;
 }
-

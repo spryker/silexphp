@@ -11,8 +11,6 @@
 
 namespace Silex;
 
-use Composer\InstalledVersions;
-use Composer\Semver\VersionParser;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Matcher\RedirectableUrlMatcher as BaseRedirectableUrlMatcher;
 

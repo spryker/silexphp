@@ -15,13 +15,6 @@ namespace Silex;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\Kernel;
-
-// @phpstan-ignore-next-line
-if (Kernel::MAJOR_VERSION < 6) {
-    require 'ApplicationTrait.symfony5.php';
-    return;
-}
 
 trait ApplicationTrait
 {
@@ -31,7 +24,7 @@ trait ApplicationTrait
      * If you call this method directly instead of run(), you must call the
      * terminate() method yourself if you want the finish filters to be run.
      */
-    public function handle(Request $request, int $type = HttpKernelInterface::MASTER_REQUEST, bool $catch = true): Response
+    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
         return $this->executeHandle($request, $type, $catch);
     }
@@ -45,7 +38,3 @@ trait ApplicationTrait
      */
     abstract protected function executeHandle(Request $request, int $type = HttpKernelInterface::MASTER_REQUEST, bool $catch = true): Response;
 }
-
-
-
-

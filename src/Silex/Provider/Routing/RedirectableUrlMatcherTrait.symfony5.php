@@ -11,25 +11,16 @@
 
 namespace Silex\Provider\Routing;
 
-use Symfony\Component\HttpKernel\Kernel;
-
-// @phpstan-ignore-next-line
-if (Kernel::MAJOR_VERSION < 6) {
-    require 'RedirectableUrlMatcherTrait.symfony5.php';
-
-    return;
-}
-
 trait RedirectableUrlMatcherTrait
 {
     /**
-     * @param string $path
-     * @param string $route
-     * @param string|null $scheme
+     * @param $path
+     * @param $route
+     * @param $scheme
      *
      * @return array
      */
-    public function redirect(string $path, string $route, string $scheme = null): array
+    public function redirect($path, $route, $scheme = null)
     {
         return $this->executeRedirect($path, $route, $scheme);
     }
