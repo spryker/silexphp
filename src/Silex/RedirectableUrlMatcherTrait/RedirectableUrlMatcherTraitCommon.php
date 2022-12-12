@@ -9,24 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Silex;
+namespace Silex\RedirectableUrlMatcherTrait;
 
-trait RedirectableUrlMatcherTrait
+trait RedirectableUrlMatcherTraitCommon
 {
-    /**
-     * {@inheritdoc}
-     *
-     * @param string $path
-     * @param string $route
-     * @param string|null $scheme
-     *
-     * @return array
-     */
-    public function redirect($path, $route, $scheme = null)
-    {
-        return $this->executeRedirect($path, $route, $scheme);
-    }
-
     /**
      * @param string $path
      * @param string $route

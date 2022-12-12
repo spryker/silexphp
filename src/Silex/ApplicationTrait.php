@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Silex;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -19,35 +18,8 @@ use Symfony\Component\HttpKernel\Kernel;
 
 // @phpstan-ignore-next-line
 if (Kernel::MAJOR_VERSION < 6) {
-    require 'ApplicationTrait.symfony5.php';
-    return;
+    require 'ApplicationTrait/ApplicationTrait.symfony5.php';
+} else {
+    require 'ApplicationTrait/ApplicationTrait.latest.php';
 }
-
-trait ApplicationTrait
-{
-    /**
-     * {@inheritDoc}
-     *
-     * If you call this method directly instead of run(), you must call the
-     * terminate() method yourself if you want the finish filters to be run.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int $type
-     * @param bool $catch
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function handle(Request $request, int $type = HttpKernelInterface::MASTER_REQUEST, bool $catch = true): Response
-    {
-        return $this->executeHandle($request, $type, $catch);
-    }
-
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int $type
-     * @param bool $catch
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    abstract protected function executeHandle(Request $request, int $type = HttpKernelInterface::MASTER_REQUEST, bool $catch = true): Response;
-}
+    

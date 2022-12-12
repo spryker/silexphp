@@ -9,8 +9,7 @@
  * file that was distributed with this source code.
  */
 
-
-namespace Silex;
+namespace Silex\ApplicationTrait;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +17,8 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 trait ApplicationTrait
 {
+    use ApplicationTraitCommon;
+
     /**
      * {@inheritDoc}
      *
@@ -30,17 +31,8 @@ trait ApplicationTrait
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
+    public function handle(Request $request, int $type = HttpKernelInterface::MASTER_REQUEST, bool $catch = true): Response
     {
         return $this->executeHandle($request, $type, $catch);
     }
-
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int $type
-     * @param bool $catch
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    abstract protected function executeHandle(Request $request, int $type = HttpKernelInterface::MASTER_REQUEST, bool $catch = true): Response;
 }

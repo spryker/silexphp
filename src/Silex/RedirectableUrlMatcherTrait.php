@@ -14,35 +14,7 @@ namespace Silex;
 //  symfony/routing: <6.0.0
 // @phpstan-ignore-next-line
 if (class_exists('\Symfony\Component\Routing\RouteCollectionBuilder')) {
-    require 'RedirectableUrlMatcherTrait.symfony5.php';
-
-    return;
+    require 'RedirectableUrlMatcherTrait/RedirectableUrlMatcherTrait.symfony5.php';
+} else {
+    require 'RedirectableUrlMatcherTrait/RedirectableUrlMatcherTrait.latest.php';
 }
-
-trait RedirectableUrlMatcherTrait
-{
-    /**
-     * {@inheritdoc}
-     *
-     * @param string $path
-     * @param string $route
-     * @param string|null $scheme
-     *
-     * @return array
-     */
-    public function redirect(string $path, string $route, string $scheme = null): array
-    {
-        return $this->executeRedirect($path, $route, $scheme);
-    }
-
-
-    /**
-     * @param string $path
-     * @param string $route
-     * @param string|null $scheme
-     *
-     * @return array
-     */
-    abstract protected function executeRedirect(string $path, string $route, string $scheme = null): array;
-}
-

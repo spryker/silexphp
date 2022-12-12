@@ -11,19 +11,11 @@
 
 namespace Silex\Provider\Routing;
 
+use Silex\Provider\Routing\RedirectableUrlMatcherTrait\RedirectableUrlMatcherTraitCommon;
+
 trait RedirectableUrlMatcherTrait
 {
-    /**
-     * @param $path
-     * @param $route
-     * @param $scheme
-     *
-     * @return array
-     */
-    public function redirect($path, $route, $scheme = null)
-    {
-        return $this->executeRedirect($path, $route, $scheme);
-    }
+    use RedirectableUrlMatcherTraitCommon;
 
     /**
      * @param string $path
@@ -32,5 +24,8 @@ trait RedirectableUrlMatcherTrait
      *
      * @return array
      */
-    abstract protected function executeRedirect(string $path, string $route, ?string $scheme = null): array;
+    public function redirect(string $path, string $route, string $scheme = null): array
+    {
+        return $this->executeRedirect($path, $route, $scheme);
+    }
 }
