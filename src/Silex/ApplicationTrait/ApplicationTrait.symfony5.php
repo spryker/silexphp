@@ -36,13 +36,4 @@ trait ApplicationTrait
     {
         return $this->executeHandle($request, $type, $catch);
     }
-
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param int $type
-     * @param bool $catch
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    abstract protected function executeHandle(Request $request, int $type = HttpKernelInterface::MASTER_REQUEST, bool $catch = true): Response;
 }
