@@ -44,8 +44,6 @@ use Symfony\Component\Routing\RequestContext;
  */
 class Application extends Pimple implements HttpKernelInterface, TerminableInterface
 {
-    use ApplicationTrait;
-
     public const VERSION = '1.3.6';
 
     public const EARLY_EVENT = 512;
@@ -605,21 +603,13 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
     /**
      * {@inheritDoc}
      *
-     * @return void
-     */
-    public function terminate(Request $request, Response $response)
-    {
-        $this['kernel']->terminate($request, $response);
-    }
-
-    /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param int $type
      * @param bool $catch
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function executeHandle(Request $request, int $type = HttpKernelInterface::MASTER_REQUEST, bool $catch = true): Response
+    protected function handle(Request $request, int $type = HttpKernelInterface::MASTER_REQUEST, bool $catch = true): Response
     {
         if (!$this->booted) {
             $this->boot();
@@ -636,5 +626,15 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
         $this['request'] = $current;
 
         return $response;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return void
+     */
+    public function terminate(Request $request, Response $response)
+    {
+        $this['kernel']->terminate($request, $response);
     }
 }
