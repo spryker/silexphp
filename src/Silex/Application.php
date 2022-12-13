@@ -602,9 +602,10 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * If you call this method directly instead of run(), you must call the
      * terminate() method yourself if you want the finish filters to be run.
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param int $type
      * @param bool $catch
