@@ -27,4 +27,4 @@ parameters:
         - '#Call to an undefined static method Symfony\\Component\\Translation\\Translator::transChoice\(\).#'
         - '#Call to an undefined static method Symfony\\Component\\Debug\\Exception\\FlattenException::createFromThrowable\(\).#'
         - '#Instantiated class Symfony\\Component\\HttpKernel\\Client not found.#'
-
+        - "#Offset 'key' does not exist on non-empty-array#"
