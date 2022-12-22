@@ -24,7 +24,7 @@ use Symfony\Component\Validator\ConstraintValidatorFactory as BaseConstraintVali
 class ConstraintValidatorFactory extends BaseConstraintValidatorFactory
 {
     /**
-     * @var \Pimple
+     * @var \Spryker\Service\Container\ContainerInterface
      */
     protected $container;
 
