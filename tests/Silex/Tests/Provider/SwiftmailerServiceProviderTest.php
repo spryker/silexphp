@@ -46,14 +46,9 @@ class SwiftmailerServiceProviderTest extends TestCase
         $this->assertInstanceOf('Swift_Mailer', $app['mailer']);
     }
 
-    /**
-     * @skip
-     *
-     * @return void
-     */
     public function testSwiftMailerSendsMailsOnFinish()
     {
-        $this->markTestSkipped('skipped.');
+        // $this->markTestSkipped('Issue with prefer-lowest jobs and Swiftmailer send message.');
 
         $app = new Application();
 
