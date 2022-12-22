@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use PDO;
 use Silex\Application;
 use Silex\Provider\DoctrineServiceProvider;
+use Doctrine\DBAL\Driver\PDO\SQLite\Driver;
 
 /**
  * DoctrineProvider test cases.
@@ -46,8 +47,9 @@ class DoctrineServiceProviderTest extends TestCase
         $params = $db->getParams();
         $this->assertTrue(array_key_exists('memory', $params));
         $this->assertTrue($params['memory']);
-        $this->assertInstanceof('Doctrine\DBAL\Driver\PDOSqlite\Driver', $db->getDriver());
-        $this->assertEquals(22, $app['db']->fetchColumn('SELECT 22'));
+
+        $this->assertInstanceof(Driver::class, $db->getDriver());
+        $this->assertEquals([22 => 22], $app['db']->executeQuery('SELECT 22')->fetchAll()[0]);
 
         $this->assertSame($app['dbs']['default'], $db);
     }
@@ -70,8 +72,8 @@ class DoctrineServiceProviderTest extends TestCase
         $params = $db->getParams();
         $this->assertTrue(array_key_exists('memory', $params));
         $this->assertTrue($params['memory']);
-        $this->assertInstanceof('Doctrine\DBAL\Driver\PDOSqlite\Driver', $db->getDriver());
-        $this->assertEquals(22, $app['db']->fetchColumn('SELECT 22'));
+        $this->assertInstanceof(Driver::class, $db->getDriver());
+        $this->assertEquals([22 => 22], $app['db']->executeQuery('SELECT 22')->fetchAll()[0]);
 
         $this->assertSame($app['dbs']['sqlite1'], $db);
 
