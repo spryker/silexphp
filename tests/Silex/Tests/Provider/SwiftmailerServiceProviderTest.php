@@ -48,8 +48,6 @@ class SwiftmailerServiceProviderTest extends TestCase
 
     public function testSwiftMailerSendsMailsOnFinish()
     {
-        // $this->markTestSkipped('Issue with prefer-lowest jobs and Swiftmailer send message.');
-
         $app = new Application();
 
         $app->register(new SwiftmailerServiceProvider());
