@@ -25,6 +25,11 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class RouterTest extends TestCase
 {
+    /**
+     * @var string
+     */
+    protected const NOT_FOUND_MESSAGE = 'Sorry, the page you are looking for could not be found';
+
     public function testMapRouting()
     {
         $app = new Application();

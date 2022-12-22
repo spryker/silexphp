@@ -11,7 +11,7 @@
 
 namespace Silex;
 
-use Pimple;
+use \Spryker\Service\Container\ContainerInterface;
 use InvalidArgumentException;
 
 class CallbackResolver
@@ -21,9 +21,9 @@ class CallbackResolver
     private $app;
 
     /**
-     * @param Pimple $app
+     * @param \Spryker\Service\Container\ContainerInterface $app
      */
-    public function __construct(Pimple $app)
+    public function __construct(ContainerInterface $app)
     {
         $this->app = $app;
     }

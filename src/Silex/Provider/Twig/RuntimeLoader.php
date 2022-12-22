@@ -11,7 +11,7 @@
 
 namespace Silex\Provider\Twig;
 
-use Pimple;
+use Spryker\Service\Container\ContainerInterface;
 use Twig\RuntimeLoader\RuntimeLoaderInterface;
 
 /**
@@ -22,7 +22,7 @@ use Twig\RuntimeLoader\RuntimeLoaderInterface;
 class RuntimeLoader implements RuntimeLoaderInterface
 {
     /**
-     * @var \Pimple
+     * @var \Spryker\Service\Container\ContainerInterface
      */
     private $container;
 
@@ -32,10 +32,10 @@ class RuntimeLoader implements RuntimeLoaderInterface
     private $mapping;
 
     /**
-     * @param \Pimple $container
+     * @param \Spryker\Service\Container\ContainerInterface $container
      * @param array $mapping
      */
-    public function __construct(Pimple $container, array $mapping)
+    public function __construct(ContainerInterface $container, array $mapping)
     {
         $this->container = $container;
         $this->mapping = $mapping;
