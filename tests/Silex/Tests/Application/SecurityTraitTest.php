@@ -28,11 +28,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class SecurityTraitTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        //$this->markTestSkipped();
-    }
-
     public function testUser()
     {
         $request = Request::create('/');
