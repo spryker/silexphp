@@ -63,8 +63,7 @@ class SwiftmailerServiceProviderTest extends TestCase
                 return true;
             }
 
-
-            $app['mailer']->send((new Swift_Message()));
+            $app['mailer']->send(new Swift_Message());
 
             return true;
         });
