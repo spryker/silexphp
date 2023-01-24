@@ -14,6 +14,8 @@ namespace Silex\Application;
 use Symfony\Component\Form\FormBuilder;
 
 /**
+ * @deprecated Will be removed without replacement.
+ *
  * Form trait.
  *
  * @author Fabien Potencier <fabien@symfony.com>

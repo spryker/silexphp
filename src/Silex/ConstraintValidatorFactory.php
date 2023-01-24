@@ -11,7 +11,7 @@
 
 namespace Silex;
 
-use Pimple;
+use Spryker\Service\Container\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidatorFactory as BaseConstraintValidatorFactory;
 
@@ -24,7 +24,7 @@ use Symfony\Component\Validator\ConstraintValidatorFactory as BaseConstraintVali
 class ConstraintValidatorFactory extends BaseConstraintValidatorFactory
 {
     /**
-     * @var \Pimple
+     * @var \Spryker\Service\Container\ContainerInterface
      */
     protected $container;
 
@@ -36,10 +36,10 @@ class ConstraintValidatorFactory extends BaseConstraintValidatorFactory
     /**
      * Constructor.
      *
-     * @param \Pimple $container    DI container
+     * @param \Spryker\Service\Container\ContainerInterface $container    DI container
      * @param array   $serviceNames Validator service names
      */
-    public function __construct(Pimple $container, array $serviceNames = array(), $propertyAccessor = null)
+    public function __construct(ContainerInterface $container, array $serviceNames = array(), $propertyAccessor = null)
     {
         // for BC with 2.3
         if (method_exists('Symfony\Component\Validator\Constraint\BaseConstraintValidatorFactory', '__construct')) {

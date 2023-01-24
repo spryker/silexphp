@@ -23,8 +23,14 @@ class RedirectableUrlMatcher extends BaseRedirectableUrlMatcher
 {
     /**
      * {@inheritdoc}
+     *
+     * @param string $path
+     * @param string $route
+     * @param string|null $scheme
+     *
+     * @return array
      */
-    public function redirect($path, $route, $scheme = null)
+    public function redirect(string $path, string $route, ?string $scheme = null): array
     {
         $url = $this->context->getBaseUrl().$path;
         $query = $this->context->getQueryString() ?: '';
