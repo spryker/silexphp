@@ -187,7 +187,7 @@ if (method_exists('Symfony\Component\Form\AbstractType', 'configureOptions')) {
             return [class_exists(RangeType::class) ? FileType::class : 'file'];
         }
 
-        public function configureOptions(OptionsResolver $resolver)
+        public function configureOptions(OptionsResolver $resolver): void
         {
             $resolver->setDefined(array('image_path'));
         }
