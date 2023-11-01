@@ -1,4 +1,6 @@
 parameters:
+    excludePaths:
+    	- src/Silex/Provider/*
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         - "#Call to function method_exists\\(\\) with '.+Component…' and '__construct' will always evaluate to false#"
@@ -28,3 +30,4 @@ parameters:
         - '#Call to an undefined static method Symfony\\Component\\Debug\\Exception\\FlattenException::createFromThrowable\(\).#'
         - '#Instantiated class Symfony\\Component\\HttpKernel\\Client not found.#'
         - "#Offset 'key' does not exist on non-empty-array#"
+
