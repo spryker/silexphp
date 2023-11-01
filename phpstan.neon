@@ -1,7 +1,6 @@
 parameters:
     excludePaths:
     	- src/Silex/Provider/*
-    	- tests/Silex/Tests/Provider/*
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         - "#Call to function method_exists\\(\\) with '.+Component…' and '__construct' will always evaluate to false#"
