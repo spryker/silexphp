@@ -14,6 +14,7 @@ namespace Silex;
 use Spryker\Service\Container\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidatorFactory as BaseConstraintValidatorFactory;
+use Symfony\Component\Validator\ConstraintValidatorInterface;
 
 /**
  * Uses a service container to create constraint validators with dependencies.
@@ -53,7 +54,7 @@ class ConstraintValidatorFactory extends BaseConstraintValidatorFactory
     /**
      * {@inheritdoc}
      */
-    public function getInstance(Constraint $constraint)
+    public function getInstance(Constraint $constraint): ConstraintValidatorInterface
     {
         $name = $constraint->validatedBy();
 
