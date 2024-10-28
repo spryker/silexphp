@@ -71,6 +71,8 @@ use Throwable;
  * Symfony Security component Provider.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ *
+ *
  */
 class SecurityServiceProvider implements ServiceProviderInterface
 {

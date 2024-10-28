@@ -13,6 +13,7 @@ namespace Silex;
 
 use Closure;
 use LogicException;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RequestContext as SymfonyRequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
@@ -48,7 +49,7 @@ class LazyUrlMatcher implements UrlMatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function match($pathinfo)
+    public function match(string $pathinfo): array
     {
         return $this->getUrlMatcher()->match($pathinfo);
     }
@@ -64,7 +65,7 @@ class LazyUrlMatcher implements UrlMatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getContext()
+    public function getContext(): RequestContext
     {
         return $this->getUrlMatcher()->getContext();
     }

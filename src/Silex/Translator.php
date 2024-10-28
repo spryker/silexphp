@@ -43,7 +43,7 @@ class Translator extends BaseTranslator
         return $this->trans($id, $parameters, $domain, $locale);
     }
 
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->app['locale'];
     }

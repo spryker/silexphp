@@ -74,8 +74,8 @@ class HttpCacheServiceProviderTest extends TestCase
 
 class UnsendableResponse extends Response
 {
-    public function send()
+    public function send(): static
     {
-        // do nothing
+        return $this;
     }
 }
