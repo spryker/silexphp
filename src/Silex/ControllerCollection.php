@@ -48,7 +48,7 @@ class ControllerCollection
     protected $routesFactory;
     protected $controllersFactory;
 
-    public function __construct(Route $defaultRoute, RouteCollection $routesFactory = null, $controllersFactory = null)
+    public function __construct(Route $defaultRoute, ?RouteCollection $routesFactory = null, $controllersFactory = null)
     {
         $this->defaultRoute = $defaultRoute;
         $this->routesFactory = $routesFactory;

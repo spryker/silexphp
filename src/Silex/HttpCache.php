@@ -26,7 +26,7 @@ class HttpCache extends BaseHttpCache
      *
      * @param Request $request The Request object
      */
-    public function run(Request $request = null)
+    public function run(?Request $request = null)
     {
         if (null === $request) {
             $request = Request::createFromGlobals();

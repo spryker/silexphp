@@ -43,7 +43,7 @@ class Translator extends BaseTranslator
         return $this->trans($id, $parameters, $domain, $locale);
     }
 
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->app['locale'];
     }
@@ -53,7 +53,7 @@ class Translator extends BaseTranslator
      *
      * @return void
      */
-    public function setLocale($locale)
+    public function setLocale($locale): void
     {
         if (null === $locale) {
             return;
