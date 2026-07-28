@@ -631,6 +631,8 @@ class ApplicationTest extends TestCase
 
         $response = $app->handle(Request::create('/foo'));
         $this->assertEquals(301, $response->getStatusCode());
+
+        restore_exception_handler();
     }
 
     public function testBeforeFilterOnMountedControllerGroupIsolatedToGroup()

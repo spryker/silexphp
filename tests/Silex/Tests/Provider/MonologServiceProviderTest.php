@@ -29,14 +29,14 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class MonologServiceProviderTest extends TestCase
 {
-    private $currErrorHandler;
+    private $errorHandlerBeforeTest;
 
     /**
      * @return void
      */
     protected function setUp(): void
     {
-        $this->currErrorHandler = set_error_handler('var_dump');
+        $this->errorHandlerBeforeTest = set_error_handler(static function () { return false; });
         restore_error_handler();
     }
 
@@ -45,7 +45,12 @@ class MonologServiceProviderTest extends TestCase
      */
     protected function tearDown(): void
     {
-        set_error_handler($this->currErrorHandler);
+        $errorHandlerAfterTest = set_error_handler(static function () { return false; });
+        restore_error_handler();
+
+        if ($errorHandlerAfterTest !== $this->errorHandlerBeforeTest) {
+            restore_error_handler();
+        }
     }
 
     public function testRequestLogging()
