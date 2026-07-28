@@ -61,7 +61,7 @@ class LazyUrlMatcherTest extends TestCase
         $urlMatcher->expects($this->once())
             ->method('match')
             ->with('path')
-            ->will($this->returnValue(array('matcherReturnValue')));
+            ->willReturn(array('matcherReturnValue'));
 
         $matcher = new LazyUrlMatcher(function () use ($urlMatcher) {
             return $urlMatcher;
@@ -73,7 +73,6 @@ class LazyUrlMatcherTest extends TestCase
 
     /**
      * @covers Silex\LazyUrlMatcher::setContext
-     * @doesNotPerformAssertion
      */
     public function testSetContextIsProxy()
     {
@@ -98,7 +97,7 @@ class LazyUrlMatcherTest extends TestCase
         $urlMatcher = $this->getMockBuilder('Symfony\Component\Routing\Matcher\UrlMatcherInterface')->getMock();
         $urlMatcher->expects($this->once())
             ->method('getContext')
-            ->will($this->returnValue($context));
+            ->willReturn($context);
 
         $matcher = new LazyUrlMatcher(function () use ($urlMatcher) {
             return $urlMatcher;

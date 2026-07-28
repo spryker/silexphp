@@ -11,6 +11,7 @@
 
 namespace Silex\Tests\Provider;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Silex\Application;
 use Silex\Provider\HttpCacheServiceProvider;
@@ -40,6 +41,7 @@ class HttpCacheServiceProviderTest extends TestCase
     /**
      * @depends testRegister
      */
+    #[Depends('testRegister')]
     public function testRunCallsShutdown($app)
     {
         $finished = false;

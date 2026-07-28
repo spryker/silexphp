@@ -19,14 +19,9 @@ use Symfony\Component\Translation\Translator;
  * TranslationTrait test cases.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @requires PHP 5.4
  */
 class TranslationTraitTest extends TestCase
 {
-    /**
-     * @doesNotPerformAssertion
-     */
     public function testTrans()
     {
         $app = $this->createApplication();
@@ -35,9 +30,6 @@ class TranslationTraitTest extends TestCase
         $app->trans('foo');
     }
 
-    /**
-     * @doesNotPerformAssertion
-     */
     public function testTransChoice()
     {
         $app = $this->createApplication();

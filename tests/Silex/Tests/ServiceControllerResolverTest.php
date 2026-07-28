@@ -48,14 +48,14 @@ class ServiceControllerResolverTest extends TestCase
     {
         $this->mockCallbackResolver->expects($this->once())
             ->method('isValid')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $callback = function () { return 'callback'; };
 
         $this->mockCallbackResolver->expects($this->once())
             ->method('convertCallback')
             ->with('some_service:methodName')
-            ->will($this->returnValue($callback));
+            ->willReturn($callback);
 
         $this->app['some_service'] = function () { return new stdClass(); };
 
@@ -73,12 +73,12 @@ class ServiceControllerResolverTest extends TestCase
         $this->mockCallbackResolver->expects($this->once())
             ->method('isValid')
             ->with('some_class::methodName')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->mockResolver->expects($this->once())
             ->method('getController')
             ->with($req)
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $this->assertFalse($this->resolver->getController($req));
     }

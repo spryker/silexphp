@@ -23,8 +23,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * SecurityTrait test cases.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @requires PHP 5.4
  */
 class SecurityTraitTest extends TestCase
 {

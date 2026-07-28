@@ -31,9 +31,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class LogListenerTest extends TestCase
 {
-    /**
-     * @doesNotPerformAssertion
-     */
     public function testRequestListener()
     {
         $logger = $this->getMockBuilder('Psr\\Log\\LoggerInterface')->getMock();
@@ -53,9 +50,6 @@ class LogListenerTest extends TestCase
         $dispatcher->dispatch(new RequestEvent($kernel, Request::create('/foo'), HttpKernelInterface::MASTER_REQUEST), KernelEvents::REQUEST, 'Log master requests');
     }
 
-    /**
-     * @doesNotPerformAssertion
-     */
     public function testResponseListener()
     {
         $logger = $this->getMockBuilder('Psr\\Log\\LoggerInterface')->getMock();
@@ -70,14 +64,11 @@ class LogListenerTest extends TestCase
 
         $kernel = $this->getMockBuilder('Symfony\\Component\\HttpKernel\\HttpKernelInterface')->getMock();
 
-        $dispatcher->dispatch(new ResponseEvent($kernel, Request::create('/foo'), HttpKernelInterface::SUB_REQUEST, Response::create('subrequest', 200)), KernelEvents::RESPONSE, 'Skip sub requests');
+        $dispatcher->dispatch(new ResponseEvent($kernel, Request::create('/foo'), HttpKernelInterface::SUB_REQUEST, new Response('subrequest', 200)), KernelEvents::RESPONSE, 'Skip sub requests');
 
-        $dispatcher->dispatch(new ResponseEvent($kernel, Request::create('/foo'), HttpKernelInterface::MASTER_REQUEST, Response::create('bar', 301)), KernelEvents::RESPONSE, 'Log master requests');
+        $dispatcher->dispatch(new ResponseEvent($kernel, Request::create('/foo'), HttpKernelInterface::MASTER_REQUEST, new Response('bar', 301)), KernelEvents::RESPONSE, 'Log master requests');
     }
 
-    /**
-     * @doesNotPerformAssertion
-     */
     public function testExceptionListener()
     {
         $logger = $this->getMockBuilder('Psr\\Log\\LoggerInterface')->getMock();

@@ -11,6 +11,7 @@
 
 namespace Silex\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Silex\Controller;
 use Silex\Route;
@@ -79,6 +80,7 @@ class ControllerTest extends TestCase
     /**
      * @dataProvider provideRouteAndExpectedRouteName
      */
+    #[DataProvider('provideRouteAndExpectedRouteName')]
     public function testDefaultRouteNameGeneration(Route $route, $prefix, $expectedRouteName)
     {
         $controller = new Controller($route);
@@ -87,7 +89,7 @@ class ControllerTest extends TestCase
         $this->assertEquals($expectedRouteName, $controller->getRouteName());
     }
 
-    public function provideRouteAndExpectedRouteName()
+    public static function provideRouteAndExpectedRouteName()
     {
         return array(
             array(new Route('/Invalid%Symbols#Stripped', array(), array(), array(), '', array(), array('POST')), '', 'POST_InvalidSymbolsStripped'),
