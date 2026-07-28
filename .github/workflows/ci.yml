@@ -7,16 +7,16 @@ on: [
 
 jobs:
   validation:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         php-version: [
-            '8.1'
+            '8.4'
         ]
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
@@ -28,7 +28,7 @@ jobs:
         run: |
           echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v6
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
@@ -53,12 +53,12 @@ jobs:
         run: vendor/bin/phpunit
 
   prefer-lowest:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         php-version: [
-            '8.0'
+            '8.3'
         ]
 
     steps:
