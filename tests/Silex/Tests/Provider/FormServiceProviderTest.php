@@ -11,6 +11,7 @@
 
 namespace Silex\Tests\Provider;
 
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 use Silex\Application;
@@ -128,9 +129,7 @@ class FormServiceProviderTest extends TestCase
         }
     }
 
-    /**
-     * @doesNotPerformAssertion
-     */
+    #[DoesNotPerformAssertions]
     public function testFormServiceProviderWillNotAddNonexistentTranslationFiles()
     {
         $app = new Application(array(

@@ -11,6 +11,7 @@
 
 namespace Silex\Tests;
 
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\TestCase;
 use Silex\Controller;
 use Silex\ControllerCollection;
@@ -41,9 +42,7 @@ class ControllerCollectionTest extends TestCase
         $this->assertEquals(2, count($routes->all()));
     }
 
-    /**
-     * @doesNotPerformAssertion
-     */
+    #[DoesNotPerformAssertions]
     public function testControllerFreezing()
     {
         $controllers = new ControllerCollection(new Route());

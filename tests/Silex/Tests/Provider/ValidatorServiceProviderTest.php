@@ -11,6 +11,7 @@
 
 namespace Silex\Tests\Provider;
 
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints\Expression;
 use Symfony\Component\Validator\Constraints\Collection;
@@ -33,9 +34,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class ValidatorServiceProviderTest extends TestCase
 {
-    /**
-     * @doesNotPerformAssertion
-     */
+    #[DoesNotPerformAssertions]
     public function testRegister()
     {
         $app = new Application();
@@ -46,9 +45,7 @@ class ValidatorServiceProviderTest extends TestCase
         return $app;
     }
 
-    /**
-     * @doesNotPerformAssertion
-     */
+    #[DoesNotPerformAssertions]
     public function testRegisterWithCustomValidators()
     {
         $app = new Application();
@@ -129,9 +126,7 @@ class ValidatorServiceProviderTest extends TestCase
         $this->assertEquals($nbEmailError, count($form->offsetGet('email')->getErrors()));
     }
 
-    /**
-     * @doesNotPerformAssertion
-     */
+    #[DoesNotPerformAssertions]
     public function testValidatorWillNotAddNonexistentTranslationFiles()
     {
         $app = new Application(array(

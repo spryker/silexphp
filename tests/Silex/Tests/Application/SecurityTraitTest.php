@@ -28,6 +28,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class SecurityTraitTest extends TestCase
 {
+    public function setUp(): void
+    {
+        if (!class_exists('Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider')) {
+            $this->markTestSkipped('SecurityServiceProvider relies on the Guard-based security classes removed in Symfony 6+; use the native security-bundle instead.');
+        }
+    }
+
     public function testUser()
     {
         $request = Request::create('/');
