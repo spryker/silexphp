@@ -28,6 +28,7 @@ class LazyUrlMatcherTest extends TestCase
     {
         $callCounter = 0;
         $urlMatcher = $this->getMockBuilder('Symfony\Component\Routing\Matcher\UrlMatcherInterface')->getMock();
+        $urlMatcher->method('match')->willReturn(array());
 
         $matcher = new LazyUrlMatcher(function () use ($urlMatcher, &$callCounter) {
             ++$callCounter;
@@ -60,14 +61,14 @@ class LazyUrlMatcherTest extends TestCase
         $urlMatcher->expects($this->once())
             ->method('match')
             ->with('path')
-            ->will($this->returnValue('matcherReturnValue'));
+            ->will($this->returnValue(array('matcherReturnValue')));
 
         $matcher = new LazyUrlMatcher(function () use ($urlMatcher) {
             return $urlMatcher;
         });
         $result = $matcher->match('path');
 
-        $this->assertEquals('matcherReturnValue', $result);
+        $this->assertEquals(array('matcherReturnValue'), $result);
     }
 
     /**

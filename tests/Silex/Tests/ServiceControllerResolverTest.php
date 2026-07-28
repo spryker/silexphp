@@ -50,17 +50,19 @@ class ServiceControllerResolverTest extends TestCase
             ->method('isValid')
             ->will($this->returnValue(true));
 
+        $callback = function () { return 'callback'; };
+
         $this->mockCallbackResolver->expects($this->once())
             ->method('convertCallback')
             ->with('some_service:methodName')
-            ->will($this->returnValue(array('callback')));
+            ->will($this->returnValue($callback));
 
         $this->app['some_service'] = function () { return new stdClass(); };
 
         $req = Request::create('/');
         $req->attributes->set('_controller', 'some_service:methodName');
 
-        $this->assertEquals(array('callback'), $this->resolver->getController($req));
+        $this->assertSame($callback, $this->resolver->getController($req));
     }
 
     public function testShouldUnresolvedControllerNames()
@@ -76,8 +78,8 @@ class ServiceControllerResolverTest extends TestCase
         $this->mockResolver->expects($this->once())
             ->method('getController')
             ->with($req)
-            ->will($this->returnValue(123));
+            ->will($this->returnValue(false));
 
-        $this->assertEquals(123, $this->resolver->getController($req));
+        $this->assertFalse($this->resolver->getController($req));
     }
 }
