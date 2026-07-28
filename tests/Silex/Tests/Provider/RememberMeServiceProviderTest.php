@@ -28,6 +28,15 @@ use Symfony\Component\Security\Http\SecurityEvents;
  */
 class RememberMeServiceProviderTest extends WebTestCase
 {
+    public function setUp(): void
+    {
+        if (!class_exists('Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider')) {
+            $this->markTestSkipped('RememberMeServiceProvider relies on the Guard-based security classes removed in Symfony 6+; use the native security-bundle instead.');
+        }
+
+        parent::setUp();
+    }
+
     public function testRememberMeAuthentication()
     {
         $app = $this->createApplication();

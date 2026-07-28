@@ -30,6 +30,15 @@ use Symfony\Component\HttpKernel\HttpKernelBrowser;
  */
 class SecurityServiceProviderTest extends WebTestCase
 {
+    public function setUp(): void
+    {
+        if (!class_exists('Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider')) {
+            $this->markTestSkipped('SecurityServiceProvider relies on the Guard-based security classes removed in Symfony 6+; use the native security-bundle instead.');
+        }
+
+        parent::setUp();
+    }
+
     public function testWrongAuthenticationType()
     {
         $this->expectException('LogicException');
