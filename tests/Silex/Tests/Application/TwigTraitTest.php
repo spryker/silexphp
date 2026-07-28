@@ -52,7 +52,7 @@ class TwigTraitTest extends TestCase
         $app = $this->createApplication();
 
         $app['twig'] = $mailer = $this->getMockBuilder(Environment::class)->disableOriginalConstructor()->getMock();
-        $mailer->expects($this->once())->method('display')->will($this->returnCallback(function () { echo 'foo'; }));
+        $mailer->expects($this->once())->method('display')->willReturnCallback(function () { echo 'foo'; });
 
         $response = $app->render('view', array(), new StreamedResponse());
         $this->assertEquals('Symfony\Component\HttpFoundation\StreamedResponse', get_class($response));

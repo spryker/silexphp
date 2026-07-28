@@ -148,6 +148,10 @@ class MonologServiceProviderTest extends TestCase
 
     public function testErrorLoggingGivesWayToSecurityExceptionHandling()
     {
+        if (!class_exists('Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider')) {
+            $this->markTestSkipped('SecurityServiceProvider relies on the Guard-based security classes removed in Symfony 6+; use the native security-bundle instead.');
+        }
+
         $app = $this->getApplication();
         $app['monolog.level'] = Logger::ERROR;
 

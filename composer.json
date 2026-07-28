@@ -44,6 +44,7 @@
         "symfony/translation": "^5.1.0 || ^6.0.0 || ^7.0.0",
         "symfony/twig-bridge": "^5.1.0 || ^6.0.0 || ^7.0.0",
         "symfony/validator": "^5.2.0 || ^6.0.0 || ^7.0.0",
+        "symfony/expression-language": "^5.1.0 || ^6.0.0 || ^7.0.0",
         "twig/twig": "^2.15.3 || ^3.4.3",
         "doctrine/dbal": "^3.0.0",
         "swiftmailer/swiftmailer": "^6.3.0",

@@ -23,15 +23,13 @@ use Silex\Provider\ServiceControllerServiceProvider;
  */
 class CallbackServicesTest extends TestCase
 {
-    public $called = array();
-
     public function testCallbacksAsServices()
     {
         $app = new Application();
         $app->register(new ServiceControllerServiceProvider());
 
         $app['service'] = $app->share(function () {
-            return new CallbackServicesTest();
+            return new CallbackServiceHolder();
         });
 
         $app->before('service:beforeApp');
@@ -62,6 +60,11 @@ class CallbackServicesTest extends TestCase
             'FINISH APP',
         ), $app['service']->called);
     }
+}
+
+class CallbackServiceHolder
+{
+    public $called = array();
 
     public function controller(Application $app)
     {
