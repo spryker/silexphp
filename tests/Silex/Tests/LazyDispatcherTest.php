@@ -11,6 +11,7 @@
 
 namespace Silex\Tests;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 class LazyDispatcherTest extends TestCase
 {
     /** @test */
+    #[Test]
     public function beforeMiddlewareShouldNotCreateDispatcherEarly()
     {
         $dispatcherCreated = false;
@@ -40,6 +42,7 @@ class LazyDispatcherTest extends TestCase
     }
 
     /** @test */
+    #[Test]
     public function eventHelpersShouldDirectlyAddListenersAfterBoot()
     {
         $app = new Application();
