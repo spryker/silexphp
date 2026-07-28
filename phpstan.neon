@@ -1,5 +1,10 @@
 parameters:
     reportUnmatchedIgnoredErrors: false
+    excludePaths:
+        - src/Silex/Provider/SecurityServiceProvider.php
+        - src/Silex/Provider/RememberMeServiceProvider.php
+        - src/Silex/Provider/DoctrineServiceProvider.php
+        - src/Silex/Provider/MonologServiceProvider.php
     ignoreErrors:
         - "#Call to function method_exists\\(\\) with '.+Component…' and '__construct' will always evaluate to false#"
         - '#Method Symfony\\Component\\Validator\\ConstraintValidatorFactory::__construct\(\) invoked with 1 parameter, 0 required#'
