@@ -42,6 +42,9 @@ class ControllerCollectionTest extends TestCase
         $this->assertEquals(2, count($routes->all()));
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     #[DoesNotPerformAssertions]
     public function testControllerFreezing()
     {

@@ -129,6 +129,9 @@ class FormServiceProviderTest extends TestCase
         }
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     #[DoesNotPerformAssertions]
     public function testFormServiceProviderWillNotAddNonexistentTranslationFiles()
     {

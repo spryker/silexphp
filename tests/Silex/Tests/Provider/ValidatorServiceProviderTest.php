@@ -34,6 +34,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class ValidatorServiceProviderTest extends TestCase
 {
+    /**
+     * @doesNotPerformAssertions
+     */
     #[DoesNotPerformAssertions]
     public function testRegister()
     {
@@ -45,6 +48,9 @@ class ValidatorServiceProviderTest extends TestCase
         return $app;
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     #[DoesNotPerformAssertions]
     public function testRegisterWithCustomValidators()
     {
@@ -126,6 +132,9 @@ class ValidatorServiceProviderTest extends TestCase
         $this->assertEquals($nbEmailError, count($form->offsetGet('email')->getErrors()));
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     #[DoesNotPerformAssertions]
     public function testValidatorWillNotAddNonexistentTranslationFiles()
     {
