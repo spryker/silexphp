@@ -633,10 +633,8 @@ class Application extends Pimple implements HttpKernelInterface, TerminableInter
 
     /**
      * {@inheritDoc}
-     *
-     * @return void
      */
-    public function terminate(Request $request, Response $response)
+    public function terminate(Request $request, Response $response): void
     {
         $this['kernel']->terminate($request, $response);
     }
