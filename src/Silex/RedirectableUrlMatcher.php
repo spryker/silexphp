@@ -30,7 +30,7 @@ class RedirectableUrlMatcher extends BaseRedirectableUrlMatcher
      *
      * @return array
      */
-    public function redirect(string $path, string $route, string $scheme = null): array
+    public function redirect(string $path, string $route, ?string $scheme = null): array
     {
         $url = $this->context->getBaseUrl() . $path;
         $query = $this->context->getQueryString() ?: '';

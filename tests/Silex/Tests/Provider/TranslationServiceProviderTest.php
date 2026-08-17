@@ -11,6 +11,7 @@
 
 namespace Silex\Tests\Provider;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Silex\Application;
 use Silex\Provider\TranslationServiceProvider;
@@ -53,7 +54,7 @@ class TranslationServiceProviderTest extends TestCase
         return $app;
     }
 
-    public function transChoiceProvider()
+    public static function transChoiceProvider()
     {
         return array(
             array('key2', 0, null, '0 apples'),
@@ -68,7 +69,7 @@ class TranslationServiceProviderTest extends TestCase
         );
     }
 
-    public function transProvider()
+    public static function transProvider()
     {
         return array(
             array('key1', null, 'The translation'),
@@ -83,6 +84,7 @@ class TranslationServiceProviderTest extends TestCase
     /**
      * @dataProvider transProvider
      */
+    #[DataProvider('transProvider')]
     public function testTransForDefaultLanguage($key, $locale, $expected)
     {
         $app = $this->getPreparedApp();
@@ -95,6 +97,7 @@ class TranslationServiceProviderTest extends TestCase
     /**
      * @dataProvider transChoiceProvider
      */
+    #[DataProvider('transChoiceProvider')]
     public function testTransChoiceForDefaultLanguage($key, $number, $locale, $expected)
     {
         $app = $this->getPreparedApp();

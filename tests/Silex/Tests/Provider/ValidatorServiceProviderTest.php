@@ -11,6 +11,9 @@
 
 namespace Silex\Tests\Provider;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Constraints\Expression;
 use Symfony\Component\Validator\Constraints\Collection;
@@ -34,8 +37,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ValidatorServiceProviderTest extends TestCase
 {
     /**
-     * @doesNotPerformAssertion
+     * @doesNotPerformAssertions
      */
+    #[DoesNotPerformAssertions]
     public function testRegister()
     {
         $app = new Application();
@@ -47,8 +51,9 @@ class ValidatorServiceProviderTest extends TestCase
     }
 
     /**
-     * @doesNotPerformAssertion
+     * @doesNotPerformAssertions
      */
+    #[DoesNotPerformAssertions]
     public function testRegisterWithCustomValidators()
     {
         $app = new Application();
@@ -69,6 +74,7 @@ class ValidatorServiceProviderTest extends TestCase
     /**
      * @depends testRegisterWithCustomValidators
      */
+    #[Depends('testRegisterWithCustomValidators')]
     public function testConstraintValidatorFactory($app)
     {
         $this->assertInstanceOf('Silex\ConstraintValidatorFactory', $app['validator.validator_factory']);
@@ -80,6 +86,7 @@ class ValidatorServiceProviderTest extends TestCase
     /**
      * @depends testRegister
      */
+    #[Depends('testRegister')]
     public function testConstraintValidatorFactoryWithExpression($app)
     {
         if (!class_exists('Symfony\Component\Validator\Constraints\Expression')) {
@@ -94,6 +101,7 @@ class ValidatorServiceProviderTest extends TestCase
     /**
      * @depends testRegister
      */
+    #[Depends('testRegister')]
     public function testValidatorServiceIsAValidator($app)
     {
         $this->assertTrue($app['validator'] instanceof ValidatorInterface);
@@ -103,6 +111,8 @@ class ValidatorServiceProviderTest extends TestCase
      * @depends testRegister
      * @dataProvider getTestValidatorConstraintProvider
      */
+    #[Depends('testRegister')]
+    #[DataProvider('getTestValidatorConstraintProvider')]
     public function testValidatorConstraint($email, $isValid, $nbGlobalError, $nbEmailError, $app)
     {
         $constraints = new Collection(array(
@@ -130,8 +140,9 @@ class ValidatorServiceProviderTest extends TestCase
     }
 
     /**
-     * @doesNotPerformAssertion
+     * @doesNotPerformAssertions
      */
+    #[DoesNotPerformAssertions]
     public function testValidatorWillNotAddNonexistentTranslationFiles()
     {
         $app = new Application(array(
@@ -153,7 +164,7 @@ class ValidatorServiceProviderTest extends TestCase
         }
     }
 
-    public function getTestValidatorConstraintProvider()
+    public static function getTestValidatorConstraintProvider()
     {
         // Email, form is valid, nb global error, nb email error
         return array(
@@ -166,6 +177,7 @@ class ValidatorServiceProviderTest extends TestCase
     /**
      * @dataProvider getAddResourceData
      */
+    #[DataProvider('getAddResourceData')]
     public function testAddResource($registerValidatorFirst)
     {
         $app = new Application();
@@ -186,7 +198,7 @@ class ValidatorServiceProviderTest extends TestCase
         $this->assertEquals('Pas vide', $app['translator']->trans('This value should not be blank.', array(), 'validators', 'fr'));
     }
 
-    public function getAddResourceData()
+    public static function getAddResourceData()
     {
         return array(array(false), array(true));
     }

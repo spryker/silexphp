@@ -20,7 +20,6 @@ use Symfony\Component\HttpKernel\Fragment\EsiFragmentRenderer;
 use Symfony\Component\HttpKernel\Fragment\HIncludeFragmentRenderer;
 use Symfony\Component\HttpKernel\EventListener\FragmentListener;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\HttpKernel\UriSigner;
 
 /**
  * @deprecated Use Http module plugins instead.
@@ -76,7 +75,13 @@ class HttpFragmentServiceProvider implements ServiceProviderInterface
         });
 
         $app['uri_signer'] = $app->share(function ($app) {
-            return new UriSigner($app['uri_signer.secret']);
+            // Symfony 6.1+ moved UriSigner from HttpKernel to HttpFoundation; the HttpKernel
+            // one is a phantom class since 6.4 (never actually defined at runtime).
+            $uriSignerClass = class_exists('Symfony\Component\HttpFoundation\UriSigner')
+                ? 'Symfony\Component\HttpFoundation\UriSigner'
+                : 'Symfony\Component\HttpKernel\UriSigner';
+
+            return new $uriSignerClass($app['uri_signer.secret']);
         });
 
         $app['uri_signer.secret'] = $this->uriSignerSecret;

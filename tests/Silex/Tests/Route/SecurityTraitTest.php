@@ -20,11 +20,16 @@ use Symfony\Component\HttpFoundation\Request;
  * SecurityTrait test cases.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @requires PHP 5.4
  */
 class SecurityTraitTest extends TestCase
 {
+    public function setUp(): void
+    {
+        if (!class_exists('Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider')) {
+            $this->markTestSkipped('SecurityServiceProvider relies on the Guard-based security classes removed in Symfony 6+; use the native security-bundle instead.');
+        }
+    }
+
     public function testSecureWithNoAuthenticatedUser()
     {
         $app = $this->createApplication();

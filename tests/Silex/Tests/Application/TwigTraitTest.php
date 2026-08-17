@@ -21,8 +21,6 @@ use Twig\Environment;
  * TwigTrait test cases.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @requires PHP 5.4
  */
 class TwigTraitTest extends TestCase
 {
@@ -31,7 +29,7 @@ class TwigTraitTest extends TestCase
         $app = $this->createApplication();
 
         $app['twig'] = $mailer = $this->getMockBuilder(Environment::class)->disableOriginalConstructor()->getMock();
-        $mailer->expects($this->once())->method('render')->will($this->returnValue('foo'));
+        $mailer->expects($this->once())->method('render')->willReturn('foo');
 
         $response = $app->render('view');
         $this->assertEquals('Symfony\Component\HttpFoundation\Response', get_class($response));
@@ -43,7 +41,7 @@ class TwigTraitTest extends TestCase
         $app = $this->createApplication();
 
         $app['twig'] = $mailer = $this->getMockBuilder(Environment::class)->disableOriginalConstructor()->getMock();
-        $mailer->expects($this->once())->method('render')->will($this->returnValue('foo'));
+        $mailer->expects($this->once())->method('render')->willReturn('foo');
 
         $response = $app->render('view', array(), new Response('', 404));
         $this->assertEquals(404, $response->getStatusCode());
@@ -54,7 +52,7 @@ class TwigTraitTest extends TestCase
         $app = $this->createApplication();
 
         $app['twig'] = $mailer = $this->getMockBuilder(Environment::class)->disableOriginalConstructor()->getMock();
-        $mailer->expects($this->once())->method('display')->will($this->returnCallback(function () { echo 'foo'; }));
+        $mailer->expects($this->once())->method('display')->willReturnCallback(function () { echo 'foo'; });
 
         $response = $app->render('view', array(), new StreamedResponse());
         $this->assertEquals('Symfony\Component\HttpFoundation\StreamedResponse', get_class($response));
@@ -64,9 +62,6 @@ class TwigTraitTest extends TestCase
         $this->assertEquals('foo', ob_get_clean());
     }
 
-    /**
-     * @doesNotPerformAssertion
-     */
     public function testRenderView()
     {
         $app = $this->createApplication();

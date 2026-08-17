@@ -19,6 +19,7 @@ namespace Silex\Tests;
 use ArrayObject;
 use Exception;
 use LogicException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Silex\AppArgumentValueResolver;
@@ -221,6 +222,7 @@ class ApplicationTest extends TestCase
      *
      * @return void
      */
+    #[DataProvider('escapeProvider')]
     public function testEscape($expected, $text)
     {
         $app = new Application();
@@ -228,7 +230,7 @@ class ApplicationTest extends TestCase
         $this->assertEquals($expected, $app->escape($text));
     }
 
-    public function escapeProvider()
+    public static function escapeProvider()
     {
         return [
             ['&lt;', '<'],
@@ -629,6 +631,8 @@ class ApplicationTest extends TestCase
 
         $response = $app->handle(Request::create('/foo'));
         $this->assertEquals(301, $response->getStatusCode());
+
+        restore_exception_handler();
     }
 
     public function testBeforeFilterOnMountedControllerGroupIsolatedToGroup()
@@ -692,9 +696,6 @@ class ApplicationTest extends TestCase
         $this->assertEquals('Hello world', $response->getContent());
     }
 
-    /**
-     * @requires PHP 5.4
-     */
     public function testViewListenerWithCallableTypeHint()
     {
         $app = new Application();

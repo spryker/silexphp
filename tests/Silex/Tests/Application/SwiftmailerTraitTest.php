@@ -18,14 +18,9 @@ use Silex\Provider\SwiftmailerServiceProvider;
  * SwiftmailerTrait test cases.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @requires PHP 5.4
  */
 class SwiftmailerTraitTest extends TestCase
 {
-    /**
-     * @doesNotPerformAssertion
-     */
     public function testMail()
     {
         $app = $this->createApplication();

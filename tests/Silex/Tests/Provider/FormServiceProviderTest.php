@@ -11,6 +11,7 @@
 
 namespace Silex\Tests\Provider;
 
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 use Silex\Application;
@@ -129,8 +130,9 @@ class FormServiceProviderTest extends TestCase
     }
 
     /**
-     * @doesNotPerformAssertion
+     * @doesNotPerformAssertions
      */
+    #[DoesNotPerformAssertions]
     public function testFormServiceProviderWillNotAddNonexistentTranslationFiles()
     {
         $app = new Application(array(
@@ -187,7 +189,7 @@ if (method_exists('Symfony\Component\Form\AbstractType', 'configureOptions')) {
             return [class_exists(RangeType::class) ? FileType::class : 'file'];
         }
 
-        public function configureOptions(OptionsResolver $resolver)
+        public function configureOptions(OptionsResolver $resolver): void
         {
             $resolver->setDefined(array('image_path'));
         }
@@ -236,21 +238,22 @@ if (!class_exists('Symfony\Component\Form\Extension\DataCollector\DataCollectorE
 } else {
     class FakeCsrfProvider implements CsrfTokenManagerInterface
     {
-        public function getToken($tokenId)
+        public function getToken(string $tokenId): CsrfToken
         {
             return new CsrfToken($tokenId, '123');
         }
 
-        public function refreshToken($tokenId)
+        public function refreshToken(string $tokenId): CsrfToken
         {
             return new CsrfToken($tokenId, '123');
         }
 
-        public function removeToken($tokenId)
+        public function removeToken(string $tokenId): ?string
         {
+            return null;
         }
 
-        public function isTokenValid(CsrfToken $token)
+        public function isTokenValid(CsrfToken $token): bool
         {
             return '123' === $token->getValue();
         }
